@@ -1,0 +1,223 @@
+{
+    "resourceType": "Bundle",
+    "type": "collection",
+    "entry": [
+        {
+            "resource": {
+                "resourceType": "Patient",
+                "id": "cf_patient_1",
+                "name": [
+                    {
+                        "use": "official",
+                        "family": "Doe",
+                        "given": [
+                            "John"
+                        ]
+                    }
+                ],
+                "gender": "male",
+                "birthDate": "2000-05-15"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Condition",
+                "id": "cf_condition_1",
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "190905008",
+                            "display": "Cystic fibrosis"
+                        }
+                    ],
+                    "text": "Cystic Fibrosis"
+                },
+                "clinicalStatus": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                            "code": "active"
+                        }
+                    ]
+                },
+                "verificationStatus": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                            "code": "confirmed"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "MolecularSequence",
+                "id": "cf_molecular_1",
+                "patient": {
+                    "reference": "Patient/cf_patient_1"
+                },
+                "type": "dna",
+                "coordinateSystem": 1,
+                "variant": [
+                    {
+                        "start": 117199646,
+                        "end": 117199648,
+                        "observedAllele": "del",
+                        "referenceAllele": "CTT",
+                        "gene": "CFTR",
+                        "variantType": "F508del"
+                    },
+                    {
+                        "start": 117199646,
+                        "end": 117199648,
+                        "observedAllele": "del",
+                        "referenceAllele": "CTT",
+                        "gene": "CFTR",
+                        "variantType": "F508del"
+                    }
+                ]
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Observation",
+                "id": "cf_observation_1",
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "42901-3",
+                            "display": "CFTR gene mutation analysis"
+                        }
+                    ],
+                    "text": "CFTR Gene Mutation Analysis"
+                },
+                "valueString": "Patient is homozygous for F508del mutation in CFTR gene"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Observation",
+                "id": "cf_symptoms_1",
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "49727002",
+                            "display": "Chronic lung disease"
+                        }
+                    ],
+                    "text": "Chronic lung disease due to thick mucus production"
+                },
+                "valueString": "Frequent lung infections, chronic cough, thick mucus production, difficulty breathing"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Observation",
+                "id": "cf_symptoms_2",
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "267425008",
+                            "display": "Pancreatic insufficiency"
+                        }
+                    ],
+                    "text": "Pancreatic insufficiency"
+                },
+                "valueString": "Poor digestion, malnutrition, need for pancreatic enzyme supplements"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "MedicationStatement",
+                "id": "med_cf_1",
+                "medicationCodeableConcept": {
+                    "text": "Dornase Alfa (Pulmozyme)"
+                },
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                }
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "MedicationStatement",
+                "id": "med_cf_2",
+                "medicationCodeableConcept": {
+                    "text": "Pancreatic Enzyme Replacement Therapy (PERT)"
+                },
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                }
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "MedicationRequest",
+                "id": "med_req_cf_1",
+                "medicationCodeableConcept": {
+                    "text": "Azithromycin"
+                },
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                }
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Procedure",
+                "id": "proc_cf_1",
+                "code": {
+                    "text": "Sinus surgery"
+                },
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                }
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Observation",
+                "id": "obs_cf_1",
+                "code": {
+                    "text": "FEV1 Lung Function"
+                },
+                "valueQuantity": {
+                    "value": 52
+                },
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                }
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "DiagnosticReport",
+                "id": "diag_cf_1",
+                "code": {
+                    "text": "Sweat Chloride Test"
+                },
+                "conclusion": "Elevated (92 mmol/L)",
+                "subject": {
+                    "reference": "Patient/cf_patient_1"
+                }
+            }
+        }
+    ]
+}

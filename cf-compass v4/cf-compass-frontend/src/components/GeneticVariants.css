@@ -1,0 +1,175 @@
+/* src/components/GeneticVariants.css */
+
+.genetic-variants {
+    margin-bottom: 24px;
+  }
+  
+  .zygosity-badge {
+    margin-bottom: 16px;
+  }
+  
+  .zygosity-badge span {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .zygosity-badge .homozygous {
+    background-color: #7209B7;
+  }
+  
+  .zygosity-badge .heterozygous {
+    background-color: #4361EE;
+  }
+  
+  .variants-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .variant-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 4px solid #ccc;
+  }
+  
+  .variant-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Severity-based coloring */
+  .variant-card.high-severity {
+    border-left-color: #F44336;
+  }
+  
+  .variant-card.moderate-severity {
+    border-left-color: #FF9800;
+  }
+  
+  .variant-card.mild-severity {
+    border-left-color: #4CAF50;
+  }
+  
+  .variant-card.mild-to-moderate-severity {
+    border-left-color: #8BC34A;
+  }
+  
+  .variant-card.moderate-to-severe-severity {
+    border-left-color: #FF5722;
+  }
+  
+  .variant-card.unknown {
+    border-left-color: #9E9E9E;
+  }
+  
+  .variant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .variant-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .variant-full-name {
+    font-size: 14px;
+    color: #5f6368;
+    font-family: monospace;
+  }
+  
+  .variant-details {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .variant-description {
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .variant-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  
+  .variant-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .info-label {
+    font-size: 12px;
+    color: #5f6368;
+    font-weight: 500;
+  }
+  
+  .info-value {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .severity-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    width: fit-content;
+  }
+  
+  .severity-badge.high {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+  }
+  
+  .severity-badge.moderate {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #FF9800;
+  }
+  
+  .severity-badge.mild {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+  }
+  
+  .severity-badge.mild-to-moderate {
+    background-color: rgba(139, 195, 74, 0.1);
+    color: #8BC34A;
+  }
+  
+  .severity-badge.moderate-to-severe {
+    background-color: rgba(255, 87, 34, 0.1);
+    color: #FF5722;
+  }
+  
+  .modulator-info {
+    grid-column: 1 / -1;
+  }
+  
+  /* No variants state */
+  .no-variants {
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    text-align: center;
+    color: #5f6368;
+    font-style: italic;
+  }

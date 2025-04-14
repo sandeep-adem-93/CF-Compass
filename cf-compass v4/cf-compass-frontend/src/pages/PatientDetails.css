@@ -1,0 +1,236 @@
+/* PatientDetails.css */
+.patient-details-container {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .patient-content {
+    flex: 1;
+    padding: 24px;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .patient-header {
+    margin-bottom: 24px;
+  }
+  
+  .patient-header h1 {
+    margin-bottom: 4px;
+    font-size: 32px;
+    color: #333;
+    font-weight: 700;
+  }
+  
+  .patient-id {
+    font-size: 14px;
+    color: #5f6368;
+    font-weight: 500;
+  }
+  
+  .patient-info-grid {
+    display: flex;
+    flex-direction: column;
+    /* grid-template-columns: 1fr; */
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  /* Cards */
+  .patient-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+  }
+  
+  .patient-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  /* Overview Card */
+  .overview-card {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .info-label {
+    font-size: 14px;
+    color: #5f6368;
+    font-weight: 500;
+  }
+  
+  .info-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    width: fit-content;
+  }
+  
+  .status-badge.active {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+  }
+  
+  .status-badge.inactive {
+    background-color: rgba(158, 158, 158, 0.1);
+    color: #757575;
+  }
+  
+  .status-badge.unknown {
+    background-color: rgba(33, 150, 243, 0.1);
+    color: #2196F3;
+  }
+  
+  /* Genetic Card */
+  .genetic-card {
+    margin-bottom: 0;
+  }
+  
+  .variant-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .variant-tag {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: #4361EE;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .genetic-summary {
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  .genetic-summary p {
+    margin-bottom: 16px;
+  }
+  
+  /* Clinical Section */
+  .clinical-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .section-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  
+  .clinical-card {
+    margin-bottom: 0;
+  }
+  
+  .clinical-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #4361EE;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .clinical-content {
+    line-height: 1.6;
+  }
+  
+  .clinical-paragraph {
+    margin-bottom: 16px;
+  }
+  
+  .clinical-paragraph:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* No data message */
+  .no-data {
+    color: #757575;
+    font-style: italic;
+  }
+  
+  .loading, 
+  .error-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 18px;
+    color: #5f6368;
+  }
+  
+  .error-message {
+    color: #F44336;
+  }
+  
+  /* Responsive adjustments */
+  @media (min-width: 992px) {
+    .patient-info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .clinical-section {
+      grid-column: span 2;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .patient-details-container {
+      flex-direction: column;
+    }
+    
+    .patient-content {
+      padding: 16px;
+    }
+    
+    .info-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+  }

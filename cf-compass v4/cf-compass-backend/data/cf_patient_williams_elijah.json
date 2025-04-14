@@ -1,0 +1,292 @@
+{
+  "resourceType": "Bundle",
+  "id": "CFBundle-1",
+  "meta": {
+    "lastUpdated": "2024-10-27T12:00:00Z"
+  },
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CF1744483167236453",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "name": [
+          {
+            "use": "official",
+            "family": "Williams",
+            "given": [
+              "Elijah"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "2010-10-25"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "CFCondition-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "onsetDateTime": "2010-10-25"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "CFSeq-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "coordinateSystem": 1,
+        "referenceSeq": {
+          "referenceSeqId": "NC_000007.13",
+          "referenceSeqPointer": "http://www.ncbi.nlm.nih.gov/nuccore/NC_000007.13"
+        },
+        "variant": [
+          {
+            "start": 117282360,
+            "end": 117282360,
+            "observedAllele": "T",
+            "referenceAllele": "G",
+            "gene": {
+              "geneId": "CFTR",
+              "geneSymbol": "CFTR"
+            },
+            "variantType": "G542X"
+          },
+          {
+            "start": 117199646,
+            "end": 117199646,
+            "observedAllele": "A",
+            "referenceAllele": "G",
+            "gene": {
+              "geneId": "CFTR",
+              "geneSymbol": "CFTR"
+            },
+            "variantType": "R117H"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "CFObs-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "14647-2",
+              "display": "Sweat chloride concentration"
+            }
+          ]
+        },
+        "valueQuantity": {
+          "value": 90,
+          "unit": "mmol/L"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "CFObs-2",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "21241-5",
+              "display": "FEV1"
+            }
+          ]
+        },
+        "valueQuantity": {
+          "value": 68,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "CFMed-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "medicationCodeableConcept": {
+          "text": "Pancrelipase (Creon)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "CFMed-2",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "medicationCodeableConcept": {
+          "text": "Dornase alfa (Pulmozyme)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "CFMed-3",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "medicationCodeableConcept": {
+          "text": "Hypertonic saline"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "CFDiag-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "14647-2",
+              "display": "Sweat chloride concentration"
+            }
+          ]
+        },
+        "issued": "2024-10-26T10:00:00Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "CarePlan",
+        "id": "CFCare-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483167236453"
+        },
+        "activity": [
+          {
+            "detail": {
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "44173002",
+                    "display": "Pulmonary management"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "2252000",
+                    "display": "Pancreatic/Nutritional Management"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://example.org/cf-codes",
+                    "code": "cftr-modulator-therapy",
+                    "display": "CFTR Modulator Therapy Considerations"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://example.org/cf-codes",
+                    "code": "monitoring-follow-up",
+                    "display": "Monitoring and Follow-up Recommendations"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

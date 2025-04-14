@@ -1,0 +1,117 @@
+/* Dashboard.css */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-xl);
+  }
+  
+  .add-patient-button1 {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    margin-top: 20px;
+    padding: 10px 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.15s ease;
+    width: 95%;
+    justify-self: center;
+    justify-content: center;
+  }
+  
+  .add-patient-button:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .stat-card {
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-lg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .stat-card h3 {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+  }
+  
+  .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+  
+  .main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+  }
+  
+  .search-container {
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 14px;
+    transition: border-color 0.15s ease;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+  }
+  
+  .table-section {
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-lg);
+  }
+  
+  .chart-section {
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-lg);
+  }
+  
+  /* Media queries for responsiveness */
+  @media (max-width: 768px) {
+    .main-content {
+      grid-template-columns: 1fr;
+    }
+    
+    .chart-section {
+      margin-top: var(--spacing-lg);
+    }
+  }

@@ -1,0 +1,266 @@
+{
+  "resourceType": "Bundle",
+  "id": "cf-bundle-example",
+  "meta": {
+    "lastUpdated": "2024-10-27T12:00:00Z"
+  },
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CF1744483280412447",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "name": [
+          {
+            "use": "official",
+            "family": "Walker",
+            "given": [
+              "Amelia"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "2011-10-26"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-cf-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483280412447"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ]
+        },
+        "verificationStatus": "confirmed",
+        "clinicalStatus": {
+          "code": "active"
+        },
+        "onsetDateTime": "2011-10-26"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "seq-cftr-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483280412447"
+        },
+        "coordinateSystem": 1,
+        "referenceSeq": {
+          "referenceSeqId": "NC_000007.13",
+          "referenceSeqPointer": "http://www.ncbi.nlm.nih.gov/nuccore/NC_000007.13"
+        },
+        "variant": [
+          {
+            "start": 117282360,
+            "end": 117282360,
+            "observedAllele": "T",
+            "referenceAllele": "C",
+            "gene": {
+              "geneId": "CFTR",
+              "geneIdType": "HGNC"
+            },
+            "variantType": "3849+10kbC>T"
+          },
+          {
+            "start": 117199646,
+            "end": 117199646,
+            "observedAllele": "A",
+            "referenceAllele": "G",
+            "gene": {
+              "geneId": "CFTR",
+              "geneIdType": "HGNC"
+            },
+            "variantType": "2789+5G>A"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-sweat-chloride-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483280412447"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "14647-2",
+              "display": "Sweat chloride concentration"
+            }
+          ]
+        },
+        "valueQuantity": {
+          "value": 68,
+          "unit": "mmol/L"
+        },
+        "effectiveDateTime": "2024-10-26"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-fev1-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483280412447"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "21243-3",
+              "display": "FEV1"
+            }
+          ]
+        },
+        "valueQuantity": {
+          "value": 76,
+          "unit": "%"
+        },
+        "effectiveDateTime": "2024-10-26"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med-pancrelipase-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483280412447"
+        },
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+              "code": "1016543",
+              "display": "Pancrelipase"
+            }
+          ]
+        },
+        "effectivePeriod": {
+          "start": "2024-10-26"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diag-sweat-test-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483280412447"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "47000-7",
+              "display": "Sweat chloride test"
+            }
+          ]
+        },
+        "effectiveDateTime": "2024-10-26",
+        "result": [
+          {
+            "reference": "Observation/obs-sweat-chloride-1"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "CarePlan",
+        "id": "careplan-cf-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483280412447"
+        },
+        "activity": [
+          {
+            "detail": {
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "44174002",
+                    "display": "Pulmonary management"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "36367007",
+                    "display": "Pancreatic/Nutritional Management"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "70311000",
+                    "display": "CFTR Modulator Therapy"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "44065006",
+                    "display": "Monitoring and Follow-up"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

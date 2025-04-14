@@ -1,0 +1,157 @@
+{
+    "resourceType": "Bundle",
+    "type": "collection",
+    "entry": [
+      {
+        "resource": {
+          "resourceType": "Patient",
+          "id": "cf_patient_6",
+          "name": [{"use": "official", "family": "Brown", "given": ["Alex"]}],
+          "gender": "male",
+          "birthDate": "2010-03-10"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Condition",
+          "id": "cf_condition_6",
+          "subject": {"reference": "Patient/cf_patient_6"},
+          "code": {
+            "coding": [{"system": "http://snomed.info/sct", "code": "190905008", "display": "Cystic fibrosis"}],
+            "text": "Cystic Fibrosis"
+          },
+          "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+          "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]}
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "MolecularSequence",
+          "id": "cf_molecular_6",
+          "patient": {"reference": "Patient/cf_patient_6"},
+          "type": "dna",
+          "coordinateSystem": 1,
+          "variant": [
+            {
+              "start": 117199646,
+              "end": 117199648,
+              "observedAllele": "del",
+              "referenceAllele": "CTT",
+              "gene": "CFTR",
+              "variantType": "F508del"
+            },
+            {
+              "start": 117199800,
+              "end": 117199802,
+              "observedAllele": "T",
+              "referenceAllele": "C",
+              "gene": "CFTR",
+              "variantType": "R334W"
+            }
+          ]
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Observation",
+          "id": "cf_observation_6",
+          "subject": {"reference": "Patient/cf_patient_6"},
+          "code": {"coding": [{"system": "http://loinc.org", "code": "42901-3", "display": "CFTR gene mutation analysis"}], "text": "CFTR Gene Mutation Analysis"},
+          "valueString": "Patient is heterozygous for F508del and R334W mutations in CFTR gene"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Observation",
+          "id": "cf_symptoms_6",
+          "subject": {"reference": "Patient/cf_patient_6"},
+          "code": {"coding": [{"system": "http://snomed.info/sct", "code": "49727002", "display": "Chronic lung disease"}], "text": "Chronic lung disease"},
+          "valueString": "Mild respiratory issues, frequent sinus infections"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Observation",
+          "id": "cf_symptoms_6b",
+          "subject": {"reference": "Patient/cf_patient_6"},
+          "code": {"coding": [{"system": "http://snomed.info/sct", "code": "409622000", "display": "Recurrent pneumonia"}], "text": "Recurrent pneumonia"},
+          "valueString": "Episodes of pneumonia during winter, managed with antibiotics"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Observation",
+          "id": "cf_symptoms_6c",
+          "subject": {"reference": "Patient/cf_patient_6"},
+          "code": {"coding": [{"system": "http://snomed.info/sct", "code": "28944009", "display": "Failure to thrive"}], "text": "Failure to thrive"},
+          "valueString": "Weight gain below growth curve"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Observation",
+          "id": "obs_cf_6",
+          "code": {"text": "FEV1 Lung Function"},
+          "valueQuantity": {"value": 74},
+          "subject": {"reference": "Patient/cf_patient_6"}
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "DiagnosticReport",
+          "id": "diag_cf_6",
+          "code": {"text": "Sweat Chloride Test"},
+          "conclusion": "Elevated (95 mmol/L)",
+          "subject": {"reference": "Patient/cf_patient_6"}
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "DiagnosticReport",
+          "id": "diag_cf_6b",
+          "code": {"text": "Pulmonary Function Test"},
+          "conclusion": "Mild obstruction"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Procedure",
+          "id": "proc_cf_6",
+          "code": {"text": "Bronchoscopy"},
+          "subject": {"reference": "Patient/cf_patient_6"}
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Procedure",
+          "id": "proc_cf_6b",
+          "code": {"text": "Feeding tube placement"},
+          "subject": {"reference": "Patient/cf_patient_6"}
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "MedicationStatement",
+          "id": "med_cf_6",
+          "medicationCodeableConcept": {"text": "Pancrelipase"},
+          "subject": {"reference": "Patient/cf_patient_6"}
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "MedicationStatement",
+          "id": "med_cf_6b",
+          "medicationCodeableConcept": {"text": "Albuterol"},
+          "subject": {"reference": "Patient/cf_patient_6"}
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "MedicationRequest",
+          "id": "med_req_cf_6",
+          "medicationCodeableConcept": {"text": "Levofloxacin"},
+          "subject": {"reference": "Patient/cf_patient_6"}
+        }
+      }
+    ]
+}

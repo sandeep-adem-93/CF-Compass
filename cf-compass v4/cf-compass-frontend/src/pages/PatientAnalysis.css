@@ -1,0 +1,190 @@
+/* PatientAnalysis.css - Enhanced styling for patient analysis display */
+
+.patient-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1200px;
+  }
+  
+  /* Card Styling */
+  .patient-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .patient-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .card-title, 
+  .section-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  /* Genetic Analysis Styling */
+  .genetic-card {
+    border-left: 4px solid #4361EE;
+  }
+  
+  .variant-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .variant-tag {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: #4361EE;
+    padding: 8px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  
+  .genetic-summary {
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  .genetic-summary p {
+    margin-bottom: 16px;
+  }
+  
+  /* Clinical Section Styling */
+  .clinical-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .clinical-card {
+    margin-bottom: 0;
+    border-left: 4px solid #43AA8B;
+  }
+  
+  .clinical-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #43AA8B;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .clinical-content {
+    line-height: 1.6;
+  }
+  
+  .clinical-paragraph {
+    margin-bottom: 16px;
+    text-align: justify;
+  }
+  
+  .clinical-paragraph:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* No data message */
+  .no-data {
+    color: #757575;
+    font-style: italic;
+    padding: 12px 0;
+  }
+  
+  /* Responsive adjustments */
+  @media (min-width: 992px) {
+    .patient-info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .clinical-section {
+      grid-column: span 2;
+    }
+  }
+  
+  /* Color coding for different section types */
+  .clinical-card.pulmonary {
+    border-left-color: #4361EE;
+  }
+  
+  .clinical-card.pulmonary .clinical-card-title {
+    color: #4361EE;
+  }
+  
+  .clinical-card.nutritional {
+    border-left-color: #43AA8B;
+  }
+  
+  .clinical-card.nutritional .clinical-card-title {
+    color: #43AA8B;
+  }
+  
+  .clinical-card.therapy {
+    border-left-color: #F9A826;
+  }
+  
+  .clinical-card.therapy .clinical-card-title {
+    color: #F9A826;
+  }
+  
+  .clinical-card.monitoring {
+    border-left-color: #7209B7;
+  }
+  
+  .clinical-card.monitoring .clinical-card-title {
+    color: #7209B7;
+  }
+  
+  /* Add animation for sections */
+  .patient-card {
+    animation: fade-in 0.5s ease forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Add animation delay for sequential appearance */
+  .patient-card:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  
+  .patient-card:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .clinical-card:nth-child(1) {
+    animation-delay: 0.3s;
+  }
+  
+  .clinical-card:nth-child(2) {
+    animation-delay: 0.4s;
+  }
+  
+  .clinical-card:nth-child(3) {
+    animation-delay: 0.5s;
+  }
+  
+  .clinical-card:nth-child(4) {
+    animation-delay: 0.6s;
+  }

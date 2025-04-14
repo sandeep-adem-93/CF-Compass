@@ -1,0 +1,297 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cf_patient_3",
+        "name": [
+          {
+            "use": "official",
+            "family": "Lee",
+            "given": [
+              "Alex"
+            ]
+          }
+        ],
+        "gender": "non-binary",
+        "birthDate": "2005-03-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cf_condition_3",
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ],
+          "text": "Cystic Fibrosis"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "cf_molecular_3",
+        "patient": {
+          "reference": "Patient/cf_patient_3"
+        },
+        "type": "dna",
+        "coordinateSystem": 1,
+        "variant": [
+          {
+            "start": 117300000,
+            "end": 117300005,
+            "observedAllele": "A",
+            "referenceAllele": "G",
+            "gene": "CFTR",
+            "variantType": "2789+5G>A"
+          },
+          {
+            "start": 117199500,
+            "end": 117199505,
+            "observedAllele": "T",
+            "referenceAllele": "C",
+            "gene": "CFTR",
+            "variantType": "R117H"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_observation_3",
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "42901-3",
+              "display": "CFTR gene mutation analysis"
+            }
+          ],
+          "text": "CFTR Gene Mutation Analysis"
+        },
+        "valueString": "Patient is compound heterozygous for 2789+5G>A and R117H mutations in CFTR gene"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_5",
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "195967001",
+              "display": "Chronic sinusitis"
+            }
+          ],
+          "text": "Chronic sinusitis"
+        },
+        "valueString": "Frequent sinus infections, nasal polyps, mild respiratory issues"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_6",
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "386661006",
+              "display": "Mild pulmonary disease"
+            }
+          ],
+          "text": "Mild pulmonary disease"
+        },
+        "valueString": "Occasional respiratory infections, productive cough, some airway obstruction"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_7",
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "267425008",
+              "display": "Pancreatic sufficiency"
+            }
+          ],
+          "text": "Pancreatic sufficiency"
+        },
+        "valueString": "Normal digestion and pancreatic enzyme function, no need for enzyme supplements"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_5",
+        "medicationCodeableConcept": {
+          "text": "Ivacaftor/Lumacaftor (Orkambi)"
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_6",
+        "medicationCodeableConcept": {
+          "text": "Nasal Steroids"
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med_req_cf_3",
+        "medicationCodeableConcept": {
+          "text": "Albuterol"
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "proc_cf_3",
+        "code": {
+          "text": "No major procedures yet"
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs_cf_3",
+        "code": {
+          "text": "FEV1 Lung Function"
+        },
+        "valueQuantity": {
+          "value": 75
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diag_cf_3",
+        "code": {
+          "text": "Genetic Test Result"
+        },
+        "conclusion": "Confirmed compound heterozygous 2789+5G>A and R117H",
+        "subject": {
+          "reference": "Patient/cf_patient_3"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "FamilyMemberHistory",
+        "id": "cf_famhx_mother",
+        "status": "completed",
+        "patient": {
+          "reference": "Patient/cf_patient_3"
+        },
+        "relationship": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+              "code": "MTH",
+              "display": "Mother"
+            }
+          ]
+        },
+        "name": "Morgan Lee",
+        "condition": [
+          {
+            "code": {
+              "text": "CFTR carrier (2789+5G>A, F508del)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "FamilyMemberHistory",
+        "id": "cf_famhx_father",
+        "status": "completed",
+        "patient": {
+          "reference": "Patient/cf_patient_3"
+        },
+        "relationship": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+              "code": "FTH",
+              "display": "Father"
+            }
+          ]
+        },
+        "name": "Taylor Lee",
+        "condition": [
+          {
+            "code": {
+              "text": "CFTR carrier (R117H, F508del)"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

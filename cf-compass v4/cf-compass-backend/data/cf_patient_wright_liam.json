@@ -1,0 +1,216 @@
+{
+  "resourceType": "Bundle",
+  "id": "cf-bundle-example",
+  "meta": {
+    "lastUpdated": "2024-10-27T12:00:00Z"
+  },
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CF1744483138617563",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "name": [
+          {
+            "use": "official",
+            "family": "Wright",
+            "given": [
+              "Liam"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1995-03-16"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-cf-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483138617563"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "onsetDateTime": "1995-03-16"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "seq-cftr-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483138617563"
+        },
+        "coordinateSystem": 1,
+        "referenceSeq": {
+          "referenceSeqId": "NC_000007.13",
+          "referenceSeqPointer": "NC_000007.13"
+        },
+        "variant": [
+          {
+            "start": 117199646,
+            "end": 117199646,
+            "observedAllele": "T",
+            "referenceAllele": "C",
+            "gene": {
+              "geneId": "CFTR",
+              "geneSymbol": "CFTR"
+            },
+            "variantType": "R553X"
+          },
+          {
+            "start": 117282360,
+            "end": 117282360,
+            "observedAllele": "T",
+            "referenceAllele": "G",
+            "gene": {
+              "geneId": "CFTR",
+              "geneSymbol": "CFTR"
+            },
+            "variantType": "G542X"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-sweat-chloride-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483138617563"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "14647-2",
+              "display": "Sweat chloride concentration"
+            }
+          ]
+        },
+        "valueQuantity": {
+          "value": 73,
+          "unit": "mmol/L"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-fev1-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483138617563"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "21241-5",
+              "display": "FEV1"
+            }
+          ]
+        },
+        "valueQuantity": {
+          "value": 87,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med-pancrelipase-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483138617563"
+        },
+        "medicationCodeableConcept": {
+          "text": "Pancrelipase (Creon)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "CarePlan",
+        "id": "careplan-cf-1",
+        "meta": {
+          "lastUpdated": "2024-10-27T12:00:00Z"
+        },
+        "subject": {
+          "reference": "Patient/CF1744483138617563"
+        },
+        "activity": [
+          {
+            "detail": {
+              "code": {
+                "text": "Pulmonary Management"
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "text": "Pancreatic/Nutritional Management"
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "text": "CFTR Modulator Therapy Considerations"
+              }
+            }
+          },
+          {
+            "detail": {
+              "code": {
+                "text": "Monitoring and Follow-up Recommendations"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

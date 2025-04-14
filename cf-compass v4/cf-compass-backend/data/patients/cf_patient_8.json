@@ -1,0 +1,284 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cf_patient_8_patient",
+        "name": [
+          {
+            "use": "official",
+            "family": "Novak",
+            "given": [
+              "Ella"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1985-11-02"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cf_patient_8_condition",
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ],
+          "text": "Cystic Fibrosis"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "cf_patient_8_molecularsequence",
+        "patient": {
+          "reference": "Patient/cf_patient_8"
+        },
+        "type": "dna",
+        "coordinateSystem": 1,
+        "variant": [
+          {
+            "start": 117300010,
+            "end": 117300020,
+            "observedAllele": "T",
+            "referenceAllele": "C",
+            "gene": "CFTR",
+            "variantType": "3849+10kbC>T"
+          },
+          {
+            "start": 117300100,
+            "end": 117300101,
+            "observedAllele": "G",
+            "referenceAllele": "A",
+            "gene": "CFTR",
+            "variantType": "2789+5G>A"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_patient_8_mutation_obs",
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "42901-3",
+              "display": "CFTR gene mutation analysis"
+            }
+          ],
+          "text": "CFTR Gene Mutation Analysis"
+        },
+        "valueString": "Patient is heterozygous for 3849+10kbC>T mutation in CFTR gene"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_patient_8_obs_195967001",
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "195967001",
+              "display": "Chronic sinusitis"
+            }
+          ],
+          "text": "Chronic sinusitis"
+        },
+        "valueString": "Chronic sinus congestion and nasal polyps"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_patient_8_obs_386661006",
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "386661006",
+              "display": "Pulmonary disease"
+            }
+          ],
+          "text": "Pulmonary disease"
+        },
+        "valueString": "Persistent cough with mucus and shortness of breath"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_patient_8_obs_271327008",
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "271327008",
+              "display": "Poor weight gain"
+            }
+          ],
+          "text": "Poor weight gain"
+        },
+        "valueString": "Difficulty gaining weight despite normal appetite"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_patient_8_obs_233604007",
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "233604007",
+              "display": "Meconium ileus"
+            }
+          ],
+          "text": "Meconium ileus"
+        },
+        "valueString": "History of intestinal blockage at birth"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_patient_8_fev1",
+        "code": {
+          "text": "FEV1 Lung Function"
+        },
+        "valueQuantity": {
+          "value": 68
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "cf_patient_8_med_ivacaftor/lumacaftor",
+        "medicationCodeableConcept": {
+          "text": "Ivacaftor/Lumacaftor (Orkambi)"
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "cf_patient_8_med_pancrelipase",
+        "medicationCodeableConcept": {
+          "text": "Pancrelipase (Creon)"
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "cf_patient_8_med_azithromycin",
+        "medicationCodeableConcept": {
+          "text": "Azithromycin"
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "cf_patient_8_procedure1",
+        "code": {
+          "text": "Sweat chloride test"
+        },
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "cf_patient_8_genetic_report",
+        "code": {
+          "text": "Genetic Test Result"
+        },
+        "conclusion": "Confirmed compound heterozygous 3849+10kbC>T and 2789+5G>A",
+        "subject": {
+          "reference": "Patient/cf_patient_8"
+        }
+      }
+    },
+    {
+      "resourceType": "RelatedPerson",
+      "id": "related_child_taylor",
+      "patient": {
+        "reference": "Patient/cf_patient_8"
+      },
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+              "code": "daughter",
+              "display": "daughter"
+            }
+          ]
+        }
+      ],
+      "name": {
+        "text": "Taylor Novak"
+      }
+    }
+  ]
+}

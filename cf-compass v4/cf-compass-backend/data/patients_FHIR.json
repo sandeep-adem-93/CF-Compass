@@ -1,0 +1,1197 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cf_condition_1",
+        "subject": {
+          "reference": "Patient/CF001"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ],
+          "text": "Cystic Fibrosis"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "onsetDateTime": "2010-09-12"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "cf_molecular_1",
+        "patient": {
+          "reference": "Patient/CF001"
+        },
+        "type": "dna",
+        "coordinateSystem": 1,
+        "variant": [
+          {
+            "start": 117199646,
+            "end": 117199648,
+            "observedAllele": "del",
+            "referenceAllele": "CTT",
+            "gene": "CFTR",
+            "variantType": "F508del"
+          },
+          {
+            "start": 117199646,
+            "end": 117199648,
+            "observedAllele": "del",
+            "referenceAllele": "CTT",
+            "gene": "CFTR",
+            "variantType": "F508del"
+          }
+        ],
+        "referenceSeq": {
+          "referenceSeqString": "ATGCAGAGGTCGCCTCTGGAAAAGGCCAGCGTTGTCTCCAAACTTTTTTTCAGCTGGACCAGACCAATTTTGAGGAAAGGATACAGACAGCGCCTGGAATTGTCAGACATATACCAAATCCCTTCTGTTGATTCTGCTGACAATCTATCTGAAAAATTGGAAAGAGAATGGGATAGAGAGCTGGCTTCAAAGAAAAATCCTAAACTCATTAATGCCCTTCGGCGATGTTTTTTCTGGAGATTTATGTTCTATGGAATCTTTTTATATTTAGGGGAAGTCACCAAAGCAGTACAGCCTCTCTTACTGGGAAGAATCATAGCTTCCTATGACCCGGATAACAAGGAGGAACGCTCTATCGCGATTTATCTAGGCATAGGCTTATGCCTTCTCTTTATTGTGAGGACACTGCTCCTACACCCAGCCATTTTTGGCCTTCATCACATTGGAATGCAGATGAGAATAGCTATGTTTAGTTTGATTTATAAGAAGACTTTAAAGCTGTCAAGCCGTGTTCTAGATAAAATAAGTATTGGACAACTTGTTAGTCTCCTTTCCAACAACCTGAACAAATTTGATGAAGGACTTGCATTGGCACATTTCGTGTGGATCGCTCCTTTGCAAGTGGCACTCCTCATGGGGCTAATCTGGGAGTTGTTACAGGCGTCTGCCTTCTGTGGACTTGGTTTCCTGATAGTCCTTGCCCTTTTTCAGGCTGGGCTAGGGAGAATGATGATGAAGTACAGAGATCAGAGAGCTGGGAAGATCAGTGAAAGACTTGTGATTAGAGGAGGGATTTGGGGAATTATTTGAGAAAGCAAAACAAAACAATAACAATAGAAAAACTTCTAATGGTGATGACAGCCTCTTCTTCAGTAATTTCTCACTTCTTGGTACTCCTGTCCTGAAAGATATTAATTTCAAGATAGAAAGAGGACAGTTGTTGGCGGTTGCTGGATCCACTGGAGCAGGCAAGACTTCACTTCTAATGGTGATTATGGGAGAACTGGAGCCTTCAGAGGGTAAAATTAAGCACAGTGGAAGAATTTCATTCTGTTCTCAGTTTTCCTGGATTATGCCTGGCACCATTAAAGAAAATATCATCTTTGGTGTTTCCTATGATGAATATAGATACAGAAGCGTCATCAAAGCATGCCAACTAGAAGAGTCATCAAAGCATGCCAACTAGA"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_observation_1",
+        "subject": {
+          "reference": "Patient/CF001"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "42901-3",
+              "display": "CFTR gene mutation analysis"
+            }
+          ],
+          "text": "CFTR Gene Mutation Analysis"
+        },
+        "valueString": "Patient is homozygous for F508del mutation in CFTR gene"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_1a",
+        "subject": {
+          "reference": "Patient/CF001"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "233604007",
+              "display": "Recurrent respiratory infections"
+            }
+          ],
+          "text": "Recurrent respiratory infections"
+        },
+        "valueString": "Patient experiences frequent respiratory infections"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_1b",
+        "subject": {
+          "reference": "Patient/CF001"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "36440009",
+              "display": "Poor weight gain"
+            }
+          ],
+          "text": "Poor weight gain"
+        },
+        "valueString": "Patient shows poor weight gain"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_1c",
+        "subject": {
+          "reference": "Patient/CF001"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "8801005",
+              "display": "Sweat chloride test positive"
+            }
+          ],
+          "text": "Elevated sweat chloride levels"
+        },
+        "valueString": "Elevated sweat chloride (98 mmol/L)"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_1a",
+        "medicationCodeableConcept": {
+          "text": "Trikafta"
+        },
+        "subject": {
+          "reference": "Patient/CF001"
+        },
+        "effectiveDateTime": "2022-06-10",
+        "note": [
+          {
+            "text": "Good clinical response to CFTR modulator therapy"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_1b",
+        "medicationCodeableConcept": {
+          "text": "Pancreatic enzymes"
+        },
+        "subject": {
+          "reference": "Patient/CF001"
+        },
+        "effectiveDateTime": "2010-10-03"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs_cf_1",
+        "code": {
+          "text": "FEV1 Lung Function"
+        },
+        "valueQuantity": {
+          "value": 72,
+          "unit": "%"
+        },
+        "subject": {
+          "reference": "Patient/CF001"
+        },
+        "effectiveDateTime": "2025-01-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diag_cf_1",
+        "code": {
+          "text": "Sweat Chloride Test"
+        },
+        "conclusion": "Elevated (98 mmol/L)",
+        "subject": {
+          "reference": "Patient/CF001"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CF002",
+        "name": [
+          {
+            "use": "official",
+            "family": "Johnson",
+            "given": [
+              "Emma"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "2015-07-22"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cf_condition_2",
+        "subject": {
+          "reference": "Patient/CF002"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ],
+          "text": "Cystic Fibrosis"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "onsetDateTime": "2019-04-18"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "cf_molecular_2",
+        "patient": {
+          "reference": "Patient/CF002"
+        },
+        "type": "dna",
+        "coordinateSystem": 1,
+        "variant": [
+          {
+            "start": 117199646,
+            "end": 117199648,
+            "observedAllele": "del",
+            "referenceAllele": "CTT",
+            "gene": "CFTR",
+            "variantType": "F508del"
+          },
+          {
+            "start": 117227858,
+            "end": 117227858,
+            "observedAllele": "T",
+            "referenceAllele": "G",
+            "gene": "CFTR",
+            "variantType": "R117H"
+          }
+        ],
+        "referenceSeq": {
+          "referenceSeqString": "ATGCAGAGGTCGCCTCTGGAAAAGGCCAGCGTTGTCTCCAAACTTTTTTTCAGCTGGACCAGACCAATTTTGAGGAAAGGATACAGACAGCGCCTGGAATTGTCAGACATATACCAAATCCCTTCTGTTGATTCTGCTGACAATCTATCTGAAAAATTGGAAAGAGAATGGGATAGAGAGCTGGCTTCAAAGAAAAATCCTAAACTCATTAATGCCCTTCGGCGATGTTTTTTCTGGAGATTTATGTTCTATGGAATCTTTTTATATTTAGGGGAAGTCACCAAAGCAGTACAGCCTCTCTTACTGGGAAGAATCATAGCTTCCTATGACCCGGATAACAAGGAGGAACACTATCGCGATTTATCTAGGCATAGGCTTATGCCTTCTCTTTATTGTGAGGACACTGCTCCTACACCCAGCCATTTTTGGCCTTCATCACATTGGAATGCAGATGAGAATAGCTATGTTTAGTTTGATTTATAAGAAGACTTTAAAGCTGTCAAGCCGTGTTCTAGATAAAATAAGTATTGGACAACTTGTTAGTCTCCTTTCCAACAACCTGAACAAATTTGATGAAGGACTTGCATTGGCACATTTCGTGTGGATCGCTCCTTTGCAAGTGGCACTCCTCATGGGGCTAATCTGGGAGTTGTTACAGGCGTCTGCCTTCTGTGGACTTGGTTTCCTGATAGTCCTTGCCCTTTTTCAGGCTGGGCTAGGGAGAATGATGATGAAGTACAGAGATCAGAGAGCTGGGAAGATCAGTGAAAGACTTGTGATTACCTCAGAAATGATTGAAAATATCCAATCTGTTAAGGCATACTGCTGGGAAGAAGCAATGGAAAAAATGATTGAAAACTTAAGACAAACAGAACTGAAACTGACTCGGAAGGCAGCCTATGTGAGATACTTCAATAGCTCAGCCTTCTTCTTCTCAGGGTTCTTTGTGGTGTTTTTATCTGTGCTTCCCTATGCACTAATCAAAGGAATCATCCTCCGGAAAATATTCACCACCATCTCATTCTGCATTGTTCTGCGCATGGCGGTCACTCGGCAATTTCCCTGGGCTGTACAAACATGGTATGACTCTCTTGGAGCAATAAACAAAATACAGGATTTCTTACAAAAGCAAGAATATAAGACATTGGAATATAACTTAACGACTACAGAAGTAGTGATGGAGAATGTAACAGCCTTCTGGGAGAGGGATTTGGGGAATTATTTGAGAAAGCAAAACAAAACAATAACAATAGAAAAACTTCTAATGGTGATGACAGCCTCTTCTTCAGTAATTTCTCACTTCTTGGTACTCCTGTCCTGAAAGATATTAATTTCAAGATAGAAAGAGGACAGTTGTTGGCGGTTGCTGGATCCACTGGAGCAGGCAAGACTTCACTTCTAATGGTGATTATGGGAGAACTGGAGCCTTCAGAGGGTAAAATTAAGCACAGTGGAAGAATTTCATTCTGTTCTCAGTTTTCCTGGATTATGCCTGGCACCATTAAAGAAAATATCATCTTTGGTGTTTCCTATGATGAATATAGATACAGAAGCGTCATCAAAGCATGCCAACTAGAAGAG"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_observation_2",
+        "subject": {
+          "reference": "Patient/CF002"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "42901-3",
+              "display": "CFTR gene mutation analysis"
+            }
+          ],
+          "text": "CFTR Gene Mutation Analysis"
+        },
+        "valueString": "Patient is compound heterozygous for F508del/R117H mutations in CFTR gene with 5T polymorphism"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_2a",
+        "subject": {
+          "reference": "Patient/CF002"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "232353008",
+              "display": "Nasal polyps"
+            }
+          ],
+          "text": "Nasal polyps"
+        },
+        "valueString": "Patient has nasal polyps"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_2b",
+        "subject": {
+          "reference": "Patient/CF002"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "40055000",
+              "display": "Chronic sinusitis"
+            }
+          ],
+          "text": "Chronic sinusitis"
+        },
+        "valueString": "Patient has chronic sinusitis"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_2c",
+        "subject": {
+          "reference": "Patient/CF002"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "8801005",
+              "display": "Sweat chloride test positive"
+            }
+          ],
+          "text": "Borderline sweat chloride levels"
+        },
+        "valueString": "Borderline sweat chloride (58 mmol/L)"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_2",
+        "medicationCodeableConcept": {
+          "text": "Kalydeco"
+        },
+        "subject": {
+          "reference": "Patient/CF002"
+        },
+        "effectiveDateTime": "2020-01-15",
+        "note": [
+          {
+            "text": "Excellent response to targeted therapy"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs_cf_2",
+        "code": {
+          "text": "FEV1 Lung Function"
+        },
+        "valueQuantity": {
+          "value": 89,
+          "unit": "%"
+        },
+        "subject": {
+          "reference": "Patient/CF002"
+        },
+        "effectiveDateTime": "2025-02-03"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diag_cf_2",
+        "code": {
+          "text": "Sweat Chloride Test"
+        },
+        "conclusion": "Borderline (58 mmol/L)",
+        "subject": {
+          "reference": "Patient/CF002"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CF003",
+        "name": [
+          {
+            "use": "official",
+            "family": "Rodriguez",
+            "given": [
+              "Michael"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "2008-11-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cf_condition_3",
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ],
+          "text": "Cystic Fibrosis"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "onsetDateTime": "2009-03-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "cf_molecular_3",
+        "patient": {
+          "reference": "Patient/CF003"
+        },
+        "type": "dna",
+        "coordinateSystem": 1,
+        "variant": [
+          {
+            "start": 117199646,
+            "end": 117199648,
+            "observedAllele": "del",
+            "referenceAllele": "CTT",
+            "gene": "CFTR",
+            "variantType": "F508del"
+          },
+          {
+            "start": 117282360,
+            "end": 117282360,
+            "observedAllele": "T",
+            "referenceAllele": "G",
+            "gene": "CFTR",
+            "variantType": "G542X"
+          }
+        ],
+        "referenceSeq": {
+          "referenceSeqString": "ATGCAGAGGTCGCCTCTGGAAAAGGCCAGCGTTGTCTCCAAACTTTTTTTCAGCTGGACCAGACCAATTTTGAGGAAAGGATACAGACAGCGCCTGGAATTGTCAGACATATACCAAATCCCTTCTGTTGATTCTGCTGACAATCTATCTGAAAAATTGGAAAGAGAATGGGATAGAGAGCTGGCTTCAAAGAAAAATCCTAAACTCATTAATGCCCTTCGGCGATGTTTTTTCTGGAGATTTATGTTCTATGGAATCTTTTTATATTTAGGGGAAGTCACCAAAGCAGTACAGCCTCTCTTACTGGGAAGAATCATAGCTTCCTATGACCCGGATAACAAGGAGGAACGCTCTATCGCGATTTATCTAGGCATAGGCTTATGCCTTCTCTTTATTGTGAGGACACTGCTCCTACACCCAGCCATTTTTGGCCTTCATCACATTGGAATGCAGATGAGAATAGCTATGTTTAGTTTGATTTATAAGAAGACTTTAAAGCTGTCAAGCCGTGTTCTAGATAAAATAAGTATTGGACAACTTGTTAGTCTCCTTTCCAACAACCTGAACAAATTTGATGAAGGACTTGCATTGGCACATTTCGTGTGGATCGCTCCTTTGCAAGTGGCACTCCTCATGGGGCTAATCTGGGAGTTGTTACAGGCGTCTGCCTTCTGTGGACTTGGTTTCCTGATAGTCCTTGCCCTTTTTCAGGCTGGGCTAGGGAGAATGATGATGAAGTACAGAGATCAGAGAGCTGGGAAGATCAGTGAAAGACTTGTGATTACCTCAGAAATGATTGAAAATATCCAATCTGTTAAGGCATACTGCTGGGAAGAAGCAATGGAAAAAATGATTGAAAACTTAAGACAAACAGAACTGAAACTGACTCGGAAGGCAGCCTATGTGAGATACTTCAATAGCTCAGCCTTCTTCTTCTCAGGGTTCTTTGTGGTGTTTTTATCTGTGCTTCCCTATGCACTAATCAAAGGAATCATCCTCCGGAAAATATTCACCACCATCTCATTCTGCATTGTTCTGCGCATGGCGGTCACTCGGCAATTTCCCTGGGCTGTACAAACATGGTATGACTCTCTTGGAGCAATAAACAAAATACAGGATTTCTTACAAAAGCAAGAATATAAGACATTGGAATATAACTTAACGACTACAGAAGTAGTGATGGAGAATGTAACAGCCTTCTGGGAGGAGGGATTTGGGGAATTATTTGAGAAAGCAAAACAAAACAATAACAATAGAAAAACTTCTAATGGTGATGACAGCCTCTTCTTCAGTAATTTCTCACTTCTTGGTACTCCTGTCCTGAAAGATATTAATTTCAAGATAGAAAGAGGACAGTTGTTGGCGGTTGCTGGATCCACTGGAACAGGCAAGACTTCACTTCTAATTGTGATTATGGGAGAACTGGAGCCTTCAGAGGGTAAAATTAAGCACAGTGTAAGAATTTCATTCTGTTCTCAGTTTTCCTGGATTATGCCTGGCACCATTAAAGAAAATATCATCTTTGGTGTTTCCTATGATGAATATAGATACAGAAGCGTCATCAAAGCATGCCAACTAGAAGAG"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_observation_3",
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "42901-3",
+              "display": "CFTR gene mutation analysis"
+            }
+          ],
+          "text": "CFTR Gene Mutation Analysis"
+        },
+        "valueString": "Patient is compound heterozygous for F508del/G542X mutations in CFTR gene with potential A455E variant"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_3a",
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "56717001",
+              "display": "Bronchiectasis"
+            }
+          ],
+          "text": "Bronchiectasis"
+        },
+        "valueString": "Patient has bronchiectasis"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_3b",
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "414581005",
+              "display": "Pancreatic insufficiency"
+            }
+          ],
+          "text": "Pancreatic insufficiency"
+        },
+        "valueString": "Patient has pancreatic insufficiency"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_3c",
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "8801005",
+              "display": "Sweat chloride test positive"
+            }
+          ],
+          "text": "Elevated sweat chloride levels"
+        },
+        "valueString": "Elevated sweat chloride (105 mmol/L)"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_3a",
+        "medicationCodeableConcept": {
+          "text": "Trikafta"
+        },
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "effectiveDateTime": "2022-09-05",
+        "note": [
+          {
+            "text": "Moderate improvement with CFTR modulator therapy"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_3b",
+        "medicationCodeableConcept": {
+          "text": "Pancreatic enzymes"
+        },
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "effectiveDateTime": "2009-04-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_3c",
+        "medicationCodeableConcept": {
+          "text": "Azithromycin"
+        },
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "effectiveDateTime": "2015-06-22"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs_cf_3",
+        "code": {
+          "text": "FEV1 Lung Function"
+        },
+        "valueQuantity": {
+          "value": 58,
+          "unit": "%"
+        },
+        "subject": {
+          "reference": "Patient/CF003"
+        },
+        "effectiveDateTime": "2025-01-20"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diag_cf_3",
+        "code": {
+          "text": "Sweat Chloride Test"
+        },
+        "conclusion": "Elevated (105 mmol/L)",
+        "subject": {
+          "reference": "Patient/CF003"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CF004",
+        "name": [
+          {
+            "use": "official",
+            "family": "Chen",
+            "given": [
+              "Sophia"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "2020-04-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cf_condition_4",
+        "subject": {
+          "reference": "Patient/CF004"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ],
+          "text": "Cystic Fibrosis"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "onsetDateTime": "2020-05-01"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "cf_molecular_4",
+        "patient": {
+          "reference": "Patient/CF004"
+        },
+        "type": "dna",
+        "coordinateSystem": 1,
+        "variant": [
+          {
+            "start": 117199646,
+            "end": 117199648,
+            "observedAllele": "del",
+            "referenceAllele": "CTT",
+            "gene": "CFTR",
+            "variantType": "F508del"
+          },
+          {
+            "start": 0,
+            "end": 0,
+            "observedAllele": "unknown",
+            "referenceAllele": "unknown",
+            "gene": "CFTR",
+            "variantType": "unknown"
+          }
+        ],
+        "referenceSeq": {
+          "referenceSeqString": "ATGCAGAGGTCGCCTCTGGAAAAGGCCAGCGTTGTCTCCAAACTTTTTTTCAGCTGGACCAGACCAATTTTGAGGAAAGGATACAGACAGCGCCTGGAATTGTCAGACATATACCAAATCCCTTCTGTTGATTCTGCTGACAATCTATCTGAAAAATTGGAAAGAGAATGGGATAGAGAGCTGGCTTCAAAGAAAAATCCTAAACTCATTAATGCCCTTCGGCGATGTTTTTTCTGGAGATTTATGTTCTATGGAATCTTTTTATATTTAGGGGAAGTCACCAAAGCAGTACAGCCTCTCTTACTGGGAAGAATCATAGCTTCCTATGACCCGGATAACAAGGAGGAACGCTCTATCGCGATTTATCTAGGCATAGGCTTATGCCTTCTCTTTATTGTGAGGACACTGCTCCTACACCCAGCCATTTTTGGCCTTCATCACATTGGAATGCAGATGAGAATAGCTATGTTTAGTTTGATTTATAAGAAGACTTTAAAGCTGTCAAGCCGTGTTCTAGATAAAATAAGTATTGGACAACTTGTTAGTCTCCTTTCCAACAACCTGAACAAATTTGATGAAGGACTTGCATTGGCACATTTCGTGTGGATCGCTCCTTTGCAAGTGGCACTCCTCATGGGGCTAATCTGGGAGTTGTTACAGGCGTCTGCCTTCTGTGGACTTGGTTTCCTGATAGTCCTTGCCCTTTTTCAGGCTGGGCTAGGGAGAATGATGATGAAGTACAGAGATCAGAGAGCTGGGAAGATCAGTGAAAGACTTGTGATTACCTCAGAAATGATTGAAAATATCCAATCTGTTAAGGCATACTGCTGGGAAGAAGCAATGGAAAAAATGATTGAAAACTTAAGACAAACAGAACTGAAACTGACTCGGAAGGCAGCCTATGTGAGATACTTCAATAGCTCAGCCTTCTTCTTCTCAGGGTTCTTTGTGGTGTTTTTATCTGTGCTTCCCTATGCACTAATCAAAGGAATCATCCTCCGGAAAATATTCACCACCATCTCATTCTGCATTGTTCTGCGCATGGCGGTCACTCGGCAATTTCCCTGGGCTGTACAAACATGGTATGACTCTCTTGGAGCAATAAACAAAATACAGGATTTCTTACAAAAGCAAGAATATAAGACATTGGAATATAACTTAACGACTACAGAAGTAGTATGGAGAATGTAACAGCCTTCTGGGAGGAGGGATTTGGGGAATTATTTGAGAAAGCAAAACAAAACAATAACAATAGAAAAACTTCTAATGGTGATGACAGCCTCTTCTTCAGTAATTTCTCACTTCTTGGTACTCCTGTCCTGAAAGATATTAATTTCAAGATAGAAAGAGGACAGTTGTTGGCGGTTGCTGGATCCACTGGAGCAGGCAAGACTTCACTTCTAATGGTGATAATGGGAGAACTGGAGCCTTCAGAGGGTAAAATTAAGCACAGTGGAAGAATTTCATTCTGTTCTCAGTTTTCCTGGATATGCCTGGCACCATTAAAGAAAATATCATCTTTGGTGTTTCCTATGATGAATATAGATACAGAAGCGTCATCAAAGCATGCCAACTAGAAGAG"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_observation_4",
+        "subject": {
+          "reference": "Patient/CF004"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "42901-3",
+              "display": "CFTR gene mutation analysis"
+            }
+          ],
+          "text": "CFTR Gene Mutation Analysis"
+        },
+        "valueString": "Patient is heterozygous for F508del with an unknown second variant"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_4a",
+        "subject": {
+          "reference": "Patient/CF004"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "51118003",
+              "display": "Meconium ileus"
+            }
+          ],
+          "text": "Meconium ileus at birth"
+        },
+        "valueString": "Patient had meconium ileus at birth"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_4b",
+        "subject": {
+          "reference": "Patient/CF004"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "237834000",
+              "display": "Failure to thrive"
+            }
+          ],
+          "text": "Failure to thrive"
+        },
+        "valueString": "Patient shows failure to thrive"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_4c",
+        "subject": {
+          "reference": "Patient/CF004"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "8801005",
+              "display": "Sweat chloride test positive"
+            }
+          ],
+          "text": "Elevated sweat chloride levels"
+        },
+        "valueString": "Elevated sweat chloride (94 mmol/L)"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_4a",
+        "medicationCodeableConcept": {
+          "text": "Pancreatic enzymes"
+        },
+        "subject": {
+          "reference": "Patient/CF004"
+        },
+        "effectiveDateTime": "2020-05-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_4b",
+        "medicationCodeableConcept": {
+          "text": "Trikafta"
+        },
+        "subject": {
+          "reference": "Patient/CF004"
+        },
+        "effectiveDateTime": "2023-11-01",
+        "note": [
+          {
+            "text": "Showing improvement in weight gain since starting modulator therapy"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diag_cf_4",
+        "code": {
+          "text": "Sweat Chloride Test"
+        },
+        "conclusion": "Elevated (94 mmol/L)",
+        "subject": {
+          "reference": "Patient/CF004"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CF005",
+        "name": [
+          {
+            "use": "official",
+            "family": "Williams",
+            "given": [
+              "Olivia"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "2000-01-05"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cf_condition_5",
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "190905008",
+              "display": "Cystic fibrosis"
+            }
+          ],
+          "text": "Cystic Fibrosis"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "onsetDateTime": "2000-09-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "cf_molecular_5",
+        "patient": {
+          "reference": "Patient/CF005"
+        },
+        "type": "dna",
+        "coordinateSystem": 1,
+        "variant": [
+          {
+            "start": 117277162,
+            "end": 117277162,
+            "observedAllele": "A",
+            "referenceAllele": "G",
+            "gene": "CFTR",
+            "variantType": "G551D"
+          },
+          {
+            "start": 117310264,
+            "end": 117310264,
+            "observedAllele": "G",
+            "referenceAllele": "A",
+            "gene": "CFTR",
+            "variantType": "W1282X"
+          }
+        ],
+        "referenceSeq": {
+          "referenceSeqString": "ATGCAGAGGTCGCCTCTGGAAAAGGCCAGCGTTGTCTCCAAACTTTTTTTCAGCTGGACCAGACCAATTTTGAGGAAAGGATACAGACAGCGCCTGGAATTGTCAGACATATACCAAATCCCTTCTGTTGATTCTGCTGACAATCTATCTGAAAAATTGGAAAGAGAATGGGATAGAGAGCTGGCTTCAAAGAAAAATCCTAAACTCATTAATGCCCTTCGGCGATGTTTTTTCTGGAGATTTATGTTCTATGGAATCTTTTTATATTTAGGGGAAGTCACCAAAGCAGTACAGCCTCTCTTACTGGGAAGAATCATAGCTTCCTATGACCCGGATAACAAGGAGGAACGCTCTATCGCGATTTATCTAGGCATAGGCTTATGCCTTCTCTTTATTGTGAGGACACTGCTCCTACACCCAGCCATTTTTGGCCTTCATCACATTGGAATGCAGATGAGAATAGCTATGTTTAGTTTGATTTATAAGAAGACTTTAAAGCTGTCAAGCCGTGTTCTAGATAAAATAAGTATTGGACAACTTGTTAGTCTCCTTTCCAACAACCTGAACAAATTTGATGAAGGACTTGCATTGGCACATTTCGTGTGGATCGCTCCTTTGCAAGTGGCACTCCTCATGGGGCTAATCTGGGAGTTGTTACAGGCGTCTGCCTTCTGTGGACTTGGTTTCCTGATAGTCCTTGCCCTTTTTCAGGCTGGGCTAGGGAGAATGATGATGAAGTACAGAGATCAGAGAGCTGGGAAGATCAGTGAAAGACTTGTGATTACCTCAGAAATGATTGAAAATATCCAATCTGTTAAGGCATACTGCTGGGAAGAAGCAATGGAAAAAATGATTGAAAACTTAAGACAAACAGAACTGAAACTGACTCGGAAGGCAGCCTATGTGAGATACTTCAATAGCTCAGCCTTCTTCTTCTCAGGGTTCTTTGTGGTGTTTTTATCTGTGCTTCCCTATGCACTAATCAAAGGAATCATCCTCCGGAAAATATTCACCACCATCTCATTCTGCATTGTTCTGCGCATGGCGGTCACTCGGCAATTTCTCTGGGCTGTACAAACATGGTATGACTCTCTTGGAGCAATAAACAAAATACAGGATTTCTTACAAAAGCAAGAATATAAGACATTGGAATATAACTTAACGACTACAGAAGTAGTGATGGAGAATGTAACAGCCTTCTGGGAGGAGGGATTTGGGGAATTATTTGAGAAAGCAAAACAAAACAATAACAATAGAAAAACTTCTAATGGTGATGACAGCCTCTTCTTCAGTAATTTCTCACTTCTTGGTACTCCTGTCCTGAAAGATATTAATTTCAAGATAGAAAGAGGACAGTTGTTGGCGGTTGCTGGATCCACTGGAGCAGGCAAGACTTCACTTCTAATGGTGATTATGGGAGAACTGGAGCCTTCAGAGGGTAAAATTAAGCACAGTGGAAGAATTTCATTCTGTTCTCAATTTTCCTGGATTATGCCTGGCACCATTAAAGAAAATATCATCTTTGGTGTTTCCTATGATGAATATAGATACAGAAGCGTCATCAAAGCATGCCAACTAGAAGAGGACATCTCCAAGTTTGCAGAGAAAGACAATATAATTCTTGGAGAAGGTGGAATCACACTGAGTGGAGGTCAACGAG"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_observation_5",
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "42901-3",
+              "display": "CFTR gene mutation analysis"
+            }
+          ],
+          "text": "CFTR Gene Mutation Analysis"
+        },
+        "valueString": "Patient is compound heterozygous for G551D/W1282X mutations in CFTR gene with potential R334W variant"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_5a",
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "56717001",
+              "display": "Bronchiectasis"
+            }
+          ],
+          "text": "Severe bronchiectasis"
+        },
+        "valueString": "Patient has severe bronchiectasis"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_5b",
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "41661001",
+              "display": "Pulmonary exacerbation"
+            }
+          ],
+          "text": "Recurring pulmonary exacerbations"
+        },
+        "valueString": "Patient has recurring pulmonary exacerbations"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_5c",
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "195983005",
+              "display": "Allergic bronchopulmonary aspergillosis"
+            }
+          ],
+          "text": "Allergic bronchopulmonary aspergillosis"
+        },
+        "valueString": "Patient has allergic bronchopulmonary aspergillosis"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "cf_symptoms_5d",
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "8801005",
+              "display": "Sweat chloride test positive"
+            }
+          ],
+          "text": "Elevated sweat chloride levels"
+        },
+        "valueString": "Elevated sweat chloride (112 mmol/L)"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_5a",
+        "medicationCodeableConcept": {
+          "text": "Kalydeco"
+        },
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "effectiveDateTime": "2015-03-22"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_5b",
+        "medicationCodeableConcept": {
+          "text": "Pancreatic enzymes"
+        },
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "effectiveDateTime": "2000-10-05"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_5c",
+        "medicationCodeableConcept": {
+          "text": "Azithromycin"
+        },
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "effectiveDateTime": "2010-08-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "med_cf_5d",
+        "medicationCodeableConcept": {
+          "text": "Tobramycin (inhaled)"
+        },
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "effectiveDateTime": "2018-06-30",
+        "note": [
+          {
+            "text": "Significant improvement with CFTR modulator therapy, but continued pulmonary exacerbations"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs_cf_5",
+        "code": {
+          "text": "FEV1 Lung Function"
+        },
+        "valueQuantity": {
+          "value": 42,
+          "unit": "%"
+        },
+        "subject": {
+          "reference": "Patient/CF005"
+        },
+        "effectiveDateTime": "2025-02-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diag_cf_5",
+        "code": {
+          "text": "Sweat Chloride Test"
+        },
+        "conclusion": "Elevated (112 mmol/L)",
+        "subject": {
+          "reference": "Patient/CF005"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CF006",
+        "name": [
+          {
+            "use": "official",
+            "family": "Anderson",
+            "given": [
+              "Sarah"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "2012-09-18"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MolecularSequence",
+        "id": "cf_molecular_6",
+        "patient": {
+          "reference": "Patient/CF006"
+        },
+        "type": "dna",
+        "coordinateSystem": 1,
+        "variant": [
+          {
+            "start": 117199646,
+            "end": 117199648,
+            "observedAllele": "del",
+            "referenceAllele": "CTT",
+            "gene": "CFTR",
+            "variantType": "F508del"
+          },
+          {
+            "start": 117227858,
+            "end": 117227858,
+            "observedAllele": "T",
+            "referenceAllele": "G",
+            "gene": "CFTR",
+            "variantType": "R117H"
+          }
+        ],
+        "referenceSeq": {
+          "referenceSeqString": "ATGCAGAGGTCGCCTCTGGAAAAGGCCAGCGTTGTCTCCAAACTTTTTTTCAGCTGGACCAGACCAATTTTGAGGAAAGGATACAGACAGCGCCTGGAATTGTCAGACATATACCAAATCCCTTCTGTTGATTCTGCTGACAATCTATCTGAAAAATTGGAAAGAGAATGGGATAGAGAGCTGGCTTCAAAGAAAAATCCTAAACTCATTAATGCCCTTCGGCGATGTTTTTTCTGGAGATTTATGTTCTATGGAATCTTTTTATATTTAGGGGAAGTCACCAAAGCAGTACAGCCTCTCTTACTGGGAAGAATCATAGCTTCCTATGACCCGGATAACAAGGAGGAACGCTCTATCGCGATTTATCTAGGCATAGGC"
+        }
+      }
+    }
+  ]
+}
