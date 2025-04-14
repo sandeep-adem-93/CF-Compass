@@ -1,5 +1,7 @@
 // src/services/patientService.js
 import axios from 'axios';
+import path from 'path';
+import fs from 'fs/promises';
 
 // const API_URL = 'http://localhost:5000/api';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -148,3 +150,23 @@ export default {
   calculateAge,
   deletePatient
 };
+
+// At the start of your route handler
+const initializeDataFile = async () => {
+  const dataPath = path.join(__dirname, '../data/patients_FHIR.json');
+  try {
+    await fs.access(dataPath);
+  } catch {
+    // File doesn't exist, create it with initial structure
+    const initialData = {
+      resourceType: "Bundle",
+      type: "collection",
+      entry: []
+    };
+    await fs.mkdir(path.dirname(dataPath), { recursive: true });
+    await fs.writeFile(dataPath, JSON.stringify(initialData, null, 2));
+  }
+};
+
+// Call this when your server starts
+initializeDataFile();
