@@ -173,11 +173,11 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
   const fetchPatientDetails = async (patientId) => {
     setLoading(true);
     try {
-      // Find the patient in our already loaded patients
-      const patient = patients.find(p => p.id === patientId);
+      // Get full patient details from the backend
+      const patientDetails = await getPatientById(patientId);
       
-      if (patient) {
-        setCurrentPatient(patient);
+      if (patientDetails) {
+        setCurrentPatient(patientDetails);
         setError(null); // Clear any previous errors
       } else {
         // If not found and we have other patients, redirect to the first one
