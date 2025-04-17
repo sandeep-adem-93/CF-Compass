@@ -8,9 +8,9 @@ const router = express.Router(); // This line is missing in your code
 router.post('/upload', async (req, res) => {
   try {
     // Validate input
-    const inputData = req.body;
+    const { patientData, apiKey, modelProvider } = req.body;
     
-    if (!inputData || !Object.keys(inputData).length) {
+    if (!patientData || !Object.keys(patientData).length) {
       return res.status(400).json({ error: 'No patient data provided' });
     }
     
@@ -21,12 +21,12 @@ router.post('/upload', async (req, res) => {
     // Handle both single resource and bundle formats
     let entriesToAdd = [];
     
-    if (inputData.resourceType === 'Bundle' && Array.isArray(inputData.entry)) {
+    if (patientData.resourceType === 'Bundle' && Array.isArray(patientData.entry)) {
       // Bundle format
-      entriesToAdd = inputData.entry;
-    } else if (inputData.resourceType) {
+      entriesToAdd = patientData.entry;
+    } else if (patientData.resourceType) {
       // Single resource format
-      entriesToAdd = [{ resource: inputData }];
+      entriesToAdd = [{ resource: patientData }];
     } else {
       return res.status(400).json({ 
         error: 'Invalid FHIR format. Data must be a FHIR resource or Bundle'
