@@ -6,7 +6,8 @@ import DeleteConfirmDialog from '../components/DeleteConfirmDialog';
 import { getPatients, deletePatient } from '../services/patientService';
 import './Dashboard.css';
 
-function Dashboard({ patients, onPatientsUpdate }) {
+function Dashboard() {
+  const [patients, setPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,10 +15,21 @@ function Dashboard({ patients, onPatientsUpdate }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (patients) {
+    fetchPatients();
+  }, []);
+
+  const fetchPatients = async () => {
+    setLoading(true);
+    try {
+      const data = await getPatients();
+      setPatients(data);
+    } catch (err) {
+      console.error('Error fetching patients:', err);
+      setError('Failed to load patients. Please try again later.');
+    } finally {
       setLoading(false);
     }
-  }, [patients]);
+  };
 
   const filteredPatients = patients.filter(patient => 
     patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -34,9 +46,7 @@ function Dashboard({ patients, onPatientsUpdate }) {
       setPatientToDelete(null); // Close the dialog
       
       // Refresh the patient list
-      if (onPatientsUpdate) {
-        await onPatientsUpdate();
-      }
+      fetchPatients();
     } catch (error) {
       console.error('Error deleting patient:', error);
       setError(`Failed to delete patient: ${error.message}`);

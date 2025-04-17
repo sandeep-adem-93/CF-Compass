@@ -176,4 +176,99 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Get a specific patient by id
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Read the current data
+    const fileContent = await fs.readFile(
+      path.join(__dirname, '../data/patients_FHIR.json'),
+      'utf8'
+    );
+    const patientsData = JSON.parse(fileContent);
+    
+    // Find the patient
+    const patientEntry = patientsData.entry.find(
+      entry => entry.resource.resourceType === 'Patient' && entry.resource.id === id
+    );
+    
+    if (!patientEntry) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+    
+    const patient = patientEntry.resource;
+    
+    // Find related resources
+    const molecularSequences = patientsData.entry
+      .filter(e => 
+        e.resource.resourceType === 'MolecularSequence' && 
+        e.resource.patient?.reference === `Patient/${id}`
+      );
+    
+    const observations = patientsData.entry
+      .filter(e => 
+        e.resource.resourceType === 'Observation' && 
+        e.resource.subject?.reference === `Patient/${id}`
+      );
+    
+    const conditions = patientsData.entry
+      .filter(e => 
+        e.resource.resourceType === 'Condition' && 
+        e.resource.subject?.reference === `Patient/${id}`
+      );
+    
+    const medications = patientsData.entry
+      .filter(e => 
+        e.resource.resourceType === 'MedicationStatement' && 
+        e.resource.subject?.reference === `Patient/${id}`
+      );
+    
+    // Extract variants from MolecularSequence resources
+    const variants = molecularSequences.flatMap(ms => 
+      ms.resource.variant?.map(v => v.variantType) || []
+    );
+    
+    // Extract clinical observations
+    const clinicalObservations = observations.map(obs => ({
+      type: obs.resource.code?.text || 'Unknown',
+      value: obs.resource.valueString || obs.resource.valueQuantity?.value + obs.resource.valueQuantity?.unit || 'Unknown'
+    }));
+    
+    // Extract conditions
+    const patientConditions = conditions.map(cond => ({
+      type: cond.resource.code?.text || 'Unknown',
+      status: cond.resource.clinicalStatus?.coding?.[0]?.code || 'Unknown',
+      onset: cond.resource.onsetDateTime || 'Unknown'
+    }));
+    
+    // Extract medications
+    const patientMedications = medications.map(med => ({
+      name: med.resource.medicationCodeableConcept?.text || 'Unknown',
+      startDate: med.resource.effectiveDateTime || 'Unknown',
+      notes: med.resource.note?.[0]?.text || 'None'
+    }));
+    
+    // Prepare response
+    const response = {
+      id: patient.id,
+      name: patient.name && patient.name[0] ? 
+            `${patient.name[0].given?.[0] || ''} ${patient.name[0].family || ''}`.trim() : 
+            'Unknown',
+      dob: patient.birthDate || 'Unknown',
+      gender: patient.gender || 'Unknown',
+      variants: variants.length > 0 ? variants : ['Unknown'],
+      clinicalObservations,
+      conditions: patientConditions,
+      medications: patientMedications,
+      status: 'Active'
+    };
+    
+    res.json(response);
+  } catch (error) {
+    console.error('Error fetching patient:', error);
+    res.status(500).json({ error: 'Failed to retrieve patient' });
+  }
+});
+
 module.exports = router; // This line is also important
