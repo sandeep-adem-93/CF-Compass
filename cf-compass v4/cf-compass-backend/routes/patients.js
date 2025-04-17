@@ -129,4 +129,51 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Delete a patient
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Read the current data
+    const fileContent = await fs.readFile(
+      path.join(__dirname, '../data/patients_FHIR.json'),
+      'utf8'
+    );
+    const patientsData = JSON.parse(fileContent);
+    
+    // Find and remove the patient and all related resources
+    const patientEntry = patientsData.entry.find(
+      entry => entry.resource.resourceType === 'Patient' && entry.resource.id === id
+    );
+    
+    if (!patientEntry) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+    
+    // Remove the patient and all related resources
+    patientsData.entry = patientsData.entry.filter(entry => {
+      if (entry.resource.resourceType === 'Patient' && entry.resource.id === id) {
+        return false;
+      }
+      // Remove related resources (like MolecularSequence)
+      if (entry.resource.patient?.reference === `Patient/${id}`) {
+        return false;
+      }
+      return true;
+    });
+    
+    // Save the updated data
+    await fs.writeFile(
+      path.join(__dirname, '../data/patients_FHIR.json'),
+      JSON.stringify(patientsData, null, 2),
+      'utf8'
+    );
+    
+    res.json({ success: true, message: 'Patient deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting patient:', error);
+    res.status(500).json({ error: 'Failed to delete patient' });
+  }
+});
+
 module.exports = router; // This line is also important
