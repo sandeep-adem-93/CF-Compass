@@ -224,7 +224,7 @@ function extractFhirBundleToParagraph(bundle) {
         throw new Error('Valid model provider is required');
       }
       
-      // Extract patient information
+      // Extract patient information from the FHIR Bundle
       const patientResource = jsonData.entry?.find(e => e.resource?.resourceType === 'Patient')?.resource;
       if (!patientResource) {
         throw new Error('No patient resource found in FHIR Bundle');
@@ -285,6 +285,7 @@ function extractFhirBundleToParagraph(bundle) {
         id: patient.id,
         name: patient.name,
         gender: patient.gender,
+        birthDate: patient.birthDate,
         variantsCount: patient.variants.length,
         clinicalDetailsCount: patient.clinicalDetails.length
       });
