@@ -287,6 +287,7 @@ app.post('/api/patients/upload', async (req, res) => {
       patientDataKeys: Object.keys(patientData)
     });
 
+    // First process the FHIR data
     const processedData = await processFhirJsonFile(patientData, apiKey.trim(), modelProvider.trim());
     console.log('Processed patient data:', {
       id: processedData.id,
@@ -295,8 +296,24 @@ app.post('/api/patients/upload', async (req, res) => {
       variantsCount: processedData.variants?.length
     });
 
+    // Then analyze with the LLM
+    console.log('Starting LLM analysis with:', modelProvider);
+    const analysis = await analyzeWithMultipleProviders(patientData, apiKey.trim(), modelProvider.trim());
+    console.log('LLM analysis completed:', {
+      hasGeneticSummary: !!analysis.geneticSummary,
+      hasClinicalDetails: !!analysis.clinicalDetails
+    });
+
+    // Combine the processed data with the LLM analysis
+    const finalPatientData = {
+      ...processedData,
+      geneticSummary: analysis.geneticSummary,
+      clinicalDetails: analysis.clinicalDetails,
+      analysisProvider: modelProvider
+    };
+
     // Save to MongoDB
-    const patient = new Patient(processedData);
+    const patient = new Patient(finalPatientData);
     await patient.save();
     console.log('Patient saved to database:', patient.id);
 
