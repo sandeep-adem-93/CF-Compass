@@ -13,15 +13,35 @@ async function initializeDatabase() {
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cf-compass';
     console.log('Connecting to MongoDB for initialization...');
     
-    await mongoose.connect(mongoURI);
+    const mongooseOptions = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      keepAlive: true,
+      keepAliveInitialDelay: 300000,
+      retryWrites: true,
+      w: 'majority',
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    };
+
+    await mongoose.connect(mongoURI, mongooseOptions);
     console.log('MongoDB connected for initialization');
     
-    // Check if database is empty
+    // Check if database is empty or has fewer patients than expected
     const count = await Patient.countDocuments({});
     console.log(`Current patient count in database: ${count}`);
     
-    if (count === 0) {
-      console.log('Database is empty, populating with sample data...');
+    const expectedPatientCount = patientData.length;
+    console.log(`Expected patient count: ${expectedPatientCount}`);
+    
+    if (count === 0 || count < expectedPatientCount) {
+      console.log('Database needs initialization...');
+      
+      // Clear existing data if any
+      if (count > 0) {
+        console.log('Clearing existing patient data...');
+        await Patient.deleteMany({});
+      }
       
       // Format patients for MongoDB
       const formattedPatients = patientData.map(patient => ({

@@ -17,12 +17,20 @@ const PORT = process.env.PORT || 5000;
 
 // MongoDB connection options
 const mongooseOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
-  maxPoolSize: 50
+  keepAlive: true,
+  keepAliveInitialDelay: 300000,
+  maxPoolSize: 50,
+  retryWrites: true,
+  w: 'majority',
+  family: 4
 };
 
 let isConnecting = false;
+let connectionRetryTimeout;
 
 // Connect to MongoDB and initialize database
 const connectWithRetry = async () => {
@@ -33,6 +41,7 @@ const connectWithRetry = async () => {
 
   try {
     isConnecting = true;
+    clearTimeout(connectionRetryTimeout);
 
     if (mongoose.connection.readyState === 1) {
       console.log('MongoDB already connected');
@@ -40,24 +49,27 @@ const connectWithRetry = async () => {
       return;
     }
 
-    // Close any existing connection
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.connection.close();
-    }
-
+    console.log('Attempting to connect to MongoDB...');
     await mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
     console.log('MongoDB connected successfully');
     
     // Initialize database with sample data if empty
-    try {
-      await initializeDatabase();
-    } catch (error) {
-      console.error('Error during database initialization:', error);
+    const patientCount = await Patient.countDocuments({});
+    if (patientCount === 0) {
+      console.log('Database is empty, initializing with sample data...');
+      try {
+        await initializeDatabase();
+        console.log('Database initialized successfully');
+      } catch (error) {
+        console.error('Error during database initialization:', error);
+      }
+    } else {
+      console.log(`Database contains ${patientCount} patients, skipping initialization`);
     }
   } catch (err) {
     console.error('MongoDB connection error:', err);
-    console.log('Retrying connection in 5 seconds...');
-    setTimeout(connectWithRetry, 5000);
+    isConnecting = false;
+    connectionRetryTimeout = setTimeout(connectWithRetry, 5000);
   } finally {
     isConnecting = false;
   }
@@ -65,12 +77,22 @@ const connectWithRetry = async () => {
 
 // Handle MongoDB connection events
 mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected. Attempting to reconnect...');
-  connectWithRetry();
+  console.log('MongoDB disconnected');
+  if (!isConnecting) {
+    connectionRetryTimeout = setTimeout(connectWithRetry, 5000);
+  }
 });
 
 mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
+  if (!isConnecting) {
+    connectionRetryTimeout = setTimeout(connectWithRetry, 5000);
+  }
+});
+
+mongoose.connection.on('connected', () => {
+  console.log('MongoDB connected');
+  clearTimeout(connectionRetryTimeout);
 });
 
 // Initial connection
