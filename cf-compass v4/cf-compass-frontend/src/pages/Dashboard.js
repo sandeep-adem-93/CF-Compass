@@ -31,10 +31,13 @@ function Dashboard() {
     }
   };
 
-  const filteredPatients = patients.filter(patient => 
-    patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (patient.id && patient.id.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredPatients = patients.filter(patient => {
+    if (!patient) return false;
+    const name = patient.name || '';
+    const id = patient.id || '';
+    return name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           id.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const handlePatientClick = (patient) => {
     navigate(`/patient/${patient.id}`);
