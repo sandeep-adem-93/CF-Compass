@@ -234,10 +234,19 @@ function extractFhirBundleToParagraph(bundle) {
       let formattedName = 'Unknown';
       if (patientResource.name && patientResource.name.length > 0) {
         const nameObj = patientResource.name[0];
+        // Try different name formats
         if (nameObj.given && nameObj.family) {
+          // Format: given + family
           formattedName = `${nameObj.given[0]} ${nameObj.family}`;
         } else if (nameObj.text) {
+          // Format: text field
           formattedName = nameObj.text;
+        } else if (nameObj.given) {
+          // Format: only given name
+          formattedName = nameObj.given[0];
+        } else if (nameObj.family) {
+          // Format: only family name
+          formattedName = nameObj.family;
         }
       }
       
