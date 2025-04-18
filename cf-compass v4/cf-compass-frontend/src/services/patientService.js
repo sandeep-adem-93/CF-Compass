@@ -2,13 +2,13 @@
 import axios from 'axios';
 
 // const API_URL = 'http://localhost:5000/api';
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 // Get all patients
 export const getPatients = async () => {
   try {
-    console.log('Fetching patients from:', `${API_URL}/patients`);
-    const response = await axios.get(`${API_URL}/patients`);
+    console.log('Fetching patients from:', `${API_URL}/api/patients`);
+    const response = await axios.get(`${API_URL}/api/patients`);
     return response.data;
   } catch (error) {
     console.error('Error fetching patients:', error);
