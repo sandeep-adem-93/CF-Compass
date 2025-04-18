@@ -7,19 +7,15 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 // Get all patients
 export const getPatients = async () => {
   try {
-    console.log('Fetching patients from:', `${API_URL}/api/patients`);
-    const response = await axios.get(`${API_URL}/api/patients`);
-    return response.data;
+    const url = `${API_URL.replace(/\/+$/, '')}/api/patients`;
+    console.log('Fetching patients from:', url);
+    const response = await fetch(url);
+    console.log('Response status:', response.status);
+    const data = await response.json();
+    console.log('API response data:', data);
+    return data;
   } catch (error) {
-    console.error('Error fetching patients:', error);
-    if (error.response) {
-      console.error('Server responded with status:', error.response.status);
-      console.error('Response data:', error.response.data);
-    } else if (error.request) {
-      console.error('No response received:', error.request);
-    } else {
-      console.error('Error setting up request:', error.message);
-    }
+    console.error('Error in getPatients:', error);
     throw error;
   }
 };

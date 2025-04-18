@@ -19,13 +19,34 @@ function Dashboard() {
   }, []);
 
   const fetchPatients = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const data = await getPatients();
-      setPatients(data);
-    } catch (err) {
-      console.error('Error fetching patients:', err);
-      setError('Failed to load patients. Please try again later.');
+      console.log('Raw patient data received:', data);
+      console.log('Data type:', typeof data);
+      console.log('Is array:', Array.isArray(data));
+      console.log('Number of patients:', data?.length);
+      
+      if (!data || !Array.isArray(data)) {
+        console.warn('Invalid data received:', data);
+        setPatients([]);
+        return;
+      }
+
+      const validPatients = data.filter(patient => {
+        const isValid = patient && typeof patient === 'object';
+        if (!isValid) {
+          console.warn('Invalid patient object:', patient);
+        }
+        return isValid;
+      });
+
+      console.log('Valid patients:', validPatients.length);
+      console.log('First valid patient:', validPatients[0]);
+      setPatients(validPatients);
+    } catch (error) {
+      console.error('Error fetching patients:', error);
+      setError('Failed to load patients');
     } finally {
       setLoading(false);
     }

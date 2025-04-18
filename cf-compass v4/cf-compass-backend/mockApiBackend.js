@@ -49,7 +49,15 @@ app.get('/api/health', (req, res) => {
 // Get all patients
 app.get('/api/patients', async (req, res) => {
   try {
+    console.log('Fetching patients from MongoDB...');
     const patients = await Patient.find({});
+    console.log(`Found ${patients.length} patients in database`);
+    console.log('First patient sample:', patients[0] ? {
+      id: patients[0].id,
+      name: patients[0].name,
+      dob: patients[0].dob,
+      gender: patients[0].gender
+    } : 'No patients found');
     res.json(patients);
   } catch (error) {
     console.error('Error fetching patients:', error);
