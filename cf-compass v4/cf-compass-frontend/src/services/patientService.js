@@ -32,73 +32,61 @@ export const getPatientById = async (id) => {
 };
 
 // Upload and analyze patient data
-export const uploadPatientData = async (data) => {
+export const uploadPatientData = async (patientData, apiKey, modelProvider) => {
   try {
     console.log('=== PATIENT SERVICE: uploadPatientData called ===');
-    console.log('Uploading patient data to:', `${API_URL}/patients/upload`);
+    const url = `${API_URL.replace(/\/+$/, '')}/api/patients/upload`;
+    console.log('Uploading patient data to:', url);
     
-    // Check if we received both required parameters
-    if (!data) {
-      console.error('No data provided to uploadPatientData');
-      throw new Error('No upload data provided');
-    }
-    
-    // Add more detailed logging
-    console.log('API Key provided:', data.apiKey ? 'Yes (length: ' + data.apiKey.length + ')' : 'No');
-    console.log('Model provider:', data.modelProvider || 'gemini (default)');
-    console.log('Patient data provided:', data.patientData ? 'Yes (type: ' + typeof data.patientData + ')' : 'No');
-    
-    // Validate required fields
-    if (!data.patientData) {
-      console.error('Patient data is missing from request');
+    // Validate inputs
+    if (!patientData) {
       throw new Error('Patient data is required');
     }
-    
-    if (!data.apiKey) {
-      console.error('API key is missing from request');
+    if (!apiKey) {
       throw new Error('API key is required');
     }
-    
-    // Create a clean payload with only what we need
+    if (!modelProvider) {
+      throw new Error('Model provider is required');
+    }
+
+    console.log('API Key provided:', !!apiKey, '(length:', apiKey.length, ')');
+    console.log('Model provider:', modelProvider);
+    console.log('Patient data provided:', !!patientData, '(type:', typeof patientData, ')');
+
+    // Prepare the request payload
     const payload = {
-      patientData: data.patientData,
-      apiKey: data.apiKey.trim(), // Trim whitespace
-      modelProvider: data.modelProvider || 'gemini' // Default to gemini if not specified
+      patientData,
+      apiKey,
+      modelProvider
     };
-    
+
+    // Log the structure of the payload (without sensitive data)
     console.log('Request payload structure:', {
-      hasPatientData: !!payload.patientData,
-      patientDataType: typeof payload.patientData,
-      resourceType: typeof payload.patientData === 'object' ? payload.patientData?.resourceType : 'unknown',
-      hasApiKey: !!payload.apiKey,
-      apiKeyLength: payload.apiKey.length,
-      modelProvider: payload.modelProvider
+      hasPatientData: !!patientData,
+      patientDataType: typeof patientData,
+      resourceType: patientData.resourceType,
+      hasApiKey: !!apiKey,
+      apiKeyLength: apiKey.length,
+      modelProvider: modelProvider
     });
-    
-    // Set a reasonable timeout
-    const response = await axios.post(`${API_URL}/patients/upload`, payload, {
-      timeout: 60000, // 60 second timeout (AI models can take time)
+
+    // Make the API request
+    console.log('Making request to:', url);
+    const response = await axios.post(url, payload, {
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    
-    console.log('Response received from server:', {
-      status: response.status,
-      hasData: !!response.data,
-      success: response.data?.success,
-      aiProvider: response.data?.aiProvider || 'unknown'
-    });
-    
+
+    console.log('Response status:', response.status);
     return response.data;
   } catch (error) {
     console.error('Error uploading patient data:', error);
     if (error.response) {
       console.error('Response status:', error.response.status);
       console.error('Error details:', error.response.data);
-      throw new Error(error.response.data.error || 'Failed to upload patient data');
     }
-    throw error;
+    throw new Error('Failed to upload patient data');
   }
 };
 

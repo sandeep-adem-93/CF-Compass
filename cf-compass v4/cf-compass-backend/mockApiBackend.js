@@ -170,138 +170,49 @@ app.delete('/api/patients/:id', async (req, res) => {
 // Upload a new patient (from FHIR format) and analyze with AI
 app.post('/api/patients/upload', async (req, res) => {
   try {
-    console.log('Received /api/patients/upload request');
-    
-    if (!req.body) {
-      return res.status(400).json({ error: 'Request body is empty' });
-    }
-    
-    const { patientData: rawPatientData, apiKey, modelProvider = 'gemini' } = req.body;
-    
-    if (!apiKey) {
-      return res.status(400).json({ error: 'API key is required' });
-    }
-    
-    if (!rawPatientData) {
+    console.log('=== Patient Upload Request ===');
+    console.log('Request body:', {
+      hasPatientData: !!req.body.patientData,
+      hasApiKey: !!req.body.apiKey,
+      modelProvider: req.body.modelProvider
+    });
+
+    const { patientData, apiKey, modelProvider } = req.body;
+
+    if (!patientData) {
+      console.error('No patient data provided');
       return res.status(400).json({ error: 'Patient data is required' });
     }
 
-    let processedPatientData = typeof rawPatientData === 'string' 
-      ? JSON.parse(rawPatientData) 
-      : rawPatientData;
-
-    console.log('Processing FHIR Bundle:', processedPatientData.resourceType);
-
-    // Validate FHIR format
-    if (!processedPatientData.resourceType || processedPatientData.resourceType !== 'Bundle') {
-      return res.status(400).json({ error: 'Invalid FHIR format: Must be a Bundle' });
+    if (!apiKey) {
+      console.error('No API key provided');
+      return res.status(400).json({ error: 'API key is required' });
     }
 
-    if (!processedPatientData.entry || !Array.isArray(processedPatientData.entry)) {
-      return res.status(400).json({ error: 'Invalid FHIR format: Entry array is missing' });
-    }
-
-    const patientResource = processedPatientData.entry.find(
-      entry => entry?.resource?.resourceType === 'Patient'
-    )?.resource;
-
-    if (!patientResource) {
-      return res.status(400).json({ error: 'Patient resource not found in bundle' });
-    }
-
-    console.log('Found patient resource:', patientResource.id);
-
-    // Extract variants from MolecularSequence resources
-    const variants = [];
-    console.log('Looking for MolecularSequence resources...');
-
-    processedPatientData.entry.forEach(entry => {
-      const resource = entry.resource;
-      if (resource.resourceType === 'MolecularSequence' && 
-          resource.patient?.reference === `Patient/${patientResource.id}`) {
-        console.log('Found MolecularSequence for patient:', resource.id);
-        console.log('Variants in resource:', resource.variant);
-        
-        (resource.variant || []).forEach(variant => {
-          if (variant.gene === 'CFTR' && variant.variantType) {
-            const variantType = variant.variantType.trim();
-            console.log('Processing variant:', variantType);
-            if (!variants.includes(variantType)) {
-              variants.push(variantType);
-            }
-          }
-        });
-      }
+    // Process the patient data
+    const processedData = await processFhirJsonFile(patientData, apiKey, modelProvider);
+    console.log('Processed patient data:', {
+      id: processedData.id,
+      name: processedData.name,
+      hasVariants: !!processedData.variants
     });
 
-    console.log('Extracted variants:', variants);
-
-    console.log('Processing patient data with AI...');
-    
-    // Process with AI
-    const result = await analyzeWithMultipleProviders(
-      processedPatientData,
-      apiKey,
-      modelProvider
-    );
-
-    console.log('AI analysis complete');
-
-    // Format the full name properly
-    const firstName = patientResource.name?.[0]?.given?.[0] || '';
-    const lastName = patientResource.name?.[0]?.family || '';
-    const fullName = `${firstName} ${lastName}`.trim() || 'Unknown';
-
-    // Prepare patient data
-    const patientData = {
-      id: patientResource.id,
-      name: fullName,
-      dob: patientResource.birthDate,
-      gender: patientResource.gender,
-      variants: variants,
-      status: 'Active',
-      summary: result.geneticSummary,
-      details: result.clinicalDetails,
-      aiProvider: result.providerUsed
-    };
-
-    console.log('Patient data to be saved:', {
-      id: patientData.id,
-      name: patientData.name,
-      variants: patientData.variants
-    });
-
-    // Try to update existing patient, if not found create new one
-    const updatedPatient = await Patient.findOneAndUpdate(
-      { id: patientData.id },
-      patientData,
-      { 
-        new: true,          // Return the updated document
-        upsert: true,       // Create if doesn't exist
-        runValidators: true // Run model validations
-      }
-    );
-
-    console.log('Saved patient data:', {
-      id: updatedPatient.id,
-      name: updatedPatient.name,
-      variants: updatedPatient.variants
-    });
+    // Save to MongoDB
+    const patient = new Patient(processedData);
+    await patient.save();
+    console.log('Patient saved to database:', patient.id);
 
     res.json({
       success: true,
-      message: 'Patient data processed and saved successfully',
-      patient: updatedPatient,
-      patientId: updatedPatient.id,
-      aiProvider: result.providerUsed
+      patient: {
+        id: patient.id,
+        name: patient.name,
+        status: 'Active'
+      }
     });
-
   } catch (error) {
-    console.error('Error processing patient data:', error);
-    res.status(500).json({ 
-      error: 'Failed to process patient data',
-      details: error.message 
-    });
+    console.error('Error processing patient upload:', error);
+    res.status(500).json({ error: 'Failed to process patient data' });
   }
 });
 
