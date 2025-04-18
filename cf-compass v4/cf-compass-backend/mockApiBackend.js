@@ -15,7 +15,44 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
-connectDB();
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('MongoDB connected successfully');
+  // Populate database with sample patients if empty
+  Patient.countDocuments({})
+    .then(count => {
+      if (count === 0) {
+        console.log('Database is empty, populating with sample patients...');
+        const patients = require('./data/patients.json');
+        const formattedPatients = patients.map(patient => ({
+          resourceType: 'Patient',
+          id: patient.id,
+          name: [{
+            given: [patient.name.split(' ')[0]],
+            family: patient.name.split(' ')[1],
+            text: patient.name
+          }],
+          gender: patient.gender,
+          birthDate: patient.dob,
+          variants: patient.variants,
+          geneticSummary: patient.geneticSummary,
+          clinicalDetails: patient.clinicalDetails,
+          analysisProvider: patient.analysisProvider || 'test',
+          status: 'Active'
+        }));
+        return Patient.insertMany(formattedPatients);
+      }
+    })
+    .then(() => console.log('Database population complete'))
+    .catch(err => console.error('Error populating database:', err));
+})
+.catch(err => {
+  console.error('MongoDB connection error:', err);
+  process.exit(1);
+});
 
 // Middleware
 app.use((req, res, next) => {
@@ -57,13 +94,36 @@ app.get('/api/patients', async (req, res) => {
     const patients = await Patient.find({});
     console.log(`Found ${patients.length} patients in database`);
     
-    if (patients.length > 0) {
-      console.log('Sample patient data:', JSON.stringify(patients[0], null, 2));
-    } else {
-      console.log('No patients found in database');
-    }
+    // Format patients with proper name handling
+    const formattedPatients = patients.map(patient => {
+      const patientObj = patient.toObject();
+      // Handle name array
+      let formattedName = 'Unknown';
+      if (Array.isArray(patientObj.name) && patientObj.name.length > 0) {
+        const nameObj = patientObj.name[0];
+        if (nameObj.given && nameObj.family) {
+          formattedName = `${nameObj.given[0]} ${nameObj.family}`;
+        } else if (nameObj.text) {
+          formattedName = nameObj.text;
+        }
+      }
+      
+      return {
+        ...patientObj,
+        name: formattedName,
+        id: patientObj.id,
+        gender: patientObj.gender,
+        birthDate: patientObj.birthDate,
+        variants: patientObj.variants || [],
+        geneticSummary: patientObj.geneticSummary,
+        clinicalDetails: patientObj.clinicalDetails,
+        analysisProvider: patientObj.analysisProvider,
+        status: 'Active'
+      };
+    });
     
-    res.json(patients);
+    console.log('First formatted patient:', formattedPatients[0]);
+    res.json(formattedPatients);
   } catch (error) {
     console.error('Error in /api/patients:', error);
     res.status(500).json({ error: 'Failed to fetch patients' });
@@ -87,10 +147,19 @@ app.get('/api/patients/:id', async (req, res) => {
 // Delete a patient
 app.delete('/api/patients/:id', async (req, res) => {
   try {
+    console.log('=== Delete Patient Request ===');
+    console.log('Patient ID:', req.params.id);
+    console.log('MongoDB Connection Status:', mongoose.connection.readyState);
+    
     const result = await Patient.deleteOne({ id: req.params.id });
+    console.log('Delete result:', result);
+    
     if (result.deletedCount === 0) {
+      console.log('No patient found with ID:', req.params.id);
       return res.status(404).json({ error: 'Patient not found' });
     }
+    
+    console.log('Successfully deleted patient:', req.params.id);
     res.json({ message: 'Patient deleted successfully' });
   } catch (error) {
     console.error('Error deleting patient:', error);

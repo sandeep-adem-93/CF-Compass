@@ -123,17 +123,20 @@ export const calculateAge = (dob) => {
 
 export const deletePatient = async (patientId) => {
   try {
-    console.log(`Deleting patient with ID: ${patientId}`);
-    const response = await axios.delete(`${API_URL}/patients/${patientId}`);
+    console.log('Deleting patient with ID:', patientId);
+    const url = `${API_URL.replace(/\/+$/, '')}/api/patients/${patientId}`;
+    console.log('Delete URL:', url);
+    
+    const response = await axios.delete(url);
+    console.log('Response status:', response.status);
     return response.data;
   } catch (error) {
-    console.error(`Error deleting patient ${patientId}:`, error);
+    console.error('Error deleting patient', patientId, ':', error);
     if (error.response) {
       console.error('Response status:', error.response.status);
       console.error('Error details:', error.response.data);
-      throw new Error(error.response.data.error || 'Failed to delete patient');
     }
-    throw error;
+    throw new Error('Failed to delete patient');
   }
 };
 

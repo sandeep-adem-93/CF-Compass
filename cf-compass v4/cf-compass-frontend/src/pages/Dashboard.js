@@ -24,9 +24,6 @@ function Dashboard() {
       const data = await getPatients();
       console.log('=== Patient Data Analysis ===');
       console.log('Raw patient data received:', data);
-      console.log('Data type:', typeof data);
-      console.log('Is array:', Array.isArray(data));
-      console.log('Number of patients:', data?.length);
       
       if (!data || !Array.isArray(data)) {
         console.warn('Invalid data received:', data);
@@ -35,18 +32,22 @@ function Dashboard() {
       }
 
       const validPatients = data.map(patient => {
-        console.log('Patient structure:', {
+        console.log('Processing patient:', {
           id: patient.id,
           name: patient.name,
           status: patient.status,
-          hasName: !!patient.name,
-          hasId: !!patient.id,
-          keys: Object.keys(patient)
+          variants: patient.variants?.length || 0
         });
-        return patient;
+        
+        return {
+          ...patient,
+          name: patient.name || `Patient ${patient.id}`,
+          variants: patient.variants || [],
+          status: patient.status || 'Active'
+        };
       });
 
-      console.log('Valid patients:', validPatients.length);
+      console.log('Processed patients:', validPatients.length);
       setPatients(validPatients);
     } catch (error) {
       console.error('Error fetching patients:', error);
