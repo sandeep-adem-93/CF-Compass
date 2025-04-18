@@ -22,6 +22,7 @@ function Dashboard() {
     try {
       setLoading(true);
       const data = await getPatients();
+      console.log('=== Patient Data Analysis ===');
       console.log('Raw patient data received:', data);
       console.log('Data type:', typeof data);
       console.log('Is array:', Array.isArray(data));
@@ -33,16 +34,19 @@ function Dashboard() {
         return;
       }
 
-      const validPatients = data.filter(patient => {
-        const isValid = patient && typeof patient === 'object';
-        if (!isValid) {
-          console.warn('Invalid patient object:', patient);
-        }
-        return isValid;
+      const validPatients = data.map(patient => {
+        console.log('Patient structure:', {
+          id: patient.id,
+          name: patient.name,
+          status: patient.status,
+          hasName: !!patient.name,
+          hasId: !!patient.id,
+          keys: Object.keys(patient)
+        });
+        return patient;
       });
 
       console.log('Valid patients:', validPatients.length);
-      console.log('First valid patient:', validPatients[0]);
       setPatients(validPatients);
     } catch (error) {
       console.error('Error fetching patients:', error);

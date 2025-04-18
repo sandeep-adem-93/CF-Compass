@@ -5,6 +5,9 @@ import React from 'react';
 function PatientSidebar({ patients, currentPatient, onPatientSelect, onAddPatientClick, onPatientDelete}) {
   // generate initials for the avatar
   const getInitials = (name) => {
+    if (!name || typeof name !== 'string') {
+      return 'NA';
+    }
     return name
       .split(' ')
       .map(part => part[0])

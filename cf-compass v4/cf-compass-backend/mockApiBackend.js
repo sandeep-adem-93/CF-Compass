@@ -6,6 +6,7 @@ const path = require('path');
 const connectDB = require('./config/db');
 const Patient = require('./models/Patient');
 require('dotenv').config();
+const mongoose = require('mongoose');
 
 const { processFhirJsonFile } = require('./fhirtoprompt');
 const { analyzeWithMultipleProviders } = require('./multi-model-processor');
@@ -49,18 +50,22 @@ app.get('/api/health', (req, res) => {
 // Get all patients
 app.get('/api/patients', async (req, res) => {
   try {
-    console.log('Fetching patients from MongoDB...');
+    console.log('=== Patient API Request ===');
+    console.log('MongoDB Connection Status:', mongoose.connection.readyState);
+    console.log('MongoDB URL:', process.env.MONGODB_URI);
+    
     const patients = await Patient.find({});
     console.log(`Found ${patients.length} patients in database`);
-    console.log('First patient sample:', patients[0] ? {
-      id: patients[0].id,
-      name: patients[0].name,
-      dob: patients[0].dob,
-      gender: patients[0].gender
-    } : 'No patients found');
+    
+    if (patients.length > 0) {
+      console.log('Sample patient data:', JSON.stringify(patients[0], null, 2));
+    } else {
+      console.log('No patients found in database');
+    }
+    
     res.json(patients);
   } catch (error) {
-    console.error('Error fetching patients:', error);
+    console.error('Error in /api/patients:', error);
     res.status(500).json({ error: 'Failed to fetch patients' });
   }
 });
