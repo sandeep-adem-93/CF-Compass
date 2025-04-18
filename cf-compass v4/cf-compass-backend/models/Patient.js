@@ -11,11 +11,10 @@ const PatientSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  name: [{
-    given: [String],
-    family: String,
-    text: String
-  }],
+  name: {
+    type: String,
+    required: true
+  },
   gender: {
     type: String,
     enum: ['male', 'female', 'other', 'unknown', 'non-binary'],
@@ -30,9 +29,18 @@ const PatientSchema = new mongoose.Schema({
   geneticSummary: {
     type: String
   },
-  clinicalDetails: {
-    type: String
-  },
+  clinicalDetails: [{
+    type: {
+      type: String,
+      required: true
+    },
+    text: {
+      type: String,
+      required: true
+    },
+    status: String,
+    value: mongoose.Schema.Types.Mixed
+  }],
   analysisProvider: {
     type: String,
     default: 'test'
