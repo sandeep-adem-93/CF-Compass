@@ -196,7 +196,7 @@ const generateRandomPatientParams = () => {
   const birthDay = Math.floor(Math.random() * 28) + 1;
   
   // Generate random sex
-  const genders = ['male', 'female'];
+  const genders = ['male', 'female', 'other', 'unknown', 'non-binary'];
   const gender = genders[Math.floor(Math.random() * genders.length)];
   
   // Generate a random severity level

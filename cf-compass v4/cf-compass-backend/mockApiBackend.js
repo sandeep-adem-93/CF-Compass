@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const connectDB = require('./config/db');
 const Patient = require('./models/Patient');
+const initializeDatabase = require('./scripts/initDb');
 require('dotenv').config();
 const mongoose = require('mongoose');
 
@@ -14,54 +15,91 @@ const { analyzeWithMultipleProviders } = require('./multi-model-processor');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-.then(async () => {
-  console.log('MongoDB connected successfully');
-  
-  // Check if database is empty and populate if needed
-  const count = await Patient.countDocuments({});
-  if (count === 0) {
-    console.log('Database is empty, populating with sample patients...');
-    try {
-      const patients = require('./data/patients.json');
-      const formattedPatients = patients.map(patient => ({
-        resourceType: 'Patient',
-        id: patient.id,
-        name: [{
-          given: [patient.name.split(' ')[0]],
-          family: patient.name.split(' ')[1],
-          text: patient.name
-        }],
-        gender: patient.gender,
-        birthDate: patient.dob,
-        variants: patient.variants || [],
-        geneticSummary: patient.geneticSummary,
-        clinicalDetails: patient.clinicalDetails,
-        analysisProvider: patient.analysisProvider || 'test',
-        status: 'Active',
-        createdAt: new Date(),
-        lastUpdated: new Date()
-      }));
-      
-      await Patient.insertMany(formattedPatients);
-      console.log(`Successfully inserted ${formattedPatients.length} patients`);
-    } catch (error) {
-      console.error('Error populating database:', error);
-    }
-  } else {
-    console.log(`Database already contains ${count} patients`);
+// MongoDB connection options
+const mongooseOptions = {
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  maxPoolSize: 50
+};
+
+let isConnecting = false;
+
+// Connect to MongoDB and initialize database
+const connectWithRetry = async () => {
+  if (isConnecting) {
+    console.log('Connection attempt already in progress...');
+    return;
   }
-})
-.catch(err => {
+
+  try {
+    isConnecting = true;
+
+    if (mongoose.connection.readyState === 1) {
+      console.log('MongoDB already connected');
+      isConnecting = false;
+      return;
+    }
+
+    // Close any existing connection
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.close();
+    }
+
+    await mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
+    console.log('MongoDB connected successfully');
+    
+    // Initialize database with sample data if empty
+    try {
+      await initializeDatabase();
+    } catch (error) {
+      console.error('Error during database initialization:', error);
+    }
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    console.log('Retrying connection in 5 seconds...');
+    setTimeout(connectWithRetry, 5000);
+  } finally {
+    isConnecting = false;
+  }
+};
+
+// Handle MongoDB connection events
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected. Attempting to reconnect...');
+  connectWithRetry();
+});
+
+mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
-  process.exit(1);
+});
+
+// Initial connection
+connectWithRetry();
+
+// Middleware to check MongoDB connection before handling requests
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    console.log('MongoDB not connected, attempting to reconnect...');
+    await connectWithRetry();
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ error: 'Database connection unavailable' });
+    }
+  }
+  next();
 });
 
 // Middleware
 app.use((req, res, next) => {
   console.log(`Incoming request: ${req.method} ${req.path} from ${req.headers.origin}`);
-  res.header('Access-Control-Allow-Origin', 'https://cf-compass-frontend.onrender.com');
+  const allowedOrigins = [
+    'https://cf-compass-frontend.onrender.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');

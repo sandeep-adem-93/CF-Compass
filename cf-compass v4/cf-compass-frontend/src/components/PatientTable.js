@@ -2,12 +2,26 @@ import React from 'react';
 import './PatientTable.css';
 
 function PatientTable({ patients, onPatientClick, onPatientDelete }) {
+  // Function to extract full name from FHIR patient resource
+  const getFullName = (patient) => {
+    if (!patient || !patient.resource || !patient.resource.name || !Array.isArray(patient.resource.name)) {
+      return 'Unknown';
+    }
+    const nameObj = patient.resource.name[0];
+    if (!nameObj) return 'Unknown';
+
+    const given = Array.isArray(nameObj.given) ? nameObj.given.join(' ') : '';
+    const family = nameObj.family || '';
+    return `${given} ${family}`.trim();
+  };
+
   // Function to generate initials for the avatar
-  const getInitials = (name) => {
-    if (!name || typeof name !== 'string') {
+  const getInitials = (patient) => {
+    const fullName = getFullName(patient);
+    if (!fullName || fullName === 'Unknown') {
       return 'NA';
     }
-    return name
+    return fullName
       .split(' ')
       .map(part => part[0])
       .join('')
@@ -15,8 +29,26 @@ function PatientTable({ patients, onPatientClick, onPatientDelete }) {
   };
 
   // Function to format variants for display
-  const formatVariants = (variants) => {
-    if (!variants || variants.length === 0) {
+  const getVariants = (patient) => {
+    if (!patient || !patient.resource || !patient.resource.extension) {
+      return 'No variants';
+    }
+    
+    // Find molecular sequence resource in the bundle
+    const molecularSequence = patients.find(entry => 
+      entry.resource && 
+      entry.resource.resourceType === 'MolecularSequence' && 
+      entry.resource.patient && 
+      entry.resource.patient.reference === `Patient/${patient.resource.id}`
+    );
+
+    if (!molecularSequence || !molecularSequence.resource.variant) {
+      return 'No variants';
+    }
+
+    const variants = molecularSequence.resource.variant.map(v => v.variantType);
+    
+    if (variants.length === 0) {
       return 'No variants';
     }
     
@@ -37,8 +69,12 @@ function PatientTable({ patients, onPatientClick, onPatientDelete }) {
     return `${variants[0]} + ${variants.length - 1} more`;
   };
 
-  const calculateAge = (dob) => {
-    const birthDate = new Date(dob);
+  const calculateAge = (patient) => {
+    if (!patient || !patient.resource || !patient.resource.birthDate) {
+      return 'Unknown';
+    }
+    
+    const birthDate = new Date(patient.resource.birthDate);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
@@ -56,6 +92,11 @@ function PatientTable({ patients, onPatientClick, onPatientDelete }) {
     onPatientDelete(patient);
   };
 
+  // Filter only Patient resources
+  const patientResources = patients.filter(entry => 
+    entry.resource && entry.resource.resourceType === 'Patient'
+  );
+
   return (
     <div className="patient-table-container">
       <table className="patient-table">
@@ -69,22 +110,22 @@ function PatientTable({ patients, onPatientClick, onPatientDelete }) {
           </tr>
         </thead>
         <tbody>
-          {patients.length > 0 ? (
-            patients.map((patient) => (
+          {patientResources.length > 0 ? (
+            patientResources.map((patient) => (
               <tr 
-                key={patient.id} 
+                key={patient.resource.id} 
                 onClick={() => onPatientClick(patient)}
                 className="patient-row"
               >
                 <td>
                   <div className="patient-name">
-                    <div className="avatar">{getInitials(patient.name)}</div>
-                    <span>{patient.name}</span>
+                    <div className="avatar">{getInitials(patient)}</div>
+                    <span>{getFullName(patient)}</span>
                   </div>
                 </td>
-                <td>{calculateAge(patient.dob)}</td>
-                <td>{patient.gender}</td>
-                <td>{formatVariants(patient.variants)}</td>
+                <td>{calculateAge(patient)}</td>
+                <td>{patient.resource.gender || 'Unknown'}</td>
+                <td>{getVariants(patient)}</td>
                 <td>
                   <button 
                     className="delete-patient-button1"
