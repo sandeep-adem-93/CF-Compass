@@ -156,15 +156,31 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
   const [formattedAnalysis, setFormattedAnalysis] = useState({ geneticAnalysis: null, clinicalSections: [] });
   const [patientToDelete, setPatientToDelete] = useState(null);
 
+  // Update current patient when patients array or ID changes
   useEffect(() => {
     if (id && patients.length > 0) {
-      fetchPatientDetails(id);
+      const patient = patients.find(p => p.id === id);
+      if (patient) {
+        console.log('Setting current patient:', patient);
+        setCurrentPatient(patient);
+        setError(null);
+      } else {
+        console.log('Patient not found, redirecting...');
+        // If not found and we have other patients, redirect to the first one
+        if (patients.length > 0) {
+          navigate(`/patient/${patients[0].id}`);
+        } else {
+          navigate('/');
+        }
+      }
+      setLoading(false);
     }
-  }, [id, patients]);
+  }, [id, patients, navigate]);
 
-  // Format the patient analysis whenever the current patient changes
+  // Format analysis when current patient changes
   useEffect(() => {
     if (currentPatient) {
+      console.log('Formatting analysis for patient:', currentPatient);
       const analysis = formatPatientAnalysis(currentPatient);
       setFormattedAnalysis(analysis);
     }

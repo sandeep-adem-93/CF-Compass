@@ -150,32 +150,23 @@ function AddPatientModal({ onClose, onAddPatient }) {
       // Send to backend with API key for analysis
       const response = await uploadPatientData(requestData);
       
-      setAnalysisStage('Generating clinical recommendations...');
-      
-      if (!response.success) {
-        throw new Error(response.error || 'Failed to process patient data');
-      }
-      
-      console.log("Upload successful, response:", response);
-      
-      // If successful, call onAddPatient callback or navigate directly
-      if (onAddPatient) {
-        try {
+      console.log("Upload response:", response);
+
+      if (response && response.success) {
+        // Call the onAddPatient callback to refresh the patient list
+        if (onAddPatient) {
           await onAddPatient(response.patient);
-        } catch (callbackError) {
-          console.error("Error in onAddPatient callback:", callbackError);
-          // Continue with navigation even if callback fails
         }
-      }
-      
-      // Navigate to the patient details page
-      if (response.patientId) {
-        console.log("Navigating to patient page:", response.patientId);
-        onClose(); // Close the modal first
-        navigate(`/patient/${response.patientId}`);
+        
+        // Close the modal
+        onClose();
+        
+        // Navigate to the patient details page if we have an ID
+        if (response.patientId) {
+          navigate(`/patient/${response.patientId}`);
+        }
       } else {
-        console.error("No patientId in response:", response);
-        throw new Error('No patient ID returned from server');
+        throw new Error(response?.error || 'Failed to process patient data');
       }
       
     } catch (error) {

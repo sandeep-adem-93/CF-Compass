@@ -1,17 +1,15 @@
 const mongoose = require('mongoose');
 
 const patientSchema = new mongoose.Schema({
-  resourceType: { type: String, required: true },
   id: { type: String, required: true, unique: true },
-  name: [{
-    given: [String],
-    family: String
-  }],
-  gender: String,
-  birthDate: String,
+  name: { type: String, required: true },
+  dob: { type: String, required: true },
+  gender: { type: String, required: true },
   variants: [String],
+  status: { type: String, default: 'Active' },
   summary: String,
   details: String,
+  aiProvider: String,
   createdAt: { type: Date, default: Date.now }
 });
 

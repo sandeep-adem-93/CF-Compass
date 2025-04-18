@@ -4,17 +4,16 @@ const { processFhirJsonFile } = require("./fhirtoprompt");
 
 /**
  * Analyzes FHIR data using multiple AI providers
- * @param {string} fhirFilePath - Path to the FHIR JSON file
- * @param {string} modelProvider - AI provider to use ('gemini', 'openai', 'anthropic')
+ * @param {object} fhirData - FHIR data object
  * @param {string} apiKey - API key for the selected provider
+ * @param {string} modelProvider - AI provider to use ('gemini', 'openai', 'anthropic')
  * @returns {Promise<object>} - The model's analysis with genetic and clinical sections
  */
 
-async function analyzeWithMultipleProviders(fhirFilePath, modelProvider, apiKey) {
+async function analyzeWithMultipleProviders(fhirData, apiKey, modelProvider) {
   try {
-    // Read and process the FHIR file
-    const jsonStr = fs.readFileSync(fhirFilePath, 'utf8');
-    const patientParagraph = processFhirJsonFile(jsonStr);
+    // Process the FHIR data
+    const patientParagraph = processFhirJsonFile(JSON.stringify(fhirData));
     
     console.log(`Processed FHIR data into text description successfully`);
     console.log(`Using model provider: ${modelProvider}`);

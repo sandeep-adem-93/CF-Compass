@@ -140,12 +140,22 @@ const isHomozygous = (variants) => {
 
 // GeneticVariants component
 const GeneticVariants = ({ variants = [], expanded = false }) => {
-  if (!variants || variants.length === 0) {
+  console.log('Received variants:', variants);
+  
+  if (!variants || !Array.isArray(variants) || variants.length === 0) {
+    console.log('No variants available');
     return (
       <div className="no-variants">
         <p>No variant information available</p>
       </div>
     );
+  }
+  
+  // Validate that all variants have corresponding info
+  const unknownVariants = variants.filter(variant => !VARIANT_INFO[variant]);
+  if (unknownVariants.length > 0) {
+    console.warn('Unknown variants found:', unknownVariants);
+    console.warn('Available variant types:', Object.keys(VARIANT_INFO));
   }
   
   // Determine zygosity
@@ -155,6 +165,9 @@ const GeneticVariants = ({ variants = [], expanded = false }) => {
     : homozygous 
       ? 'Homozygous'
       : 'Compound Heterozygous';
+  
+  console.log('Zygosity:', zygosity);
+  console.log('Variants to display:', variants);
   
   // Determine color class based on variants severity
   const getVariantSeverityClass = (variant) => {
