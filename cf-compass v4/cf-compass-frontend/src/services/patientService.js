@@ -42,10 +42,10 @@ export const uploadPatientData = async (patientData, apiKey, modelProvider) => {
     if (!patientData) {
       throw new Error('Patient data is required');
     }
-    if (!apiKey) {
-      throw new Error('API key is required');
+    if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length === 0) {
+      throw new Error('Valid API key is required');
     }
-    if (!modelProvider) {
+    if (!modelProvider || typeof modelProvider !== 'string') {
       throw new Error('Model provider is required');
     }
 
@@ -56,8 +56,8 @@ export const uploadPatientData = async (patientData, apiKey, modelProvider) => {
     // Prepare the request payload
     const payload = {
       patientData,
-      apiKey,
-      modelProvider
+      apiKey: apiKey.trim(),
+      modelProvider: modelProvider.trim()
     };
 
     // Log the structure of the payload (without sensitive data)

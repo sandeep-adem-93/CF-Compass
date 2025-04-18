@@ -35,11 +35,13 @@ mongoose.connect(process.env.MONGODB_URI)
         }],
         gender: patient.gender,
         birthDate: patient.dob,
-        variants: patient.variants,
+        variants: patient.variants || [],
         geneticSummary: patient.geneticSummary,
         clinicalDetails: patient.clinicalDetails,
         analysisProvider: patient.analysisProvider || 'test',
-        status: 'Active'
+        status: 'Active',
+        createdAt: new Date(),
+        lastUpdated: new Date()
       }));
       
       await Patient.insertMany(formattedPatients);
