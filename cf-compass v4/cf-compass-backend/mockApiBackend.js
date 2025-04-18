@@ -141,15 +141,18 @@ app.get('/api/patients', async (req, res) => {
     
     const patients = await Patient.find({});
     console.log(`Found ${patients.length} patients in database`);
+    console.log('Raw patients from database:', JSON.stringify(patients, null, 2));
     
     // Format patients with proper name handling
     const formattedPatients = patients.map(patient => {
       const patientObj = patient.toObject();
+      console.log('Processing patient:', patientObj.id);
       
       // Handle name array
       let formattedName = 'Unknown';
       if (Array.isArray(patientObj.name) && patientObj.name.length > 0) {
         const nameObj = patientObj.name[0];
+        console.log('Name object:', nameObj);
         if (nameObj.given && nameObj.family) {
           formattedName = `${nameObj.given[0]} ${nameObj.family}`;
         } else if (nameObj.text) {
@@ -165,7 +168,7 @@ app.get('/api/patients', async (req, res) => {
         }
       }
       
-      return {
+      const formattedPatient = {
         ...patientObj,
         name: formattedName,
         id: patientObj.id,
@@ -177,9 +180,12 @@ app.get('/api/patients', async (req, res) => {
         analysisProvider: patientObj.analysisProvider,
         status: 'Active'
       };
+      
+      console.log('Formatted patient:', formattedPatient);
+      return formattedPatient;
     });
     
-    console.log('First formatted patient:', formattedPatients[0]);
+    console.log('Sending response with formatted patients:', JSON.stringify(formattedPatients, null, 2));
     res.json(formattedPatients);
   } catch (error) {
     console.error('Error in /api/patients:', error);
@@ -236,18 +242,32 @@ app.post('/api/patients/upload', async (req, res) => {
 
     const { patientData, apiKey, modelProvider } = req.body;
 
-    if (!patientData) {
-      console.error('No patient data provided');
-      return res.status(400).json({ error: 'Patient data is required' });
+    // Validate patient data
+    if (!patientData || typeof patientData !== 'object') {
+      console.error('Invalid or missing patient data');
+      return res.status(400).json({ error: 'Valid patient data is required' });
     }
 
-    if (!apiKey) {
-      console.error('No API key provided');
-      return res.status(400).json({ error: 'API key is required' });
+    // Validate API key
+    if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length === 0) {
+      console.error('Invalid or missing API key');
+      return res.status(400).json({ error: 'Valid API key is required' });
+    }
+
+    // Validate model provider
+    if (!modelProvider || typeof modelProvider !== 'string' || modelProvider.trim().length === 0) {
+      console.error('Invalid or missing model provider');
+      return res.status(400).json({ error: 'Valid model provider is required' });
     }
 
     // Process the patient data
-    const processedData = await processFhirJsonFile(patientData, apiKey, modelProvider);
+    console.log('Processing patient data with:', {
+      modelProvider,
+      apiKeyLength: apiKey.length,
+      patientDataType: typeof patientData
+    });
+
+    const processedData = await processFhirJsonFile(patientData, apiKey.trim(), modelProvider.trim());
     console.log('Processed patient data:', {
       id: processedData.id,
       name: processedData.name,
@@ -265,11 +285,13 @@ app.post('/api/patients/upload', async (req, res) => {
         id: patient.id,
         name: patient.name,
         status: 'Active'
-      }
+      },
+      patientId: patient.id
     });
   } catch (error) {
     console.error('Error processing patient upload:', error);
-    res.status(500).json({ error: 'Failed to process patient data' });
+    const errorMessage = error.message || 'Failed to process patient data';
+    res.status(500).json({ error: errorMessage });
   }
 });
 

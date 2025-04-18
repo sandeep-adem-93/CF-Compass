@@ -207,13 +207,98 @@ function extractFhirBundleToParagraph(bundle) {
    * @param {string} jsonStr - FHIR Bundle JSON string
    * @returns {string} Formatted paragraph or error message
    */
-  function processFhirJsonFile(jsonStr) {
+  async function processFhirJsonFile(jsonData, apiKey, modelProvider) {
     try {
-      const bundle = JSON.parse(jsonStr);
-      return extractFhirBundleToParagraph(bundle);
+      console.log('=== Processing FHIR JSON ===');
+      
+      // Validate inputs
+      if (!jsonData || typeof jsonData !== 'object') {
+        throw new Error('Invalid FHIR JSON data');
+      }
+      
+      if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length === 0) {
+        throw new Error('Valid API key is required for processing');
+      }
+      
+      if (!modelProvider || typeof modelProvider !== 'string') {
+        throw new Error('Valid model provider is required');
+      }
+      
+      // Convert FHIR Bundle to paragraph
+      const paragraph = extractFhirBundleToParagraph(jsonData);
+      console.log('Generated paragraph:', paragraph);
+      
+      // Extract patient information
+      const patientResource = jsonData.entry?.find(e => e.resource?.resourceType === 'Patient')?.resource;
+      if (!patientResource) {
+        throw new Error('No patient resource found in FHIR Bundle');
+      }
+      
+      // Extract genetic information
+      const molecularSequence = jsonData.entry?.find(e => e.resource?.resourceType === 'MolecularSequence')?.resource;
+      const variants = molecularSequence?.variant?.map(v => v.variantType) || [];
+      
+      // Format patient name
+      let formattedName = 'Unknown';
+      if (patientResource.name && patientResource.name.length > 0) {
+        const nameObj = patientResource.name[0];
+        if (nameObj.given && nameObj.family) {
+          formattedName = `${nameObj.given[0]} ${nameObj.family}`;
+        } else if (nameObj.text) {
+          formattedName = nameObj.text;
+        }
+      }
+      
+      // Create patient object
+      const patient = {
+        id: patientResource.id,
+        name: formattedName,
+        gender: patientResource.gender || 'unknown',
+        birthDate: patientResource.birthDate,
+        variants,
+        geneticSummary: paragraph,
+        clinicalDetails: extractClinicalDetails(jsonData),
+        analysisProvider: modelProvider
+      };
+      
+      console.log('Processed patient:', {
+        id: patient.id,
+        name: patient.name,
+        variantsCount: patient.variants.length
+      });
+      
+      return patient;
     } catch (error) {
-      return `Error processing FHIR JSON: ${error.message}`;
+      console.error('Error processing FHIR JSON:', error);
+      throw new Error(`Failed to process FHIR data: ${error.message}`);
     }
+  }
+  
+  // Helper function to extract clinical details
+  function extractClinicalDetails(bundle) {
+    const details = [];
+    
+    (bundle.entry || []).forEach(entry => {
+      const resource = entry.resource || {};
+      
+      if (resource.resourceType === 'Condition' && resource.code?.text) {
+        details.push({
+          type: 'condition',
+          text: resource.code.text,
+          status: resource.clinicalStatus?.coding?.[0]?.code || 'unknown'
+        });
+      }
+      
+      if (resource.resourceType === 'Observation' && resource.code?.text) {
+        details.push({
+          type: 'observation',
+          text: resource.code.text,
+          value: resource.valueString || resource.valueQuantity?.value || 'unknown'
+        });
+      }
+    });
+    
+    return details;
   }
   
   module.exports = {
