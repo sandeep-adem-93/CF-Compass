@@ -16,12 +16,12 @@ async function initializeDatabase() {
     const mongooseOptions = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      keepAlive: true,
-      keepAliveInitialDelay: 300000,
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+      maxPoolSize: 50,
       retryWrites: true,
       w: 'majority',
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
+      family: 4
     };
 
     await mongoose.connect(mongoURI, mongooseOptions);

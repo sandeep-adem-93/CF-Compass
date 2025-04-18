@@ -21,8 +21,6 @@ const mongooseOptions = {
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
-  keepAlive: true,
-  keepAliveInitialDelay: 300000,
   maxPoolSize: 50,
   retryWrites: true,
   w: 'majority',
