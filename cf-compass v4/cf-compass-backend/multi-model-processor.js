@@ -13,7 +13,7 @@ const { processFhirJsonFile } = require("./fhirtoprompt");
 async function analyzeWithMultipleProviders(fhirData, apiKey, modelProvider) {
   try {
     // Process the FHIR data
-    const patientParagraph = processFhirJsonFile(JSON.stringify(fhirData));
+    const patientParagraph = await processFhirJsonFile(fhirData, apiKey, modelProvider);
     
     console.log(`Processed FHIR data into text description successfully`);
     console.log(`Using model provider: ${modelProvider}`);
@@ -74,18 +74,48 @@ IMPORTANT FORMATTING RULES:
     
     // Process the response
     let geneticSummary = '';
-    let clinicalDetails = '';
+    let clinicalDetails = [];
     
     if (responseText.includes('GENETIC ANALYSIS') && responseText.includes('CLINICAL RECOMMENDATIONS')) {
       // Extract the two main sections
       const sections = responseText.split('CLINICAL RECOMMENDATIONS');
       geneticSummary = sections[0].replace('GENETIC ANALYSIS', '').trim();
-      clinicalDetails = sections[1].trim();
+      
+      // Parse clinical recommendations into structured format
+      const clinicalText = sections[1].trim();
+      const recommendations = clinicalText.split(/\n\s*\d+\.\s+/).filter(Boolean);
+      
+      recommendations.forEach(rec => {
+        const [title, ...content] = rec.split('\n');
+        if (title && content.length > 0) {
+          clinicalDetails.push({
+            type: 'recommendation',
+            text: title.trim(),
+            value: content.join('\n').trim()
+          });
+        }
+      });
     } else {
       // Fallback if the response isn't formatted as expected
       const halfPoint = Math.floor(responseText.length / 2);
       geneticSummary = responseText.substring(0, halfPoint);
-      clinicalDetails = responseText.substring(halfPoint);
+      
+      // Try to parse clinical details from the second half
+      const clinicalText = responseText.substring(halfPoint);
+      const lines = clinicalText.split('\n').filter(line => line.trim());
+      
+      lines.forEach(line => {
+        if (line.match(/^\d+\./)) {
+          const [title, ...content] = line.split(':');
+          if (title && content.length > 0) {
+            clinicalDetails.push({
+              type: 'recommendation',
+              text: title.replace(/^\d+\.\s*/, '').trim(),
+              value: content.join(':').trim()
+            });
+          }
+        }
+      });
     }
     
     return {
