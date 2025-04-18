@@ -18,7 +18,10 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: '*',  // Allow all origins
+  origin: [
+    'https://cf-compass-frontend.onrender.com',
+    'http://localhost:3000'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
