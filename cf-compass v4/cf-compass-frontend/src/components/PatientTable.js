@@ -4,6 +4,9 @@ import './PatientTable.css';
 function PatientTable({ patients, onPatientClick, onPatientDelete }) {
   // Function to generate initials for the avatar
   const getInitials = (name) => {
+    if (!name || typeof name !== 'string') {
+      return 'NA';
+    }
     return name
       .split(' ')
       .map(part => part[0])
