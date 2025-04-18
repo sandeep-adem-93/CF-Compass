@@ -89,25 +89,12 @@ app.use(async (req, res, next) => {
 });
 
 // Middleware
-app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.path} from ${req.headers.origin}`);
-  const allowedOrigins = [
-    'https://cf-compass-frontend.onrender.com',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000'
-  ];
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
+app.use(cors({
+  origin: ['https://cf-compass-frontend.onrender.com', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use(bodyParser.json({ limit: '10mb' }));
 
