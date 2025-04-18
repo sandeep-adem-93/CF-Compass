@@ -32,11 +32,13 @@ export const getPatientById = async (id) => {
 };
 
 // Upload and analyze patient data
-export const uploadPatientData = async (patientData, apiKey, modelProvider) => {
+export const uploadPatientData = async (requestData) => {
   try {
     console.log('=== PATIENT SERVICE: uploadPatientData called ===');
     const url = `${API_URL.replace(/\/+$/, '')}/api/patients/upload`;
     console.log('Uploading patient data to:', url);
+    
+    const { patientData, apiKey, modelProvider } = requestData;
     
     // Validate inputs
     if (!patientData) {
@@ -49,36 +51,31 @@ export const uploadPatientData = async (patientData, apiKey, modelProvider) => {
       throw new Error('Model provider is required');
     }
 
-    console.log('API Key provided:', !!apiKey, '(length:', apiKey.length, ')');
-    console.log('Model provider:', modelProvider);
-    console.log('Patient data provided:', !!patientData, '(type:', typeof patientData, ')');
-
-    // Prepare the request payload
-    const payload = {
-      patientData,
-      apiKey: apiKey.trim(),
-      modelProvider: modelProvider.trim()
-    };
-
-    // Log the structure of the payload (without sensitive data)
-    console.log('Request payload structure:', {
-      hasPatientData: !!patientData,
-      patientDataType: typeof patientData,
-      resourceType: patientData.resourceType,
-      hasApiKey: !!apiKey,
-      apiKeyLength: apiKey.length,
-      modelProvider: modelProvider
-    });
+    // Debug logs
+    console.log('Request validation passed:');
+    console.log('- API Key:', apiKey ? `${apiKey.substring(0, 5)}... (length: ${apiKey.length})` : 'missing');
+    console.log('- Model provider:', modelProvider);
+    console.log('- Patient data type:', typeof patientData);
+    console.log('- Patient data keys:', Object.keys(patientData));
 
     // Make the API request
     console.log('Making request to:', url);
-    const response = await axios.post(url, payload, {
+    const response = await axios.post(url, {
+      patientData,
+      apiKey: apiKey.trim(),
+      modelProvider: modelProvider.trim()
+    }, {
       headers: {
         'Content-Type': 'application/json'
       }
     });
 
-    console.log('Response status:', response.status);
+    console.log('Response received:', {
+      status: response.status,
+      success: response.data.success,
+      patientId: response.data.patientId
+    });
+    
     return response.data;
   } catch (error) {
     console.error('Error uploading patient data:', error);
@@ -86,7 +83,7 @@ export const uploadPatientData = async (patientData, apiKey, modelProvider) => {
       console.error('Response status:', error.response.status);
       console.error('Error details:', error.response.data);
     }
-    throw new Error('Failed to upload patient data');
+    throw error.response?.data?.error || new Error('Failed to upload patient data');
   }
 };
 
@@ -106,9 +103,7 @@ export const calculateAge = (dob) => {
   return age;
 };
 
-// src/services/patientService.js
-// Add this function to your existing file
-
+// Delete a patient
 export const deletePatient = async (patientId) => {
   try {
     console.log('Deleting patient with ID:', patientId);

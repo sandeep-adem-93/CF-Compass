@@ -98,7 +98,7 @@ function AddPatientModal({ onClose, onAddPatient }) {
       return;
     }
   
-    if (!apiKey) {
+    if (!apiKey || apiKey.trim().length === 0) {
       setError('Please enter your API key');
       return;
     }
@@ -120,9 +120,13 @@ function AddPatientModal({ onClose, onAddPatient }) {
       
       // Debug logs before submission
       console.log("About to submit data to backend:");
-      console.log("API Key present:", apiKey ? "Yes (length: " + apiKey.length + ")" : "No");
+      console.log("API Key:", apiKey ? `${apiKey.substring(0, 5)}... (length: ${apiKey.length})` : 'missing');
       console.log("Model Provider:", modelProvider);
-      console.log("Patient data present:", parsedData ? "Yes (type: " + typeof parsedData + ")" : "No");
+      console.log("Patient data:", {
+        type: typeof parsedData,
+        resourceType: parsedData.resourceType,
+        hasEntries: !!parsedData.entry?.length
+      });
       
       // Verify this is a FHIR Bundle
       if (!parsedData.resourceType) {
@@ -140,16 +144,20 @@ function AddPatientModal({ onClose, onAddPatient }) {
       
       setAnalysisStage(`Analyzing with ${modelProvider}...`);
       
-      // Prepare the request object
+      // Send to backend with API key for analysis
       const requestData = {
         patientData: parsedData,
-        apiKey: apiKey,
-        modelProvider: modelProvider
+        apiKey: apiKey.trim(),
+        modelProvider: modelProvider.trim()
       };
+
+      console.log("Sending request with data:", {
+        apiKeyLength: requestData.apiKey.length,
+        modelProvider: requestData.modelProvider,
+        patientDataType: typeof requestData.patientData
+      });
       
-      // Send to backend with API key for analysis
       const response = await uploadPatientData(requestData);
-      
       console.log("Upload response:", response);
 
       if (response && response.success) {

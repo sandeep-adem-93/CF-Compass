@@ -234,9 +234,15 @@ app.delete('/api/patients/:id', async (req, res) => {
 app.post('/api/patients/upload', async (req, res) => {
   try {
     console.log('=== Patient Upload Request ===');
-    console.log('Request body:', {
+    console.log('Raw request body:', req.body);
+    console.log('Request headers:', req.headers);
+    console.log('Content type:', req.headers['content-type']);
+    console.log('Request body details:', {
       hasPatientData: !!req.body.patientData,
-      hasApiKey: !!req.body.apiKey,
+      patientDataType: typeof req.body.patientData,
+      apiKey: req.body.apiKey ? `${req.body.apiKey.substring(0, 5)}...` : 'missing',
+      apiKeyType: typeof req.body.apiKey,
+      apiKeyLength: req.body.apiKey ? req.body.apiKey.length : 0,
       modelProvider: req.body.modelProvider
     });
 
@@ -244,19 +250,32 @@ app.post('/api/patients/upload', async (req, res) => {
 
     // Validate patient data
     if (!patientData || typeof patientData !== 'object') {
-      console.error('Invalid or missing patient data');
+      console.error('Invalid or missing patient data:', {
+        exists: !!patientData,
+        type: typeof patientData,
+        value: patientData
+      });
       return res.status(400).json({ error: 'Valid patient data is required' });
     }
 
     // Validate API key
     if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length === 0) {
-      console.error('Invalid or missing API key');
+      console.error('Invalid or missing API key:', {
+        exists: !!apiKey,
+        type: typeof apiKey,
+        length: apiKey ? apiKey.length : 0,
+        trimmedLength: apiKey ? apiKey.trim().length : 0
+      });
       return res.status(400).json({ error: 'Valid API key is required' });
     }
 
     // Validate model provider
     if (!modelProvider || typeof modelProvider !== 'string' || modelProvider.trim().length === 0) {
-      console.error('Invalid or missing model provider');
+      console.error('Invalid or missing model provider:', {
+        exists: !!modelProvider,
+        type: typeof modelProvider,
+        value: modelProvider
+      });
       return res.status(400).json({ error: 'Valid model provider is required' });
     }
 
@@ -264,14 +283,16 @@ app.post('/api/patients/upload', async (req, res) => {
     console.log('Processing patient data with:', {
       modelProvider,
       apiKeyLength: apiKey.length,
-      patientDataType: typeof patientData
+      patientDataType: typeof patientData,
+      patientDataKeys: Object.keys(patientData)
     });
 
     const processedData = await processFhirJsonFile(patientData, apiKey.trim(), modelProvider.trim());
     console.log('Processed patient data:', {
       id: processedData.id,
       name: processedData.name,
-      hasVariants: !!processedData.variants
+      hasVariants: !!processedData.variants,
+      variantsCount: processedData.variants?.length
     });
 
     // Save to MongoDB
