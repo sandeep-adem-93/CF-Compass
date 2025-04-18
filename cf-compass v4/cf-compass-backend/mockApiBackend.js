@@ -15,39 +15,41 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
+mongoose.connect(process.env.MONGODB_URI)
+.then(async () => {
   console.log('MongoDB connected successfully');
-  // Populate database with sample patients if empty
-  Patient.countDocuments({})
-    .then(count => {
-      if (count === 0) {
-        console.log('Database is empty, populating with sample patients...');
-        const patients = require('./data/patients.json');
-        const formattedPatients = patients.map(patient => ({
-          resourceType: 'Patient',
-          id: patient.id,
-          name: [{
-            given: [patient.name.split(' ')[0]],
-            family: patient.name.split(' ')[1],
-            text: patient.name
-          }],
-          gender: patient.gender,
-          birthDate: patient.dob,
-          variants: patient.variants,
-          geneticSummary: patient.geneticSummary,
-          clinicalDetails: patient.clinicalDetails,
-          analysisProvider: patient.analysisProvider || 'test',
-          status: 'Active'
-        }));
-        return Patient.insertMany(formattedPatients);
-      }
-    })
-    .then(() => console.log('Database population complete'))
-    .catch(err => console.error('Error populating database:', err));
+  
+  // Check if database is empty and populate if needed
+  const count = await Patient.countDocuments({});
+  if (count === 0) {
+    console.log('Database is empty, populating with sample patients...');
+    try {
+      const patients = require('./data/patients.json');
+      const formattedPatients = patients.map(patient => ({
+        resourceType: 'Patient',
+        id: patient.id,
+        name: [{
+          given: [patient.name.split(' ')[0]],
+          family: patient.name.split(' ')[1],
+          text: patient.name
+        }],
+        gender: patient.gender,
+        birthDate: patient.dob,
+        variants: patient.variants,
+        geneticSummary: patient.geneticSummary,
+        clinicalDetails: patient.clinicalDetails,
+        analysisProvider: patient.analysisProvider || 'test',
+        status: 'Active'
+      }));
+      
+      await Patient.insertMany(formattedPatients);
+      console.log(`Successfully inserted ${formattedPatients.length} patients`);
+    } catch (error) {
+      console.error('Error populating database:', error);
+    }
+  } else {
+    console.log(`Database already contains ${count} patients`);
+  }
 })
 .catch(err => {
   console.error('MongoDB connection error:', err);
@@ -89,7 +91,6 @@ app.get('/api/patients', async (req, res) => {
   try {
     console.log('=== Patient API Request ===');
     console.log('MongoDB Connection Status:', mongoose.connection.readyState);
-    console.log('MongoDB URL:', process.env.MONGODB_URI);
     
     const patients = await Patient.find({});
     console.log(`Found ${patients.length} patients in database`);
@@ -97,6 +98,7 @@ app.get('/api/patients', async (req, res) => {
     // Format patients with proper name handling
     const formattedPatients = patients.map(patient => {
       const patientObj = patient.toObject();
+      
       // Handle name array
       let formattedName = 'Unknown';
       if (Array.isArray(patientObj.name) && patientObj.name.length > 0) {
@@ -105,6 +107,14 @@ app.get('/api/patients', async (req, res) => {
           formattedName = `${nameObj.given[0]} ${nameObj.family}`;
         } else if (nameObj.text) {
           formattedName = nameObj.text;
+        }
+      }
+      
+      // If name is still Unknown, try to get it from geneticSummary
+      if (formattedName === 'Unknown' && patientObj.geneticSummary) {
+        const nameMatch = patientObj.geneticSummary.match(/Patient (\w+ \w+)/);
+        if (nameMatch) {
+          formattedName = nameMatch[1];
         }
       }
       
