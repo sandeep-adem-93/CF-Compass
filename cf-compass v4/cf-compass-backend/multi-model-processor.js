@@ -91,37 +91,47 @@ IMPORTANT FORMATTING RULES:
     let geneticSummary = '';
     let clinicalDetails = [];
     
-    if (responseText.includes('GENETIC ANALYSIS') && responseText.includes('CLINICAL RECOMMENDATIONS')) {
-      console.log('Response contains expected sections');
-      // Extract the two main sections
-      const sections = responseText.split('CLINICAL RECOMMENDATIONS');
-      geneticSummary = sections[0].replace('GENETIC ANALYSIS', '').trim();
-      console.log('Genetic summary length:', geneticSummary.length);
+    // First, try to split the response into genetic analysis and clinical recommendations
+    const geneticAnalysisMatch = responseText.match(/GENETIC ANALYSIS\s*([\s\S]*?)(?=CLINICAL RECOMMENDATIONS|$)/i);
+    const clinicalRecommendationsMatch = responseText.match(/CLINICAL RECOMMENDATIONS\s*([\s\S]*?)$/i);
+    
+    if (geneticAnalysisMatch) {
+      geneticSummary = geneticAnalysisMatch[1].trim();
+      console.log('Extracted genetic summary, length:', geneticSummary.length);
+    } else {
+      console.log('No genetic analysis section found, using first half of response');
+      const halfPoint = Math.floor(responseText.length / 2);
+      geneticSummary = responseText.substring(0, halfPoint).trim();
+    }
+    
+    // Initialize clinical details with empty sections
+    clinicalDetails = requiredSections.map(section => ({
+      type: 'recommendation',
+      text: section,
+      value: 'No specific recommendations available.'
+    }));
+    
+    // Process clinical recommendations if found
+    if (clinicalRecommendationsMatch) {
+      const clinicalText = clinicalRecommendationsMatch[1].trim();
+      console.log('Processing clinical recommendations, length:', clinicalText.length);
       
-      // Parse clinical recommendations into structured format
-      const clinicalText = sections[1].trim();
-      console.log('Clinical text length:', clinicalText.length);
-      
-      // Initialize clinical details with empty sections
-      clinicalDetails = requiredSections.map(section => ({
-        type: 'recommendation',
-        text: section,
-        value: 'No specific recommendations available.'
-      }));
-      
-      console.log('Initialized clinical details with empty sections');
-      
-      // Extract content for each section
+      // Extract each section
       requiredSections.forEach((section, index) => {
         console.log(`Processing section: ${section}`);
-        // Look for the section in the text
+        // Look for numbered sections (e.g., "1. Pulmonary Management:")
         const sectionRegex = new RegExp(`\\d+\\.\\s*${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
         const match = clinicalText.match(sectionRegex);
         
         if (match) {
           console.log(`Found section: ${section}`);
           // Extract the content after the section title
-          const content = match[0].replace(new RegExp(`\\d+\\.\\s*${section}\\s*:?\\s*`, 'i'), '').trim();
+          const content = match[0]
+            .replace(new RegExp(`\\d+\\.\\s*${section}\\s*:?\\s*`, 'i'), '')
+            .trim()
+            .replace(/\n\s*\n/g, '\n') // Remove extra blank lines
+            .trim();
+            
           if (content) {
             clinicalDetails[index].value = content;
             console.log(`Content length for ${section}:`, content.length);
@@ -131,26 +141,22 @@ IMPORTANT FORMATTING RULES:
         }
       });
     } else {
-      console.log('Response does not contain expected sections, using fallback parsing');
-      // Fallback if the response isn't formatted as expected
+      console.log('No clinical recommendations section found, using fallback parsing');
+      // Try to find sections in the second half of the response
       const halfPoint = Math.floor(responseText.length / 2);
-      geneticSummary = responseText.substring(0, halfPoint);
-      
-      // Initialize clinical details with empty sections
-      clinicalDetails = requiredSections.map(section => ({
-        type: 'recommendation',
-        text: section,
-        value: 'No specific recommendations available.'
-      }));
-      
-      // Try to find sections in the second half
       const clinicalText = responseText.substring(halfPoint);
+      
       requiredSections.forEach((section, index) => {
         const sectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\n\\s*\\d+\\.\\s*|$)`, 'i');
         const match = clinicalText.match(sectionRegex);
         
         if (match) {
-          const content = match[0].replace(new RegExp(`${section}\\s*:?\\s*`, 'i'), '').trim();
+          const content = match[0]
+            .replace(new RegExp(`${section}\\s*:?\\s*`, 'i'), '')
+            .trim()
+            .replace(/\n\s*\n/g, '\n') // Remove extra blank lines
+            .trim();
+            
           if (content) {
             clinicalDetails[index].value = content;
           }
