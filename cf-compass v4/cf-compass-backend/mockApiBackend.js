@@ -317,6 +317,30 @@ app.post('/api/patients/upload', async (req, res) => {
   }
 });
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../cf-compass-frontend/build')));
+
+// API routes
+app.use('/api', require('./routes/patients'));
+
+// Catch-all route to serve the React app
+app.get('*', (req, res) => {
+  // Check if the request is for an API endpoint
+  if (req.path.startsWith('/api/')) {
+    res.status(404).json({ error: 'API endpoint not found' });
+    return;
+  }
+  
+  // For all other routes, serve the frontend application
+  res.sendFile(path.join(__dirname, '../cf-compass-frontend/build/index.html'));
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error handling middleware:', err);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
