@@ -201,17 +201,20 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
       
       // If the deleted patient was the current one, navigate to another
       if (currentPatient && currentPatient.id === patientId) {
-        if (patients.length > 0) {
+        // Get the updated patient list
+        const updatedPatients = await getPatients();
+        
+        if (updatedPatients.length > 0) {
           // Find the next patient in the list
-          const currentIndex = patients.findIndex(p => p.id === patientId);
+          const currentIndex = updatedPatients.findIndex(p => p.id === patientId);
           let nextPatient;
           
-          if (currentIndex === -1 || currentIndex === patients.length - 1) {
+          if (currentIndex === -1 || currentIndex === updatedPatients.length - 1) {
             // If the deleted patient was the last one or not found, go to the first patient
-            nextPatient = patients[0];
+            nextPatient = updatedPatients[0];
           } else {
             // Otherwise, go to the next patient in the list
-            nextPatient = patients[currentIndex];
+            nextPatient = updatedPatients[currentIndex + 1];
           }
           
           if (nextPatient) {
