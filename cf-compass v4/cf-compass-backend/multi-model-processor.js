@@ -12,12 +12,23 @@ const { processFhirJsonFile } = require("./fhirtoprompt");
 
 async function analyzeWithMultipleProviders(fhirData, apiKey, modelProvider) {
   try {
+    console.log('=== Starting LLM Analysis ===');
+    console.log('Model Provider:', modelProvider);
+    console.log('API Key Length:', apiKey.length);
+    
     // Process the FHIR data
     const patientParagraph = await processFhirJsonFile(fhirData, apiKey, modelProvider);
+    console.log('Processed FHIR data into text description successfully');
     
-    console.log(`Processed FHIR data into text description successfully`);
-    console.log(`Using model provider: ${modelProvider}`);
-    console.log(`API key length: ${apiKey ? apiKey.length : 0}`);
+    // Define the required sections at the top level
+    const requiredSections = [
+      'Pulmonary Management',
+      'Pancreatic/Nutritional Management',
+      'CFTR Modulator Therapy Considerations',
+      'Monitoring and Follow-up Recommendations'
+    ];
+    
+    console.log('Required sections defined:', requiredSections);
     
     // Base prompt template used across all models
     const promptTemplate = `You are a cystic fibrosis genetic specialist analyzing patient data. Your analysis must strictly follow this format:
@@ -52,45 +63,44 @@ IMPORTANT FORMATTING RULES:
     
     // Combine patient data with prompt
     const fullPrompt = `${patientParagraph}\n\n${promptTemplate}`;
+    console.log('Full prompt length:', fullPrompt.length);
     
     let responseText = '';
     
     // Use the appropriate API based on the provider
     switch(modelProvider.toLowerCase()) {
       case 'gemini':
+        console.log('Calling Gemini API...');
         responseText = await callGeminiAPI(fullPrompt, apiKey);
         break;
       case 'openai':
+        console.log('Calling OpenAI API...');
         responseText = await callOpenAIAPI(fullPrompt, apiKey);
         break;
       case 'anthropic':
+        console.log('Calling Anthropic API...');
         responseText = await callAnthropicAPI(fullPrompt, apiKey);
         break;
       default:
         throw new Error(`Unsupported model provider: ${modelProvider}`);
     }
     
-    console.log(`Received response from ${modelProvider} API`);
+    console.log('Received response from API, length:', responseText.length);
     
     // Process the response
     let geneticSummary = '';
     let clinicalDetails = [];
     
     if (responseText.includes('GENETIC ANALYSIS') && responseText.includes('CLINICAL RECOMMENDATIONS')) {
+      console.log('Response contains expected sections');
       // Extract the two main sections
       const sections = responseText.split('CLINICAL RECOMMENDATIONS');
       geneticSummary = sections[0].replace('GENETIC ANALYSIS', '').trim();
+      console.log('Genetic summary length:', geneticSummary.length);
       
       // Parse clinical recommendations into structured format
       const clinicalText = sections[1].trim();
-      
-      // Define the required sections
-      const requiredSections = [
-        'Pulmonary Management',
-        'Pancreatic/Nutritional Management',
-        'CFTR Modulator Therapy Considerations',
-        'Monitoring and Follow-up Recommendations'
-      ];
+      console.log('Clinical text length:', clinicalText.length);
       
       // Initialize clinical details with empty sections
       clinicalDetails = requiredSections.map(section => ({
@@ -99,21 +109,29 @@ IMPORTANT FORMATTING RULES:
         value: 'No specific recommendations available.'
       }));
       
+      console.log('Initialized clinical details with empty sections');
+      
       // Extract content for each section
       requiredSections.forEach((section, index) => {
+        console.log(`Processing section: ${section}`);
         // Look for the section in the text
         const sectionRegex = new RegExp(`\\d+\\.\\s*${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
         const match = clinicalText.match(sectionRegex);
         
         if (match) {
+          console.log(`Found section: ${section}`);
           // Extract the content after the section title
           const content = match[0].replace(new RegExp(`\\d+\\.\\s*${section}\\s*:?\\s*`, 'i'), '').trim();
           if (content) {
             clinicalDetails[index].value = content;
+            console.log(`Content length for ${section}:`, content.length);
           }
+        } else {
+          console.log(`Section not found: ${section}`);
         }
       });
     } else {
+      console.log('Response does not contain expected sections, using fallback parsing');
       // Fallback if the response isn't formatted as expected
       const halfPoint = Math.floor(responseText.length / 2);
       geneticSummary = responseText.substring(0, halfPoint);
@@ -140,13 +158,16 @@ IMPORTANT FORMATTING RULES:
       });
     }
     
+    console.log('Final genetic summary length:', geneticSummary.length);
+    console.log('Final clinical details count:', clinicalDetails.length);
+    
     return {
       geneticSummary,
       clinicalDetails,
       providerUsed: modelProvider
     };
   } catch (error) {
-    console.error(`Error analyzing with ${modelProvider}:`, error);
+    console.error('Error in analyzeWithMultipleProviders:', error);
     throw error;
   }
 }

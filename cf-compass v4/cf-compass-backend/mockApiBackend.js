@@ -234,48 +234,21 @@ app.delete('/api/patients/:id', async (req, res) => {
 app.post('/api/patients/upload', async (req, res) => {
   try {
     console.log('=== Patient Upload Request ===');
-    console.log('Raw request body:', req.body);
-    console.log('Request headers:', req.headers);
-    console.log('Content type:', req.headers['content-type']);
-    console.log('Request body details:', {
-      hasPatientData: !!req.body.patientData,
-      patientDataType: typeof req.body.patientData,
-      apiKey: req.body.apiKey ? `${req.body.apiKey.substring(0, 5)}...` : 'missing',
-      apiKeyType: typeof req.body.apiKey,
-      apiKeyLength: req.body.apiKey ? req.body.apiKey.length : 0,
-      modelProvider: req.body.modelProvider
-    });
-
+    console.log('Request body keys:', Object.keys(req.body));
+    
     const { patientData, apiKey, modelProvider } = req.body;
-
-    // Validate patient data
-    if (!patientData || typeof patientData !== 'object') {
-      console.error('Invalid or missing patient data:', {
-        exists: !!patientData,
-        type: typeof patientData,
-        value: patientData
-      });
-      return res.status(400).json({ error: 'Valid patient data is required' });
+    
+    // Validate inputs
+    if (!patientData) {
+      console.error('Missing patient data');
+      return res.status(400).json({ error: 'Patient data is required' });
     }
-
-    // Validate API key
     if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length === 0) {
-      console.error('Invalid or missing API key:', {
-        exists: !!apiKey,
-        type: typeof apiKey,
-        length: apiKey ? apiKey.length : 0,
-        trimmedLength: apiKey ? apiKey.trim().length : 0
-      });
+      console.error('Invalid API key');
       return res.status(400).json({ error: 'Valid API key is required' });
     }
-
-    // Validate model provider
-    if (!modelProvider || typeof modelProvider !== 'string' || modelProvider.trim().length === 0) {
-      console.error('Invalid or missing model provider:', {
-        exists: !!modelProvider,
-        type: typeof modelProvider,
-        value: modelProvider
-      });
+    if (!modelProvider || typeof modelProvider !== 'string') {
+      console.error('Invalid model provider');
       return res.status(400).json({ error: 'Valid model provider is required' });
     }
 
@@ -288,6 +261,7 @@ app.post('/api/patients/upload', async (req, res) => {
     });
 
     // First process the FHIR data
+    console.log('Starting FHIR data processing...');
     const processedData = await processFhirJsonFile(patientData, apiKey.trim(), modelProvider.trim());
     console.log('Processed patient data:', {
       id: processedData.id,
@@ -297,11 +271,12 @@ app.post('/api/patients/upload', async (req, res) => {
     });
 
     // Then analyze with the LLM
-    console.log('Starting LLM analysis with:', modelProvider);
+    console.log('Starting LLM analysis...');
     const analysis = await analyzeWithMultipleProviders(patientData, apiKey.trim(), modelProvider.trim());
     console.log('LLM analysis completed:', {
       hasGeneticSummary: !!analysis.geneticSummary,
-      hasClinicalDetails: !!analysis.clinicalDetails
+      hasClinicalDetails: !!analysis.clinicalDetails,
+      clinicalDetailsCount: analysis.clinicalDetails?.length
     });
 
     // Combine the processed data with the LLM analysis
@@ -312,7 +287,15 @@ app.post('/api/patients/upload', async (req, res) => {
       analysisProvider: modelProvider
     };
 
+    console.log('Final patient data prepared:', {
+      id: finalPatientData.id,
+      name: finalPatientData.name,
+      hasGeneticSummary: !!finalPatientData.geneticSummary,
+      clinicalDetailsCount: finalPatientData.clinicalDetails?.length
+    });
+
     // Save to MongoDB
+    console.log('Saving patient to database...');
     const patient = new Patient(finalPatientData);
     await patient.save();
     console.log('Patient saved to database:', patient.id);
@@ -328,6 +311,7 @@ app.post('/api/patients/upload', async (req, res) => {
     });
   } catch (error) {
     console.error('Error processing patient upload:', error);
+    console.error('Error stack:', error.stack);
     const errorMessage = error.message || 'Failed to process patient data';
     res.status(500).json({ error: errorMessage });
   }
