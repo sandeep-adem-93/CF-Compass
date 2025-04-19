@@ -100,6 +100,7 @@ IMPORTANT FORMATTING RULES:
       geneticSummary = geneticAnalysisMatch[1]
         .replace(/\d+\.\s*(Pulmonary|Pancreatic|CFTR|Monitoring).*?(?=\d+\.|$)/g, '')
         .replace(/In summary.*$/i, '')
+        .replace(/In conclusion.*$/i, '')
         .trim();
       console.log('Extracted genetic summary, length:', geneticSummary.length);
     } else {
@@ -108,6 +109,7 @@ IMPORTANT FORMATTING RULES:
       geneticSummary = responseText.substring(0, halfPoint)
         .replace(/\d+\.\s*(Pulmonary|Pancreatic|CFTR|Monitoring).*?(?=\d+\.|$)/g, '')
         .replace(/In summary.*$/i, '')
+        .replace(/In conclusion.*$/i, '')
         .trim();
     }
     
@@ -139,6 +141,8 @@ IMPORTANT FORMATTING RULES:
             .replace(/\n\s*\n/g, '\n') // Remove extra blank lines
             .replace(/In summary.*$/i, '') // Remove summary statements
             .replace(/In conclusion.*$/i, '') // Remove conclusion statements
+            .replace(/The overall goal.*$/i, '') // Remove goal statements
+            .replace(/The aim of this therapy.*$/i, '') // Remove aim statements
             .trim();
             
           if (content) {
@@ -166,6 +170,8 @@ IMPORTANT FORMATTING RULES:
             .replace(/\n\s*\n/g, '\n') // Remove extra blank lines
             .replace(/In summary.*$/i, '') // Remove summary statements
             .replace(/In conclusion.*$/i, '') // Remove conclusion statements
+            .replace(/The overall goal.*$/i, '') // Remove goal statements
+            .replace(/The aim of this therapy.*$/i, '') // Remove aim statements
             .trim();
             
           if (content) {
@@ -174,6 +180,18 @@ IMPORTANT FORMATTING RULES:
         }
       });
     }
+    
+    // Clean up any remaining summary or conclusion statements
+    clinicalDetails.forEach(detail => {
+      if (detail.value) {
+        detail.value = detail.value
+          .replace(/In summary.*$/i, '')
+          .replace(/In conclusion.*$/i, '')
+          .replace(/The overall goal.*$/i, '')
+          .replace(/The aim of this therapy.*$/i, '')
+          .trim();
+      }
+    });
     
     console.log('Final genetic summary length:', geneticSummary.length);
     console.log('Final clinical details count:', clinicalDetails.length);
