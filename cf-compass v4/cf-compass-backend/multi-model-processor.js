@@ -149,11 +149,15 @@ IMPORTANT FORMATTING RULES:
             .replace(/The aim of this therapy.*$/i, '')
             .replace(/This integrated approach.*$/i, '')
             .replace(/This approach aims.*$/i, '')
+            .replace(/The treatment approach.*$/i, '')
+            .replace(/This comprehensive approach.*$/i, '')
+            .replace(/The overall treatment approach.*$/i, '')
             .trim();
             
           // Find the matching required section
           const matchingSection = requiredSections.findIndex(section => 
-            sectionTitle.toLowerCase().includes(section.toLowerCase())
+            sectionTitle.toLowerCase().includes(section.toLowerCase()) ||
+            section.toLowerCase().includes(sectionTitle.toLowerCase())
           );
           
           if (matchingSection !== -1 && sectionContent) {
@@ -165,25 +169,38 @@ IMPORTANT FORMATTING RULES:
         // If no numbered sections found, try to find unnumbered sections
         console.log('No numbered sections found, trying unnumbered sections');
         requiredSections.forEach((section, index) => {
-          const sectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
-          const match = clinicalText.match(sectionRegex);
+          // Try multiple patterns to find the section
+          const patterns = [
+            new RegExp(`${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i'),
+            new RegExp(`${section}[\\s\\S]*?(?=\\n\\s*\\d+\\.\\s*|$)`, 'i'),
+            new RegExp(`${section}[\\s\\S]*?(?=\\n\\s*[A-Z][^a-z]+:|$)`, 'i'),
+            new RegExp(`${section}[\\s\\S]*?(?=\\n\\s*[A-Z][^a-z]+\\s*:|$)`, 'i')
+          ];
           
-          if (match) {
-            const content = match[0]
-              .replace(new RegExp(`${section}\\s*:?\\s*`, 'i'), '')
-              .trim()
-              .replace(/In summary.*$/i, '')
-              .replace(/In conclusion.*$/i, '')
-              .replace(/The overall goal.*$/i, '')
-              .replace(/The aim of this therapy.*$/i, '')
-              .replace(/This integrated approach.*$/i, '')
-              .replace(/This approach aims.*$/i, '')
-              .trim();
-              
-            if (content) {
-              clinicalDetails[index].value = content;
-              console.log(`Assigned content to section ${section}`);
+          let content = null;
+          for (const pattern of patterns) {
+            const match = clinicalText.match(pattern);
+            if (match) {
+              content = match[0]
+                .replace(new RegExp(`${section}\\s*:?\\s*`, 'i'), '')
+                .trim()
+                .replace(/In summary.*$/i, '')
+                .replace(/In conclusion.*$/i, '')
+                .replace(/The overall goal.*$/i, '')
+                .replace(/The aim of this therapy.*$/i, '')
+                .replace(/This integrated approach.*$/i, '')
+                .replace(/This approach aims.*$/i, '')
+                .replace(/The treatment approach.*$/i, '')
+                .replace(/This comprehensive approach.*$/i, '')
+                .replace(/The overall treatment approach.*$/i, '')
+                .trim();
+              break;
             }
+          }
+          
+          if (content) {
+            clinicalDetails[index].value = content;
+            console.log(`Assigned content to section ${section}`);
           }
         });
       }
@@ -194,27 +211,37 @@ IMPORTANT FORMATTING RULES:
       const clinicalText = responseText.substring(halfPoint);
       
       requiredSections.forEach((section, index) => {
-        // Try both numbered and unnumbered formats
-        const sectionRegex = new RegExp(`\\d+\\.\\s*${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
-        const altSectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
+        // Try multiple patterns to find the section
+        const patterns = [
+          new RegExp(`\\d+\\.\\s*${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i'),
+          new RegExp(`${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i'),
+          new RegExp(`\\d+\\.\\s*${section}[\\s\\S]*?(?=\\n\\s*\\d+\\.\\s*|$)`, 'i'),
+          new RegExp(`${section}[\\s\\S]*?(?=\\n\\s*[A-Z][^a-z]+:|$)`, 'i')
+        ];
         
-        const match = clinicalText.match(sectionRegex) || clinicalText.match(altSectionRegex);
-        
-        if (match) {
-          const content = match[0]
-            .replace(new RegExp(`(\\d+\\.\\s*)?${section}\\s*:?\\s*`, 'i'), '')
-            .trim()
-            .replace(/In summary.*$/i, '')
-            .replace(/In conclusion.*$/i, '')
-            .replace(/The overall goal.*$/i, '')
-            .replace(/The aim of this therapy.*$/i, '')
-            .replace(/This integrated approach.*$/i, '')
-            .replace(/This approach aims.*$/i, '')
-            .trim();
-            
-          if (content) {
-            clinicalDetails[index].value = content;
+        let content = null;
+        for (const pattern of patterns) {
+          const match = clinicalText.match(pattern);
+          if (match) {
+            content = match[0]
+              .replace(new RegExp(`(\\d+\\.\\s*)?${section}\\s*:?\\s*`, 'i'), '')
+              .trim()
+              .replace(/In summary.*$/i, '')
+              .replace(/In conclusion.*$/i, '')
+              .replace(/The overall goal.*$/i, '')
+              .replace(/The aim of this therapy.*$/i, '')
+              .replace(/This integrated approach.*$/i, '')
+              .replace(/This approach aims.*$/i, '')
+              .replace(/The treatment approach.*$/i, '')
+              .replace(/This comprehensive approach.*$/i, '')
+              .replace(/The overall treatment approach.*$/i, '')
+              .trim();
+            break;
           }
+        }
+        
+        if (content) {
+          clinicalDetails[index].value = content;
         }
       });
     }
@@ -229,9 +256,23 @@ IMPORTANT FORMATTING RULES:
           .replace(/The aim of this therapy.*$/i, '')
           .replace(/This integrated approach.*$/i, '')
           .replace(/This approach aims.*$/i, '')
+          .replace(/The treatment approach.*$/i, '')
+          .replace(/This comprehensive approach.*$/i, '')
+          .replace(/The overall treatment approach.*$/i, '')
           .trim();
       }
     });
+    
+    // Verify all sections are properly populated
+    const missingSections = clinicalDetails.filter(detail => !detail.value || detail.value === 'No specific recommendations available.');
+    if (missingSections.length > 0) {
+      console.log('Missing sections detected, retrying with alternative parsing...');
+      // Retry with alternative parsing if any sections are missing
+      const retryResult = await analyzeWithMultipleProviders(fhirData, apiKey, modelProvider);
+      if (retryResult.clinicalDetails.every(detail => detail.value && detail.value !== 'No specific recommendations available.')) {
+        return retryResult;
+      }
+    }
     
     console.log('Final genetic summary length:', geneticSummary.length);
     console.log('Final clinical details count:', clinicalDetails.length);
