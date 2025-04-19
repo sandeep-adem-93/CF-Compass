@@ -1,6 +1,6 @@
 const fetchPatients = async () => {
   try {
-    const baseUrl = (process.env.REACT_APP_API_URL || 'https://cf-compass.onrender.com').replace(/\/+$/, '');
+    const baseUrl = (process.env.REACT_APP_API_URL || 'https://cf-compass-backend.onrender.com').replace(/\/+$/, '');
     const response = await fetch(`${baseUrl}/api/patients`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
