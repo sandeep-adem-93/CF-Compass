@@ -141,36 +141,15 @@ app.get('/api/patients', async (req, res) => {
     
     const patients = await Patient.find({});
     console.log(`Found ${patients.length} patients in database`);
-    console.log('Raw patients from database:', JSON.stringify(patients, null, 2));
     
-    // Format patients with proper name handling
+    // Simplified patient formatting
     const formattedPatients = patients.map(patient => {
       const patientObj = patient.toObject();
       console.log('Processing patient:', patientObj.id);
       
-      // Handle name array
-      let formattedName = 'Unknown';
-      if (Array.isArray(patientObj.name) && patientObj.name.length > 0) {
-        const nameObj = patientObj.name[0];
-        console.log('Name object:', nameObj);
-        if (nameObj.given && nameObj.family) {
-          formattedName = `${nameObj.given[0]} ${nameObj.family}`;
-        } else if (nameObj.text) {
-          formattedName = nameObj.text;
-        }
-      }
-      
-      // If name is still Unknown, try to get it from geneticSummary
-      if (formattedName === 'Unknown' && patientObj.geneticSummary) {
-        const nameMatch = patientObj.geneticSummary.match(/Patient (\w+ \w+)/);
-        if (nameMatch) {
-          formattedName = nameMatch[1];
-        }
-      }
-      
-      const formattedPatient = {
+      return {
         ...patientObj,
-        name: formattedName,
+        name: patientObj.name || 'Unknown',
         id: patientObj.id,
         gender: patientObj.gender,
         birthDate: patientObj.birthDate,
@@ -180,15 +159,12 @@ app.get('/api/patients', async (req, res) => {
         analysisProvider: patientObj.analysisProvider,
         status: 'Active'
       };
-      
-      console.log('Formatted patient:', formattedPatient);
-      return formattedPatient;
     });
     
-    console.log('Sending response with formatted patients:', JSON.stringify(formattedPatients, null, 2));
+    console.log('Formatted patients:', formattedPatients);
     res.json(formattedPatients);
   } catch (error) {
-    console.error('Error in /api/patients:', error);
+    console.error('Error fetching patients:', error);
     res.status(500).json({ error: 'Failed to fetch patients' });
   }
 });
