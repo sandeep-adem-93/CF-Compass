@@ -5,7 +5,8 @@
   "main": "mockApiBackend.js",
   "scripts": {
     "start": "node mockApiBackend.js",
-    "dev": "nodemon mockApiBackend.js"
+    "dev": "nodemon mockApiBackend.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@google/generative-ai": "^0.2.1",
@@ -13,14 +14,19 @@
     "@langchain/google-genai": "^0.2.0",
     "@langchain/openai": "^0.5.0",
     "axios": "^1.8.4",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "langchain": "^0.3.19",
     "mongoose": "^8.13.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }

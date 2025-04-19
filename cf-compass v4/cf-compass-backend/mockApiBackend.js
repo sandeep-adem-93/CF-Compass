@@ -11,6 +11,8 @@ const mongoose = require('mongoose');
 
 const { processFhirJsonFile } = require('./fhirtoprompt');
 const { analyzeWithMultipleProviders } = require('./multi-model-processor');
+const authRoutes = require('./routes/authRoutes');
+const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -108,15 +110,20 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Middleware
-app.use(cors({
-  origin: ['https://cf-compass-frontend.onrender.com', 'http://localhost:3000'],
+// CORS configuration
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'https://cf-compass.onrender.com',
+    'https://cf-compass-frontend.onrender.com'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
 
-app.use(bodyParser.json({ limit: '10mb' }));
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
 
 // Log all requests
 app.use((req, res, next) => {
@@ -298,6 +305,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // API routes
 app.use('/api', require('./routes/patients'));
+
+// Add authentication routes
+app.use('/api/auth', authRoutes);
+
+// Protect all patient routes with authentication
+app.use('/api/patients', authMiddleware.verifyToken);
+
+// Add role-based access control for patient operations
+app.post('/api/patients', authMiddleware.isGeneticCounselor, async (req, res) => {
+  // ... existing patient creation code ...
+});
+
+app.delete('/api/patients/:id', authMiddleware.isGeneticCounselor, async (req, res) => {
+  // ... existing patient deletion code ...
+});
+
+// Medical receptionists can only view patients
+app.get('/api/patients', async (req, res) => {
+  // ... existing patient retrieval code ...
+});
 
 // Catch-all route to serve the React app
 app.get('*', (req, res) => {
