@@ -35,111 +35,29 @@ const formatPatientAnalysis = (patient) => {
   let geneticAnalysis = '';
   let clinicalSections = [];
   
-  // Check if the patient has summary data for genetic analysis
-  if (patient.summary) {
+  // Check if the patient has genetic summary data
+  if (patient.geneticSummary) {
     // Clean up the genetic analysis by removing any PART labels
-    geneticAnalysis = patient.summary
+    geneticAnalysis = patient.geneticSummary
       .replace(/PART\s*\d+\s*:?\s*/gi, '')
       .replace(/PART\s*\d+\s*/gi, '')
       .trim();
   }
   
   // Process clinical details
-  if (patient.details) {
-    // Remove any PART labels from clinical details
-    let clinicalDetails = patient.details
-      .replace(/PART\s*\d+\s*:?\s*/gi, '')
-      .replace(/PART\s*\d+\s*/gi, '')
-      .trim();
-    
-    // Try to identify numbered sections like "1. Pulmonary Management:"
-    // Try to identify numbered sections like "1. Pulmonary Management:" or "4. Monitoring and Follow-up Recommendations"
-// The change is to make the colon optional using (:)?
-    const sectionRegex = /(\d+\.\s+[\w\s\/\-]+)(:)?/g;
-    const sectionMatches = [...clinicalDetails.matchAll(sectionRegex)];
-    
-    if (sectionMatches.length > 0) {
-      // Process sections that are clearly numbered
-      for (let i = 0; i < sectionMatches.length; i++) {
-        const currentMatch = sectionMatches[i];
-        const nextMatch = sectionMatches[i + 1];
-        
-        const title = currentMatch[1].trim();
-        const startIndex = currentMatch.index + currentMatch[0].length;
-        const endIndex = nextMatch ? nextMatch.index : clinicalDetails.length;
-        
-        let content = clinicalDetails.substring(startIndex, endIndex).trim();
-        const category = categorizeClinicalSection(title);
-        
+  if (patient.clinicalDetails && Array.isArray(patient.clinicalDetails)) {
+    // Convert clinical details array to sections
+    patient.clinicalDetails.forEach((detail, index) => {
+      if (detail.text && detail.value) {
         clinicalSections.push({
-          id: `section-${i + 1}`,
-          title,
-          content,
-          category
+          id: `section-${index + 1}`,
+          title: detail.text,
+          content: detail.value,
+          category: categorizeClinicalSection(detail.text)
         });
       }
-    } else {
-      // If no numbered sections found, try to split by double asterisks which might indicate headers
-      const asteriskRegex = /\*\*([\w\s\/]+)\*\*/g;
-      const asteriskMatches = [...clinicalDetails.matchAll(asteriskRegex)];
-      
-      if (asteriskMatches.length > 0) {
-        for (let i = 0; i < asteriskMatches.length; i++) {
-          const currentMatch = asteriskMatches[i];
-          const nextMatch = asteriskMatches[i + 1];
-          
-          const title = currentMatch[1].trim();
-          const startIndex = currentMatch.index + currentMatch[0].length;
-          const endIndex = nextMatch ? nextMatch.index : clinicalDetails.length;
-          
-          let content = clinicalDetails.substring(startIndex, endIndex)
-            .replace(/\*\*/g, '')
-            .trim();
-          
-          const category = categorizeClinicalSection(title);
-          
-          clinicalSections.push({
-            id: `section-${i + 1}`,
-            title,
-            content,
-            category
-          });
-        }
-      } else {
-        // If no clear sections are found, try to create sections from paragraphs
-        const paragraphs = clinicalDetails.split(/\n\n+/);
-        
-        if (paragraphs.length > 1) {
-          // Create a clinical overview from the first paragraph
-          clinicalSections.push({
-            id: 'clinical-overview',
-            title: 'Clinical Overview',
-            content: paragraphs[0].trim(),
-            category: 'overview'
-          });
-          
-          // Create a detailed analysis from the rest
-          if (paragraphs.length > 2) {
-            clinicalSections.push({
-              id: 'detailed-analysis',
-              title: 'Detailed Analysis',
-              content: paragraphs.slice(1).join('\n\n').trim(),
-              category: 'analysis'
-            });
-          }
-        } else {
-          // If single paragraph, just create one section
-          clinicalSections.push({
-            id: 'clinical-assessment',
-            title: 'Clinical Assessment',
-            content: clinicalDetails,
-            category: 'overview'
-          });
-        }
-      }
-    }
+    });
   }
-
   
   return {
     geneticAnalysis,
