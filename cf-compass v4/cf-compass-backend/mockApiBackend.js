@@ -9,6 +9,7 @@ const initializeDatabase = require('./scripts/initDb');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const User = require('./models/User');
 
 const { processFhirJsonFile } = require('./fhirtoprompt');
 const { analyzeWithMultipleProviders } = require('./multi-model-processor');

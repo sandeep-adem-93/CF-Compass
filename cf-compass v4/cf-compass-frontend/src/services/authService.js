@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// Use the full backend URL
+const API_URL = process.env.REACT_APP_API_URL || 'https://cf-compass-backend.onrender.com';
 
 // Login user
 export const login = async (username, password) => {
