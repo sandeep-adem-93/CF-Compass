@@ -1,3 +1,33 @@
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const path = require('path');
+const connectDB = require('./config/db');
+const Patient = require('./models/Patient');
+const initializeDatabase = require('./scripts/initDb');
+require('dotenv').config();
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const User = require('./models/User');
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// MongoDB connection options
+const mongooseOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  maxPoolSize: 50,
+  retryWrites: true,
+  w: 'majority',
+  family: 4
+};
+
+let isConnecting = false;
+let connectionRetryTimeout;
+
 // Connect to MongoDB and initialize database
 const connectWithRetry = async () => {
   if (isConnecting) {
@@ -168,13 +198,9 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Remove the catch-all route for index.html since this is an API server
-app.use((req, res) => {
-  if (req.path.startsWith('/api/')) {
-    res.status(404).json({ error: 'API endpoint not found' });
-  } else {
-    res.status(404).json({ error: 'Not found' });
-  }
+// 404 handler for API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({ error: 'API endpoint not found' });
 });
 
 // Error handling middleware
@@ -184,7 +210,6 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 }); 
