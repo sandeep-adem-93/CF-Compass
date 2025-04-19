@@ -16,8 +16,12 @@ function PatientSidebar({ patients, currentPatient, onPatientSelect, onAddPatien
   };
 
   // Age calculation 
-  const calculateAge = (dob) => {
-    const birthDate = new Date(dob);
+  const calculateAge = (patient) => {
+    if (!patient || !patient.birthDate) {
+      return 'Unknown';
+    }
+    
+    const birthDate = new Date(patient.birthDate);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
@@ -61,7 +65,7 @@ function PatientSidebar({ patients, currentPatient, onPatientSelect, onAddPatien
             <div className="patient-info">
               <div className="patient-name">{patient.name}</div>
               <div className="patient-details">
-                {calculateAge(patient.dob)} • {patient.gender}
+                {calculateAge(patient)} • {patient.gender}
               </div>
             </div>
             <button 
