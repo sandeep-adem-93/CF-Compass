@@ -533,6 +533,56 @@ Important requirements:
 - For genetic variants, use specific mutation names (e.g., F508del, G542X, 2789+5G>A)
 - Include all four management sections in the CarePlan
 
+Example of correct MolecularSequence resource format:
+{
+  "resourceType": "MolecularSequence",
+  "id": "molseq-${uniqueId}",
+  "meta": {
+    "lastUpdated": "2023-09-21T12:34:56Z"
+  },
+  "type": "dna",
+  "patient": {
+    "reference": "Patient/${uniqueId}"
+  },
+  "referenceSeq": {
+    "genomeBuild": "GRCh37",
+    "chromosome": {
+      "coding": [
+        {
+          "code": "7",
+          "display": "7"
+        }
+      ]
+    },
+    "gene": {
+      "coding": [
+        {
+          "code": "CFTR",
+          "display": "CFTR"
+        }
+      ]
+    }
+  },
+  "variant": [
+    {
+      "start": 117199646,
+      "end": 117199646,
+      "observedAllele": "A",
+      "referenceAllele": "G",
+      "gene": {
+        "coding": [
+          {
+            "code": "CFTR",
+            "display": "CFTR"
+          }
+        ]
+      },
+      "variantType": "G551D"
+    }
+  ],
+  "variants": ["G551D", "F508del"]  // This is the correct format - array of strings
+}
+
 Respond ONLY with the valid FHIR JSON without any explanations or markdown formatting.`;
 };
 
