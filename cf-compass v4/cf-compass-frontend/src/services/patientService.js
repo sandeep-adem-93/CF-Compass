@@ -7,15 +7,97 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 // Get all patients
 export const getPatients = async () => {
   try {
-    const url = `${API_URL.replace(/\/+$/, '')}/api/patients`;
+    const url = `${API_URL.replace(/\/+$/, '')}/patients`;
     console.log('Fetching patients from:', url);
-    const response = await fetch(url);
+    
+    const response = await axios.get(url);
     console.log('Response status:', response.status);
-    const data = await response.json();
-    console.log('API response data:', data);
-    return data;
+    console.log('Raw API response data:', response.data);
+    
+    const processedPatients = response.data.map(patient => {
+      console.log('Processing patient:', {
+        originalId: patient.id,
+        originalName: patient.name,
+        originalGender: patient.gender,
+        originalBirthDate: patient.birthDate
+      });
+
+      // Enhanced FHIR name handling
+      let formattedName = 'Unknown';
+      if (patient.name) {
+        if (Array.isArray(patient.name)) {
+          // Handle array of name objects
+          const nameObj = patient.name[0];
+          if (nameObj) {
+            if (nameObj.text) {
+              formattedName = nameObj.text;
+            } else {
+              const family = nameObj.family || '';
+              const given = Array.isArray(nameObj.given) ? nameObj.given.join(' ') : (nameObj.given || '');
+              const prefix = Array.isArray(nameObj.prefix) ? nameObj.prefix.join(' ') : (nameObj.prefix || '');
+              const suffix = Array.isArray(nameObj.suffix) ? nameObj.suffix.join(' ') : (nameObj.suffix || '');
+              
+              // Build name parts
+              const nameParts = [];
+              if (prefix) nameParts.push(prefix);
+              if (given) nameParts.push(given);
+              if (family) nameParts.push(family);
+              if (suffix) nameParts.push(suffix);
+              
+              formattedName = nameParts.join(' ').trim();
+            }
+          }
+        } else if (typeof patient.name === 'string') {
+          // Handle simple string name
+          formattedName = patient.name;
+        } else if (typeof patient.name === 'object') {
+          // Handle single name object
+          if (patient.name.text) {
+            formattedName = patient.name.text;
+          } else {
+            const family = patient.name.family || '';
+            const given = Array.isArray(patient.name.given) ? patient.name.given.join(' ') : (patient.name.given || '');
+            const prefix = Array.isArray(patient.name.prefix) ? patient.name.prefix.join(' ') : (patient.name.prefix || '');
+            const suffix = Array.isArray(patient.name.suffix) ? patient.name.suffix.join(' ') : (patient.name.suffix || '');
+            
+            const nameParts = [];
+            if (prefix) nameParts.push(prefix);
+            if (given) nameParts.push(given);
+            if (family) nameParts.push(family);
+            if (suffix) nameParts.push(suffix);
+            
+            formattedName = nameParts.join(' ').trim();
+          }
+        }
+      }
+
+      // Log name processing details
+      console.log('Name processing details:', {
+        originalName: patient.name,
+        formattedName,
+        nameType: Array.isArray(patient.name) ? 'array' : typeof patient.name
+      });
+
+      const processedPatient = {
+        id: patient.id,
+        name: formattedName,
+        gender: patient.gender,
+        birthDate: patient.birthDate,
+        variants: patient.variants || [],
+        geneticSummary: patient.geneticSummary,
+        clinicalDetails: patient.clinicalDetails || [],
+        analysisProvider: patient.analysisProvider || 'Unknown',
+        status: patient.status || 'Active'
+      };
+
+      console.log('Processed patient:', processedPatient);
+      return processedPatient;
+    });
+
+    console.log('Final processed patients:', processedPatients);
+    return processedPatients;
   } catch (error) {
-    console.error('Error in getPatients:', error);
+    console.error('Error fetching patients:', error);
     throw error;
   }
 };
