@@ -99,6 +99,7 @@ IMPORTANT FORMATTING RULES:
       // Extract genetic analysis and remove any clinical recommendations that might have been included
       geneticSummary = geneticAnalysisMatch[1]
         .replace(/\d+\.\s*(Pulmonary|Pancreatic|CFTR|Monitoring).*?(?=\d+\.|$)/g, '')
+        .replace(/In summary.*$/i, '')
         .trim();
       console.log('Extracted genetic summary, length:', geneticSummary.length);
     } else {
@@ -106,6 +107,7 @@ IMPORTANT FORMATTING RULES:
       const halfPoint = Math.floor(responseText.length / 2);
       geneticSummary = responseText.substring(0, halfPoint)
         .replace(/\d+\.\s*(Pulmonary|Pancreatic|CFTR|Monitoring).*?(?=\d+\.|$)/g, '')
+        .replace(/In summary.*$/i, '')
         .trim();
     }
     
@@ -136,6 +138,7 @@ IMPORTANT FORMATTING RULES:
             .trim()
             .replace(/\n\s*\n/g, '\n') // Remove extra blank lines
             .replace(/In summary.*$/i, '') // Remove summary statements
+            .replace(/In conclusion.*$/i, '') // Remove conclusion statements
             .trim();
             
           if (content) {
@@ -162,6 +165,7 @@ IMPORTANT FORMATTING RULES:
             .trim()
             .replace(/\n\s*\n/g, '\n') // Remove extra blank lines
             .replace(/In summary.*$/i, '') // Remove summary statements
+            .replace(/In conclusion.*$/i, '') // Remove conclusion statements
             .trim();
             
           if (content) {
