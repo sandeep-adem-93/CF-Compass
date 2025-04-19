@@ -92,6 +92,62 @@ function AddPatientModal({ onClose, onAddPatient }) {
     }
   };
 
+  /**
+   * Normalizes variants in the FHIR bundle to ensure they are in the correct format
+   * @param {object} fhirBundle - The FHIR bundle to normalize
+   * @returns {object} Normalized FHIR bundle
+   */
+  const normalizeVariantsInBundle = (fhirBundle) => {
+    try {
+      // Find the MolecularSequence resource
+      const molecularSequence = fhirBundle.entry.find(entry => 
+        entry.resource.resourceType === 'MolecularSequence'
+      );
+
+      if (molecularSequence && molecularSequence.resource.variants) {
+        let variants = molecularSequence.resource.variants;
+
+        // If variants is a string, try to parse it
+        if (typeof variants === 'string') {
+          try {
+            variants = JSON.parse(variants);
+          } catch (e) {
+            console.error('Failed to parse variants string:', e);
+            return fhirBundle;
+          }
+        }
+
+        // If variants is an array of objects with text property, extract the text values
+        if (Array.isArray(variants) && variants.length > 0) {
+          if (typeof variants[0] === 'object' && 'text' in variants[0]) {
+            variants = variants.map(v => v.text);
+          }
+          // If variants is an array of strings, ensure they are properly formatted
+          else if (typeof variants[0] === 'string') {
+            variants = variants.map(v => v.trim());
+          }
+        }
+
+        // Validate the variants
+        if (!Array.isArray(variants) || variants.length === 0) {
+          console.error('Invalid variants format after normalization');
+          return fhirBundle;
+        }
+
+        // Ensure all variants are strings
+        variants = variants.filter(v => typeof v === 'string' && v.trim().length > 0);
+
+        // Update the variants in the MolecularSequence resource
+        molecularSequence.resource.variants = variants;
+      }
+
+      return fhirBundle;
+    } catch (error) {
+      console.error('Error normalizing variants:', error);
+      return fhirBundle;
+    }
+  };
+
   const processPatient = async () => {
     if (!patientData) {
       setError('Please upload a patient data file');
@@ -118,27 +174,30 @@ function AddPatientModal({ onClose, onAddPatient }) {
         throw new Error('Invalid JSON format in the uploaded file');
       }
       
+      // Normalize variants before sending to backend
+      const normalizedData = normalizeVariantsInBundle(parsedData);
+      
       // Debug logs before submission
       console.log("About to submit data to backend:");
       console.log("API Key:", apiKey ? `${apiKey.substring(0, 5)}... (length: ${apiKey.length})` : 'missing');
       console.log("Model Provider:", modelProvider);
       console.log("Patient data:", {
-        type: typeof parsedData,
-        resourceType: parsedData.resourceType,
-        hasEntries: !!parsedData.entry?.length
+        type: typeof normalizedData,
+        resourceType: normalizedData.resourceType,
+        hasEntries: !!normalizedData.entry?.length
       });
       
       // Verify this is a FHIR Bundle
-      if (!parsedData.resourceType) {
+      if (!normalizedData.resourceType) {
         throw new Error('The uploaded file is missing the resourceType property');
       }
       
-      if (parsedData.resourceType !== 'Bundle') {
+      if (normalizedData.resourceType !== 'Bundle') {
         throw new Error('The uploaded file is not a FHIR Bundle. Expected resourceType: "Bundle"');
       }
       
       // Check if it has entries
-      if (!parsedData.entry || !Array.isArray(parsedData.entry) || parsedData.entry.length === 0) {
+      if (!normalizedData.entry || !Array.isArray(normalizedData.entry) || normalizedData.entry.length === 0) {
         throw new Error('The FHIR Bundle does not contain any entries');
       }
       
@@ -146,7 +205,7 @@ function AddPatientModal({ onClose, onAddPatient }) {
       
       // Send to backend with API key for analysis
       const requestData = {
-        patientData: parsedData,
+        patientData: normalizedData,
         apiKey: apiKey.trim(),
         modelProvider: modelProvider.trim()
       };
