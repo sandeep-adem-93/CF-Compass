@@ -125,43 +125,53 @@ IMPORTANT FORMATTING RULES:
       const clinicalText = clinicalRecommendationsMatch[1].trim();
       console.log('Processing clinical recommendations, length:', clinicalText.length);
       
-      // Extract each section
-      requiredSections.forEach((section, index) => {
-        console.log(`Processing section: ${section}`);
-        // Look for numbered sections (e.g., "1. Pulmonary Management:")
-        const sectionRegex = new RegExp(`\\d+\\.\\s*${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
-        const match = clinicalText.match(sectionRegex);
+      // First, try to find numbered sections
+      const numberedSections = clinicalText.match(/\d+\.\s*[^:]+:/g);
+      if (numberedSections && numberedSections.length > 0) {
+        console.log('Found numbered sections:', numberedSections);
         
-        if (match) {
-          console.log(`Found section: ${section}`);
-          // Extract the content after the section title
-          const content = match[0]
-            .replace(new RegExp(`\\d+\\.\\s*${section}\\s*:?\\s*`, 'i'), '')
+        // Process each numbered section
+        numberedSections.forEach((sectionHeader, index) => {
+          const sectionTitle = sectionHeader.replace(/^\d+\.\s*/, '').replace(':', '').trim();
+          console.log(`Processing numbered section: ${sectionTitle}`);
+          
+          // Find the content between this section and the next
+          const nextSectionIndex = index < numberedSections.length - 1 ? 
+            clinicalText.indexOf(numberedSections[index + 1]) : 
+            clinicalText.length;
+            
+          const sectionContent = clinicalText
+            .substring(clinicalText.indexOf(sectionHeader) + sectionHeader.length, nextSectionIndex)
             .trim()
-            .replace(/\n\s*\n/g, '\n') // Remove extra blank lines
-            .replace(/In summary.*$/i, '') // Remove summary statements
-            .replace(/In conclusion.*$/i, '') // Remove conclusion statements
-            .replace(/The overall goal.*$/i, '') // Remove goal statements
-            .replace(/The aim of this therapy.*$/i, '') // Remove aim statements
-            .replace(/This integrated approach.*$/i, '') // Remove approach statements
-            .replace(/This approach aims.*$/i, '') // Remove aim statements
+            .replace(/In summary.*$/i, '')
+            .replace(/In conclusion.*$/i, '')
+            .replace(/The overall goal.*$/i, '')
+            .replace(/The aim of this therapy.*$/i, '')
+            .replace(/This integrated approach.*$/i, '')
+            .replace(/This approach aims.*$/i, '')
             .trim();
             
-          if (content) {
-            clinicalDetails[index].value = content;
-            console.log(`Content length for ${section}:`, content.length);
-          }
-        } else {
-          // If not found with numbered format, try without numbers
-          const altSectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
-          const altMatch = clinicalText.match(altSectionRegex);
+          // Find the matching required section
+          const matchingSection = requiredSections.findIndex(section => 
+            sectionTitle.toLowerCase().includes(section.toLowerCase())
+          );
           
-          if (altMatch) {
-            console.log(`Found section (alternative format): ${section}`);
-            const content = altMatch[0]
+          if (matchingSection !== -1 && sectionContent) {
+            clinicalDetails[matchingSection].value = sectionContent;
+            console.log(`Assigned content to section ${requiredSections[matchingSection]}`);
+          }
+        });
+      } else {
+        // If no numbered sections found, try to find unnumbered sections
+        console.log('No numbered sections found, trying unnumbered sections');
+        requiredSections.forEach((section, index) => {
+          const sectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
+          const match = clinicalText.match(sectionRegex);
+          
+          if (match) {
+            const content = match[0]
               .replace(new RegExp(`${section}\\s*:?\\s*`, 'i'), '')
               .trim()
-              .replace(/\n\s*\n/g, '\n')
               .replace(/In summary.*$/i, '')
               .replace(/In conclusion.*$/i, '')
               .replace(/The overall goal.*$/i, '')
@@ -172,13 +182,11 @@ IMPORTANT FORMATTING RULES:
               
             if (content) {
               clinicalDetails[index].value = content;
-              console.log(`Content length for ${section}:`, content.length);
+              console.log(`Assigned content to section ${section}`);
             }
-          } else {
-            console.log(`Section not found: ${section}`);
           }
-        }
-      });
+        });
+      }
     } else {
       console.log('No clinical recommendations section found, using fallback parsing');
       // Try to find sections in the second half of the response
@@ -196,7 +204,6 @@ IMPORTANT FORMATTING RULES:
           const content = match[0]
             .replace(new RegExp(`(\\d+\\.\\s*)?${section}\\s*:?\\s*`, 'i'), '')
             .trim()
-            .replace(/\n\s*\n/g, '\n')
             .replace(/In summary.*$/i, '')
             .replace(/In conclusion.*$/i, '')
             .replace(/The overall goal.*$/i, '')
