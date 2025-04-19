@@ -83,16 +83,34 @@ IMPORTANT FORMATTING RULES:
       
       // Parse clinical recommendations into structured format
       const clinicalText = sections[1].trim();
-      const recommendations = clinicalText.split(/\n\s*\d+\.\s+/).filter(Boolean);
       
-      recommendations.forEach(rec => {
-        const [title, ...content] = rec.split('\n');
-        if (title && content.length > 0) {
-          clinicalDetails.push({
-            type: 'recommendation',
-            text: title.trim(),
-            value: content.join('\n').trim()
-          });
+      // Define the required sections
+      const requiredSections = [
+        'Pulmonary Management',
+        'Pancreatic/Nutritional Management',
+        'CFTR Modulator Therapy Considerations',
+        'Monitoring and Follow-up Recommendations'
+      ];
+      
+      // Initialize clinical details with empty sections
+      clinicalDetails = requiredSections.map(section => ({
+        type: 'recommendation',
+        text: section,
+        value: 'No specific recommendations available.'
+      }));
+      
+      // Extract content for each section
+      requiredSections.forEach((section, index) => {
+        // Look for the section in the text
+        const sectionRegex = new RegExp(`\\d+\\.\\s*${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
+        const match = clinicalText.match(sectionRegex);
+        
+        if (match) {
+          // Extract the content after the section title
+          const content = match[0].replace(new RegExp(`\\d+\\.\\s*${section}\\s*:?\\s*`, 'i'), '').trim();
+          if (content) {
+            clinicalDetails[index].value = content;
+          }
         }
       });
     } else {
@@ -100,19 +118,23 @@ IMPORTANT FORMATTING RULES:
       const halfPoint = Math.floor(responseText.length / 2);
       geneticSummary = responseText.substring(0, halfPoint);
       
-      // Try to parse clinical details from the second half
-      const clinicalText = responseText.substring(halfPoint);
-      const lines = clinicalText.split('\n').filter(line => line.trim());
+      // Initialize clinical details with empty sections
+      clinicalDetails = requiredSections.map(section => ({
+        type: 'recommendation',
+        text: section,
+        value: 'No specific recommendations available.'
+      }));
       
-      lines.forEach(line => {
-        if (line.match(/^\d+\./)) {
-          const [title, ...content] = line.split(':');
-          if (title && content.length > 0) {
-            clinicalDetails.push({
-              type: 'recommendation',
-              text: title.replace(/^\d+\.\s*/, '').trim(),
-              value: content.join(':').trim()
-            });
+      // Try to find sections in the second half
+      const clinicalText = responseText.substring(halfPoint);
+      requiredSections.forEach((section, index) => {
+        const sectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\n\\s*\\d+\\.\\s*|$)`, 'i');
+        const match = clinicalText.match(sectionRegex);
+        
+        if (match) {
+          const content = match[0].replace(new RegExp(`${section}\\s*:?\\s*`, 'i'), '').trim();
+          if (content) {
+            clinicalDetails[index].value = content;
           }
         }
       });
