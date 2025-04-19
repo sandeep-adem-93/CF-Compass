@@ -334,7 +334,7 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
             <div className="info-grid">
               <div className="info-item">
                 <span className="info-label">Age</span>
-                <span className="info-value">{calculateAge(currentPatient.dob)}</span>
+                <span className="info-value">{calculateAge(currentPatient.birthDate)}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Gender</span>
@@ -342,7 +342,7 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
               </div>
               <div className="info-item">
                 <span className="info-label">Date of Birth</span>
-                <span className="info-value">{formatDate(currentPatient.dob)}</span>
+                <span className="info-value">{formatDate(currentPatient.birthDate)}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Status</span>
