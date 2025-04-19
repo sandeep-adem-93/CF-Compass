@@ -43,55 +43,6 @@ export const generateCFPatient = async (apiKey, provider = 'gemini') => {
 };
 
 /**
- * Generates a CF patient FHIR bundle using Gemini API
- * @param {string} apiKey - Gemini API key
- * @param {object} patientParams - Patient parameters
- * @returns {Promise<object>} FHIR bundle JSON
- */
-const generateWithGemini = async (apiKey, patientParams) => {
-    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
-  
-  try {
-    const response = await axios.post(
-      `${GEMINI_API_URL}?key=${apiKey}`,
-      {
-        contents: [
-          {
-            role: "user",
-            parts: [
-              {
-                text: constructCFPatientPrompt(patientParams)
-              }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 8192,
-        }
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    // Extract the JSON from Gemini's response
-    const responseText = response.data.candidates[0].content.parts[0].text;
-    return extractJsonFromResponse(responseText);
-  } catch (error) {
-    console.error('Error calling Gemini API:', error);
-    
-    if (error.response) {
-      throw new Error(`Gemini API error: ${error.response.status} - ${JSON.stringify(error.response.data) || 'Unknown error'}`);
-    }
-    
-    throw error;
-  }
-};
-
-/**
  * Normalizes variants to ensure they are in the correct format (array of strings)
  * @param {object} fhirBundle - The FHIR bundle to normalize
  * @returns {object} Normalized FHIR bundle
@@ -144,6 +95,57 @@ const normalizeVariants = (fhirBundle) => {
   } catch (error) {
     console.error('Error normalizing variants:', error);
     return fhirBundle;
+  }
+};
+
+/**
+ * Generates a CF patient FHIR bundle using Gemini API
+ * @param {string} apiKey - Gemini API key
+ * @param {object} patientParams - Patient parameters
+ * @returns {Promise<object>} FHIR bundle JSON
+ */
+const generateWithGemini = async (apiKey, patientParams) => {
+    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
+  
+  try {
+    const response = await axios.post(
+      `${GEMINI_API_URL}?key=${apiKey}`,
+      {
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: constructCFPatientPrompt(patientParams)
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 8192,
+        }
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    const responseText = response.data.candidates[0].content.parts[0].text;
+    const fhirBundle = extractJsonFromResponse(responseText);
+    
+    // Normalize variants before returning
+    return normalizeVariants(fhirBundle);
+  } catch (error) {
+    console.error('Error calling Gemini API:', error);
+    
+    if (error.response) {
+      throw new Error(`Gemini API error: ${error.response.status} - ${JSON.stringify(error.response.data) || 'Unknown error'}`);
+    }
+    
+    throw error;
   }
 };
 
@@ -216,7 +218,10 @@ const generateWithAnthropic = async (apiKey, patientParams) => {
     );
 
     const responseText = response.data.content[0].text;
-    return extractJsonFromResponse(responseText);
+    const fhirBundle = extractJsonFromResponse(responseText);
+    
+    // Normalize variants before returning
+    return normalizeVariants(fhirBundle);
   } catch (error) {
     console.error('Error calling Anthropic API:', error);
     throw error;
