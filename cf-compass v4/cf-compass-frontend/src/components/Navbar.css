@@ -1,8 +1,9 @@
 /* Navbar.css */
 .navbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
     height: 80px;
-    background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -10,9 +11,8 @@
   
   .navbar-container {
     max-width: 1200px;
-    height: 100%;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,67 +21,87 @@
   .navbar-logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    color: #4361EE;
     text-decoration: none;
-    font-weight: 600;
+    color: #333;
   }
   
   .logo-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .logo-icon svg {
-    width: 32px;
-    height: 32px;
+    margin-right: 0.5rem;
   }
   
   .logo-text {
-    font-size: 24px;
-    letter-spacing: -0.5px;
+    font-size: 1.25rem;
+    font-weight: 600;
   }
   
   .navbar-right {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 1rem;
   }
   
-  .nav-link {
-    color: #333333;
+  .login-btn,
+  .logout-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .login-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.15s ease;
   }
   
-  .nav-link:hover {
-    color: #4361EE;
+  .login-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .logout-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+  }
+  
+  .logout-btn:hover {
+    background-color: #c82333;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .username {
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .user-role {
+    color: #666;
+    font-size: 0.875rem;
   }
   
   .add-patient-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
-    background-color: #4361EE;
-    border: none;
-    border-radius: 20px;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #28a745;
     color: white;
-    padding: 10px 20px;
-    font-weight: 500;
-    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.875rem;
     cursor: pointer;
-    transition: background-color 0.15s ease;
-  }
-  
-  .add-patient-btn svg {
-    width: 20px;
-    height: 20px;
+    transition: background-color 0.2s;
   }
   
   .add-patient-btn:hover {
-    background-color: #3A56D4;
+    background-color: #218838;
   }
   
   /* Responsive adjustments */
@@ -97,5 +117,11 @@
     .add-patient-btn {
       padding: 8px 16px;
       font-size: 14px;
+    }
+    
+    .user-info {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
     }
   }

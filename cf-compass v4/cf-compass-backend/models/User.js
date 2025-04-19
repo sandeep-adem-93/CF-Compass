@@ -14,8 +14,12 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['genetic_counselor', 'medical_receptionist'],
+    enum: ['geneticcounselor', 'medicalreceptionist'],
     required: true
+  },
+  permissions: {
+    type: [String],
+    default: []
   },
   createdAt: {
     type: Date,

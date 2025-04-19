@@ -8,11 +8,10 @@ const Patient = require('./models/Patient');
 const initializeDatabase = require('./scripts/initDb');
 require('dotenv').config();
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 const { processFhirJsonFile } = require('./fhirtoprompt');
 const { analyzeWithMultipleProviders } = require('./multi-model-processor');
-const authRoutes = require('./routes/authRoutes');
-const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -110,20 +109,15 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// CORS configuration
-const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'https://cf-compass.onrender.com',
-    'https://cf-compass-frontend.onrender.com'
-  ],
+// Middleware
+app.use(cors({
+  origin: ['https://cf-compass-frontend.onrender.com', 'http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-};
+}));
 
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 
 // Log all requests
 app.use((req, res, next) => {
@@ -306,25 +300,137 @@ app.use(express.static(path.join(__dirname, 'public')));
 // API routes
 app.use('/api', require('./routes/patients'));
 
-// Add authentication routes
-app.use('/api/auth', authRoutes);
+// Authentication middleware
+const authMiddleware = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
 
-// Protect all patient routes with authentication
-app.use('/api/patients', authMiddleware.verifyToken);
+    // Verify token and get user
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const user = await User.findById(decoded.userId);
+    
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
 
-// Add role-based access control for patient operations
-app.post('/api/patients', authMiddleware.isGeneticCounselor, async (req, res) => {
-  // ... existing patient creation code ...
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Authentication failed' });
+  }
+};
+
+// Role-based access middleware
+const checkRole = (roles) => {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+    next();
+  };
+};
+
+// Register new user
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { username, password, role } = req.body;
+
+    // Validate role
+    if (!['geneticcounselor', 'medicalreceptionist'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    // Check if user exists
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+
+    // Create new user
+    const user = new User({
+      username,
+      password,
+      role,
+      permissions: role === 'geneticcounselor' 
+        ? ['manage_patients', 'view_patients', 'delete_patients']
+        : ['view_patients']
+    });
+
+    await user.save();
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '24h' }
+    );
+
+    res.status(201).json({
+      message: 'User registered successfully',
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+        permissions: user.permissions
+      }
+    });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ error: 'Registration failed' });
+  }
 });
 
-app.delete('/api/patients/:id', authMiddleware.isGeneticCounselor, async (req, res) => {
-  // ... existing patient deletion code ...
+// Login user
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Find user
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Check password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+        permissions: user.permissions
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Login failed' });
+  }
 });
 
-// Medical receptionists can only view patients
-app.get('/api/patients', async (req, res) => {
-  // ... existing patient retrieval code ...
-});
+// Protect patient routes with authentication
+app.use('/api/patients', authMiddleware);
+
+// Add role-based access control to patient routes
+app.post('/api/patients/upload', checkRole(['geneticcounselor']));
+app.delete('/api/patients/:id', checkRole(['geneticcounselor']));
 
 // Catch-all route to serve the React app
 app.get('*', (req, res) => {
