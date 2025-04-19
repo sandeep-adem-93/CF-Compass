@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LandingPage from './components/LandingPage';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import Dashboard from './pages/Dashboard';
 import PatientDetails from './pages/PatientDetails';
 import Navbar from './components/Navbar';
 import AddPatientModal from './components/AddPatientModal';
