@@ -32,6 +32,9 @@ export const generateCFPatient = async (apiKey, provider = 'gemini') => {
         throw new Error(`Unsupported provider: ${provider}`);
     }
     
+    // Ensure variants are normalized before returning
+    fhirBundle = normalizeVariants(fhirBundle);
+    
     // Download the generated JSON
     downloadJson(fhirBundle, randomPatient.lastName, randomPatient.firstName);
     
