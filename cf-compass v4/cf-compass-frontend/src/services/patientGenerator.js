@@ -104,10 +104,12 @@ const normalizeVariants = (fhirBundle) => {
     );
 
     if (molecularSequence && molecularSequence.resource.variants) {
-      // If variants is a string containing JSON, parse it
-      if (typeof molecularSequence.resource.variants === 'string') {
+      let variants = molecularSequence.resource.variants;
+
+      // If variants is a string, try to parse it
+      if (typeof variants === 'string') {
         try {
-          molecularSequence.resource.variants = JSON.parse(molecularSequence.resource.variants);
+          variants = JSON.parse(variants);
         } catch (e) {
           console.error('Failed to parse variants string:', e);
           return fhirBundle;
@@ -115,12 +117,27 @@ const normalizeVariants = (fhirBundle) => {
       }
 
       // If variants is an array of objects with text property, extract the text values
-      if (Array.isArray(molecularSequence.resource.variants) && 
-          molecularSequence.resource.variants.length > 0 && 
-          typeof molecularSequence.resource.variants[0] === 'object' && 
-          'text' in molecularSequence.resource.variants[0]) {
-        molecularSequence.resource.variants = molecularSequence.resource.variants.map(v => v.text);
+      if (Array.isArray(variants) && variants.length > 0) {
+        if (typeof variants[0] === 'object' && 'text' in variants[0]) {
+          variants = variants.map(v => v.text);
+        }
+        // If variants is an array of strings, ensure they are properly formatted
+        else if (typeof variants[0] === 'string') {
+          variants = variants.map(v => v.trim());
+        }
       }
+
+      // Validate the variants
+      if (!Array.isArray(variants) || variants.length === 0) {
+        console.error('Invalid variants format after normalization');
+        return fhirBundle;
+      }
+
+      // Ensure all variants are strings
+      variants = variants.filter(v => typeof v === 'string' && v.trim().length > 0);
+
+      // Update the variants in the MolecularSequence resource
+      molecularSequence.resource.variants = variants;
     }
 
     return fhirBundle;
