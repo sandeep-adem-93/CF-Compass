@@ -92,6 +92,45 @@ const generateWithGemini = async (apiKey, patientParams) => {
 };
 
 /**
+ * Normalizes variants to ensure they are in the correct format (array of strings)
+ * @param {object} fhirBundle - The FHIR bundle to normalize
+ * @returns {object} Normalized FHIR bundle
+ */
+const normalizeVariants = (fhirBundle) => {
+  try {
+    // Find the MolecularSequence resource
+    const molecularSequence = fhirBundle.entry.find(entry => 
+      entry.resource.resourceType === 'MolecularSequence'
+    );
+
+    if (molecularSequence && molecularSequence.resource.variants) {
+      // If variants is a string containing JSON, parse it
+      if (typeof molecularSequence.resource.variants === 'string') {
+        try {
+          molecularSequence.resource.variants = JSON.parse(molecularSequence.resource.variants);
+        } catch (e) {
+          console.error('Failed to parse variants string:', e);
+          return fhirBundle;
+        }
+      }
+
+      // If variants is an array of objects with text property, extract the text values
+      if (Array.isArray(molecularSequence.resource.variants) && 
+          molecularSequence.resource.variants.length > 0 && 
+          typeof molecularSequence.resource.variants[0] === 'object' && 
+          'text' in molecularSequence.resource.variants[0]) {
+        molecularSequence.resource.variants = molecularSequence.resource.variants.map(v => v.text);
+      }
+    }
+
+    return fhirBundle;
+  } catch (error) {
+    console.error('Error normalizing variants:', error);
+    return fhirBundle;
+  }
+};
+
+/**
  * Generates a CF patient FHIR bundle using OpenAI API
  */
 const generateWithOpenAI = async (apiKey, patientParams) => {
@@ -120,7 +159,10 @@ const generateWithOpenAI = async (apiKey, patientParams) => {
     );
 
     const responseText = response.data.choices[0].message.content;
-    return extractJsonFromResponse(responseText);
+    const fhirBundle = extractJsonFromResponse(responseText);
+    
+    // Normalize variants before returning
+    return normalizeVariants(fhirBundle);
   } catch (error) {
     console.error('Error calling OpenAI API:', error);
     throw error;
