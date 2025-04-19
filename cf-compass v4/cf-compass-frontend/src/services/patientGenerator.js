@@ -2,10 +2,11 @@ import axios from 'axios';
 
 /**
  * Generates and downloads a random cystic fibrosis patient FHIR bundle
- * @param {string} apiKey - Gemini API key
+ * @param {string} apiKey - API key for the selected provider
+ * @param {string} provider - The AI provider to use ('gemini', 'openai', or 'anthropic')
  * @returns {Promise<object>} - The generated FHIR bundle
  */
-export const generateCFPatient = async (apiKey) => {
+export const generateCFPatient = async (apiKey, provider = 'gemini') => {
   try {
     // Validate API key
     if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) {
@@ -15,8 +16,21 @@ export const generateCFPatient = async (apiKey) => {
     // Generate random patient parameters
     const randomPatient = generateRandomPatientParams();
     
-    // Generate FHIR bundle using Gemini
-    const fhirBundle = await generateWithGemini(apiKey, randomPatient);
+    // Generate FHIR bundle using the selected provider
+    let fhirBundle;
+    switch (provider.toLowerCase()) {
+      case 'gemini':
+        fhirBundle = await generateWithGemini(apiKey, randomPatient);
+        break;
+      case 'openai':
+        fhirBundle = await generateWithOpenAI(apiKey, randomPatient);
+        break;
+      case 'anthropic':
+        fhirBundle = await generateWithAnthropic(apiKey, randomPatient);
+        break;
+      default:
+        throw new Error(`Unsupported provider: ${provider}`);
+    }
     
     // Download the generated JSON
     downloadJson(fhirBundle, randomPatient.lastName, randomPatient.firstName);
@@ -73,6 +87,79 @@ const generateWithGemini = async (apiKey, patientParams) => {
       throw new Error(`Gemini API error: ${error.response.status} - ${JSON.stringify(error.response.data) || 'Unknown error'}`);
     }
     
+    throw error;
+  }
+};
+
+/**
+ * Generates a CF patient FHIR bundle using OpenAI API
+ */
+const generateWithOpenAI = async (apiKey, patientParams) => {
+  const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+  
+  try {
+    const response = await axios.post(
+      OPENAI_API_URL,
+      {
+        model: "gpt-4-turbo-preview",
+        messages: [
+          {
+            role: "user",
+            content: constructCFPatientPrompt(patientParams)
+          }
+        ],
+        temperature: 0.2,
+        max_tokens: 4000
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      }
+    );
+
+    const responseText = response.data.choices[0].message.content;
+    return extractJsonFromResponse(responseText);
+  } catch (error) {
+    console.error('Error calling OpenAI API:', error);
+    throw error;
+  }
+};
+
+/**
+ * Generates a CF patient FHIR bundle using Anthropic API
+ */
+const generateWithAnthropic = async (apiKey, patientParams) => {
+  const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+  
+  try {
+    const response = await axios.post(
+      ANTHROPIC_API_URL,
+      {
+        model: "claude-3-opus-20240229",
+        max_tokens: 4000,
+        temperature: 0.2,
+        messages: [
+          {
+            role: "user",
+            content: constructCFPatientPrompt(patientParams)
+          }
+        ]
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01'
+        }
+      }
+    );
+
+    const responseText = response.data.content[0].text;
+    return extractJsonFromResponse(responseText);
+  } catch (error) {
+    console.error('Error calling Anthropic API:', error);
     throw error;
   }
 };

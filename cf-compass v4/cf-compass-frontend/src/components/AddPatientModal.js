@@ -79,7 +79,7 @@ function AddPatientModal({ onClose, onAddPatient }) {
     setAnalysisStage('Generating patient data...');
 
     try {
-      const generatedPatient = await generateCFPatient(apiKey);
+      const generatedPatient = await generateCFPatient(apiKey, modelProvider);
       setPatientData(JSON.stringify(generatedPatient, null, 2));
       setFileName('Generated Patient Data');
       setError('');
@@ -270,6 +270,20 @@ function AddPatientModal({ onClose, onAddPatient }) {
               </div>
 
               <div className="api-key-section">
+                <div className="provider-selector">
+                  <label htmlFor="model-provider">Select AI Provider:</label>
+                  <select
+                    id="model-provider"
+                    value={modelProvider}
+                    onChange={(e) => setModelProvider(e.target.value)}
+                    className="provider-select"
+                  >
+                    <option value="gemini">Gemini</option>
+                    <option value="openai">OpenAI</option>
+                    <option value="anthropic">Anthropic</option>
+                  </select>
+                </div>
+
                 <label htmlFor="api-key">Enter your {modelProvider === 'gemini' ? 'Gemini' : modelProvider === 'openai' ? 'OpenAI' : 'Anthropic'} API key:</label>
                 <input
                   type="text"
