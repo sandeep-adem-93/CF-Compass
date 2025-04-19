@@ -432,7 +432,8 @@ Create a complete R4 FHIR bundle of type "collection" with the following resourc
      - referenceAllele
      - gene
      - variantType (specific mutation name)
-   - variants: An array of strings containing the mutation names (e.g., ["F508del", "G542X"])
+   - variants: MUST be an array of strings containing ONLY the mutation names (e.g., ["F508del", "G542X"])
+     WARNING: Do NOT use objects with text properties. The variants must be a simple array of strings.
 
 4. Multiple Observation resources for:
    - CFTR gene mutation analysis (with specific mutation names)
