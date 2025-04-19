@@ -1,57 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { isAuthenticated } from './services/authService';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import Dashboard from './pages/Dashboard';
+import PatientDetails from './pages/PatientDetails';
 import Unauthorized from './components/Unauthorized';
 import Navbar from './components/Navbar';
 import AddPatientModal from './components/AddPatientModal';
-import { uploadPatientData, getPatients } from './services/patientService';
 import './App.css';
 
 function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [patients, setPatients] = useState([]);
+  const [isAddPatientModalOpen, setIsAddPatientModalOpen] = React.useState(false);
+  const [patients, setPatients] = React.useState([]);
 
-  useEffect(() => {
-    fetchPatients();
-  }, []);
+  const handleAddPatientClick = () => {
+    setIsAddPatientModalOpen(true);
+  };
+
+  const handleCloseAddPatientModal = () => {
+    setIsAddPatientModalOpen(false);
+  };
 
   const fetchPatients = async () => {
     try {
-      const data = await getPatients();
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/patients`);
+      const data = await response.json();
       setPatients(data);
     } catch (error) {
       console.error('Error fetching patients:', error);
     }
   };
 
-  const handleAddPatientClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleAddPatient = async (patientData) => {
-    try {
-      console.log("App.js: handleAddPatient called with:", patientData ? "patient data present" : "no patient data");
-      
-      // Refresh the patient list after adding a new patient
-      await fetchPatients();
-      
-      // Close the modal
-      setIsModalOpen(false);
-      return { success: true };
-    } catch (error) {
-      console.error('Error in handleAddPatient:', error);
-      throw error;
-    }
-  };
+  React.useEffect(() => {
+    fetchPatients();
+  }, []);
 
   return (
     <Router>
-      <div className="app-container">
+      <div className="app">
         <Navbar onAddPatientClick={handleAddPatientClick} />
-        
         <main className="app-content">
           <Routes>
             {/* Public routes */}
@@ -63,7 +51,12 @@ function App() {
             {/* Protected routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <Dashboard />
+                <Dashboard patients={patients} onPatientsUpdate={fetchPatients} />
+              </ProtectedRoute>
+            } />
+            <Route path="/patient/:id" element={
+              <ProtectedRoute>
+                <PatientDetails onAddPatientClick={handleAddPatientClick} patients={patients} onPatientsUpdate={fetchPatients} />
               </ProtectedRoute>
             } />
 
@@ -75,11 +68,11 @@ function App() {
             } />
           </Routes>
         </main>
-        
-        {isModalOpen && (
-          <AddPatientModal 
-            onClose={() => setIsModalOpen(false)}
-            onAddPatient={handleAddPatient}
+
+        {isAddPatientModalOpen && (
+          <AddPatientModal
+            onClose={handleCloseAddPatientModal}
+            onSuccess={fetchPatients}
           />
         )}
       </div>
