@@ -48,8 +48,34 @@ const connectWithRetry = async () => {
 // Initial connection attempt
 connectWithRetry();
 
+// Middleware
+app.use(cors({
+  origin: ['https://cf-compass-frontend.onrender.com', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(bodyParser.json());
+
+// Log all requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'CF Compass API is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // API routes
-app.use('/api', require('./routes/patients'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/patients', require('./routes/patients'));
 
 // Authentication routes
 app.post('/api/auth/register', async (req, res) => {
@@ -155,4 +181,10 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error('Error handling middleware:', err);
   res.status(500).json({ error: 'Internal Server Error' });
+});
+
+// Start server
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 }); 
