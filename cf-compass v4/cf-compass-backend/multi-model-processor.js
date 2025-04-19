@@ -143,6 +143,8 @@ IMPORTANT FORMATTING RULES:
             .replace(/In conclusion.*$/i, '') // Remove conclusion statements
             .replace(/The overall goal.*$/i, '') // Remove goal statements
             .replace(/The aim of this therapy.*$/i, '') // Remove aim statements
+            .replace(/This integrated approach.*$/i, '') // Remove approach statements
+            .replace(/This approach aims.*$/i, '') // Remove aim statements
             .trim();
             
           if (content) {
@@ -150,7 +152,31 @@ IMPORTANT FORMATTING RULES:
             console.log(`Content length for ${section}:`, content.length);
           }
         } else {
-          console.log(`Section not found: ${section}`);
+          // If not found with numbered format, try without numbers
+          const altSectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
+          const altMatch = clinicalText.match(altSectionRegex);
+          
+          if (altMatch) {
+            console.log(`Found section (alternative format): ${section}`);
+            const content = altMatch[0]
+              .replace(new RegExp(`${section}\\s*:?\\s*`, 'i'), '')
+              .trim()
+              .replace(/\n\s*\n/g, '\n')
+              .replace(/In summary.*$/i, '')
+              .replace(/In conclusion.*$/i, '')
+              .replace(/The overall goal.*$/i, '')
+              .replace(/The aim of this therapy.*$/i, '')
+              .replace(/This integrated approach.*$/i, '')
+              .replace(/This approach aims.*$/i, '')
+              .trim();
+              
+            if (content) {
+              clinicalDetails[index].value = content;
+              console.log(`Content length for ${section}:`, content.length);
+            }
+          } else {
+            console.log(`Section not found: ${section}`);
+          }
         }
       });
     } else {
@@ -160,18 +186,23 @@ IMPORTANT FORMATTING RULES:
       const clinicalText = responseText.substring(halfPoint);
       
       requiredSections.forEach((section, index) => {
-        const sectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\n\\s*\\d+\\.\\s*|$)`, 'i');
-        const match = clinicalText.match(sectionRegex);
+        // Try both numbered and unnumbered formats
+        const sectionRegex = new RegExp(`\\d+\\.\\s*${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
+        const altSectionRegex = new RegExp(`${section}[\\s\\S]*?(?=\\d+\\.\\s*|$)`, 'i');
+        
+        const match = clinicalText.match(sectionRegex) || clinicalText.match(altSectionRegex);
         
         if (match) {
           const content = match[0]
-            .replace(new RegExp(`${section}\\s*:?\\s*`, 'i'), '')
+            .replace(new RegExp(`(\\d+\\.\\s*)?${section}\\s*:?\\s*`, 'i'), '')
             .trim()
-            .replace(/\n\s*\n/g, '\n') // Remove extra blank lines
-            .replace(/In summary.*$/i, '') // Remove summary statements
-            .replace(/In conclusion.*$/i, '') // Remove conclusion statements
-            .replace(/The overall goal.*$/i, '') // Remove goal statements
-            .replace(/The aim of this therapy.*$/i, '') // Remove aim statements
+            .replace(/\n\s*\n/g, '\n')
+            .replace(/In summary.*$/i, '')
+            .replace(/In conclusion.*$/i, '')
+            .replace(/The overall goal.*$/i, '')
+            .replace(/The aim of this therapy.*$/i, '')
+            .replace(/This integrated approach.*$/i, '')
+            .replace(/This approach aims.*$/i, '')
             .trim();
             
           if (content) {
@@ -189,6 +220,8 @@ IMPORTANT FORMATTING RULES:
           .replace(/In conclusion.*$/i, '')
           .replace(/The overall goal.*$/i, '')
           .replace(/The aim of this therapy.*$/i, '')
+          .replace(/This integrated approach.*$/i, '')
+          .replace(/This approach aims.*$/i, '')
           .trim();
       }
     });
