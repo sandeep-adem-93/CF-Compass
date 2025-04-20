@@ -235,6 +235,11 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate, onLogout
     }
   };
 
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   return (
     <div className="patient-details-container">
       <PatientSidebar 
@@ -244,7 +249,7 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate, onLogout
         onPatientDelete={(patient) => setPatientToDelete(patient)}
         onAddPatientClick={onAddPatientClick}
         user={user}
-        onLogout={onLogout}
+        onLogout={handleLogout}
       />
       
       <div className="patient-content">
