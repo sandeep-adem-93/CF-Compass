@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
+
+const API_URL = process.env.REACT_APP_API_URL || 'https://cf-compass-frontend.onrender.com';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -12,10 +14,13 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/auth/login', {
+      console.log('Attempting login with:', { username });
+      const response = await axios.post(`${API_URL}/api/auth/login`, {
         username,
         password
       });
+
+      console.log('Login response:', response.data);
 
       // Store token and user info
       localStorage.setItem('token', response.data.token);
@@ -24,7 +29,8 @@ function Login() {
       // Redirect to dashboard
       navigate('/dashboard');
     } catch (error) {
-      setError(error.response?.data?.error || 'Login failed');
+      console.error('Login error:', error);
+      setError(error.response?.data?.error || 'Login failed. Please check your credentials.');
     }
   };
 
@@ -42,6 +48,7 @@ function Login() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              placeholder="Enter your username"
             />
           </div>
           <div className="form-group">
@@ -52,10 +59,14 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              placeholder="Enter your password"
             />
           </div>
           <button type="submit" className="login-button">Login</button>
         </form>
+        <div className="register-link">
+          Don't have an account? <Link to="/register">Register here</Link>
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './Register.css';
+
+const API_URL = process.env.REACT_APP_API_URL || 'https://cf-compass-frontend.onrender.com';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -17,7 +19,7 @@ function Register() {
       console.log('Username:', username);
       console.log('Role:', role);
       
-      const response = await axios.post('/api/auth/register', {
+      const response = await axios.post(`${API_URL}/api/auth/register`, {
         username,
         password,
         role
@@ -33,7 +35,7 @@ function Register() {
       navigate('/dashboard');
     } catch (error) {
       console.error('Registration error:', error);
-      setError(error.response?.data?.error || 'Registration failed');
+      setError(error.response?.data?.error || 'Registration failed. Please try again.');
     }
   };
 
@@ -51,6 +53,7 @@ function Register() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              placeholder="Choose a username"
             />
           </div>
           <div className="form-group">
@@ -61,6 +64,7 @@ function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              placeholder="Choose a password"
             />
           </div>
           <div className="form-group">
@@ -72,13 +76,13 @@ function Register() {
               required
             >
               <option value="genetic_counselor">Genetic Counselor</option>
-              <option value="medical_receptionist">Medical Receptionist</option>
+              <option value="clinician">Clinician</option>
             </select>
           </div>
           <button type="submit" className="register-button">Register</button>
         </form>
         <div className="login-link">
-          Already have an account? <a href="/login">Login here</a>
+          Already have an account? <Link to="/login">Login here</Link>
         </div>
       </div>
     </div>
