@@ -56,13 +56,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
-    max-height: 400px;
-    overflow-y: hidden;
-    padding-right: 8px;
-  }
-  
-  .chart-legend:hover {
-    overflow-y: auto;
   }
   
   .legend-item {
@@ -107,14 +100,14 @@
 }
 
 .variant-tooltip {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: calc(100% + 10px);
   width: 320px;
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 100;
   overflow: hidden;
   animation: tooltip-fade-in 0.2s ease forwards;
 }
@@ -199,7 +192,6 @@
 /* Make tooltip position responsive */
 @media (max-width: 768px) {
   .variant-tooltip {
-    position: fixed;
     right: 50%;
     top: auto;
     bottom: 100%;
@@ -207,22 +199,4 @@
     transform: translateX(50%);
     width: 280px;
   }
-}
-
-/* Custom scrollbar styling */
-.chart-legend::-webkit-scrollbar {
-  width: 4px;
-}
-
-.chart-legend::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.chart-legend::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-}
-
-.chart-legend::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
 }
