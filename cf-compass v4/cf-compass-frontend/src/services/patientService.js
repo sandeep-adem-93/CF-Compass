@@ -114,14 +114,17 @@ export const deletePatient = async (patientId, token) => {
   try {
     console.log('=== Delete Patient Request ===');
     console.log('Patient ID:', patientId);
+    console.log('Token exists:', !!token);
     
     if (!token) {
+      console.error('No token provided for delete operation');
       throw new Error('Authentication token is required');
     }
     
     const url = `${API_URL}/api/patients/${patientId}`;
     console.log('Delete URL:', url);
     
+    console.log('Making delete request...');
     const response = await axios.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -129,14 +132,18 @@ export const deletePatient = async (patientId, token) => {
       }
     });
     
-    console.log('Response status:', response.status);
-    console.log('Delete result:', response.data);
+    console.log('Response received:', {
+      status: response.status,
+      data: response.data
+    });
+    
     return response.data;
   } catch (error) {
-    console.error('Error deleting patient', patientId, ':', error);
+    console.error('Error deleting patient:', error);
     if (error.response) {
       console.error('Response status:', error.response.status);
       console.error('Error details:', error.response.data);
+      console.error('Error headers:', error.response.headers);
     }
     throw error;
   }
