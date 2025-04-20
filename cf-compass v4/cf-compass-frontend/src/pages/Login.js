@@ -49,7 +49,6 @@ function Login({ onLoginSuccess }) {
           <span className="login-logo-text">CF Compass</span>
         </div>
 
-        <h2>Welcome Back</h2>
         {error && <div className="error-message">{error}</div>}
         
         <form onSubmit={handleSubmit}>

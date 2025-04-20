@@ -48,6 +48,7 @@
 
 .form-group input:focus {
   outline: none;
+  border-radius: 20px;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
 }
