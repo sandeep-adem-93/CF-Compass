@@ -194,7 +194,14 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
 
   const handlePatientDelete = async (patientId) => {
     try {
-      await deletePatient(patientId);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Authentication token not found. Please log in again.');
+        navigate('/login');
+        return;
+      }
+
+      await deletePatient(patientId, token);
       setPatientToDelete(null); // Close the dialog
       
       // Refresh the patient list using the parent's update function
@@ -203,7 +210,7 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
       // If the deleted patient was the current one, navigate to another
       if (currentPatient && currentPatient.id === patientId) {
         // Get the updated patient list
-        const updatedPatients = await getPatients();
+        const updatedPatients = await getPatients(token);
         
         if (updatedPatients.length > 0) {
           // Find the next patient in the list
@@ -229,7 +236,14 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
       }
     } catch (error) {
       console.error('Error deleting patient:', error);
-      setError(`Failed to delete patient: ${error.message}`);
+      if (error.response?.status === 401) {
+        setError('Your session has expired. Please log in again.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login');
+      } else {
+        setError(`Failed to delete patient: ${error.message}`);
+      }
     }
   };
 

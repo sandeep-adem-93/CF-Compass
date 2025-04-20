@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Patient = require('../models/Patient');
-const { auth, checkRole } = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 // Apply auth middleware to all routes
 router.use(auth);
@@ -10,6 +10,9 @@ router.use(auth);
 // Get all patients
 router.get('/', async (req, res) => {
   try {
+    console.log('=== Get All Patients Request ===');
+    console.log('User making request:', req.user);
+    
     const patients = await Patient.find({});
     res.json(patients);
   } catch (err) {
@@ -80,6 +83,10 @@ router.post('/upload', async (req, res) => {
 // Delete a patient
 router.delete('/:id', async (req, res) => {
   try {
+    console.log('=== Delete Patient Request ===');
+    console.log('User making request:', req.user);
+    console.log('Patient ID:', req.params.id);
+    
     const { id } = req.params;
     const deletedPatient = await Patient.findOneAndDelete({ id });
     
