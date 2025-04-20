@@ -56,6 +56,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
   }
   
   .legend-item {
@@ -199,4 +202,23 @@
     transform: translateX(50%);
     width: 280px;
   }
+}
+
+/* Custom scrollbar styling */
+.chart-legend::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chart-legend::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.chart-legend::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.chart-legend::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
