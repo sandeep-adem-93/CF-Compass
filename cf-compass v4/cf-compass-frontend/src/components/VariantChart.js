@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { VARIANT_INFO } from './GeneticVariants';
 import './VariantChart.css';
 
@@ -81,7 +81,7 @@ function VariantChart({ data }) {
   };
     
   const handleMouseLeave = () => {
-    setActiveTooltip(null);
+    setTooltipInfo(null);
   };
 
   return (
