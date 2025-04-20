@@ -76,7 +76,7 @@ function Register() {
               required
             >
               <option value="genetic_counselor">Genetic Counselor</option>
-              <option value="clinician">Clinician</option>
+              <option value="medical_receptionist">Medical Receptionist</option>
             </select>
           </div>
           <button type="submit" className="register-button">Register</button>
