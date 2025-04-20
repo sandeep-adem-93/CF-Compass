@@ -66,8 +66,16 @@ function VariantChart({ data }) {
     return `conic-gradient(${gradient})`;
   };
   // Function to handle tooltip display
-  const handleMouseEnter = (variant) => {
-    setActiveTooltip(variant);
+  // Update the handleMouseEnter function in VariantChart.js
+  const handleMouseEnter = (variant, event) => {
+    setActiveTooltip({
+      variant,
+      // Store the mouse position for tooltip positioning
+      position: {
+        x: event.clientX,
+        y: event.clientY
+      }
+    });
   };
   
   const handleMouseLeave = () => {
@@ -94,7 +102,7 @@ function VariantChart({ data }) {
             <div 
               key={index} 
               className="legend-item"
-              onMouseEnter={() => handleMouseEnter(item.name)}
+              onMouseEnter={(e) => handleMouseEnter(item.name, e)}
               onMouseLeave={handleMouseLeave}
             >
               <div className="legend-color" style={{ backgroundColor: item.color }}></div>
@@ -105,7 +113,10 @@ function VariantChart({ data }) {
               
               {/* Tooltip */}
               {activeTooltip === item.name && VARIANT_INFO[item.name] && (
-                <div className="variant-tooltip">
+                <div className="variant-tooltip"  style={{
+                  left: `${activeTooltip.position.x - 340}px`, // Position to the left of the cursor
+                  top: `${activeTooltip.position.y - 100}px`, // Position above the cursor
+                }}>
                   <div className={`variant-card ${VARIANT_INFO[item.name].severity ? 
                     VARIANT_INFO[item.name].severity.replace(/\s+/g, '-').toLowerCase() + '-severity' : 
                     'unknown'}`}>
