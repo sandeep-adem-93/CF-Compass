@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './PatientSidebar.css';
 import React from 'react';
 
-function PatientSidebar({ patients, currentPatient, onPatientSelect, onAddPatientClick, onPatientDelete}) {
+function PatientSidebar({ patients, currentPatient, onPatientSelect, onAddPatientClick, onPatientDelete, user }) {
   // generate initials for the avatar
   const getInitials = (name) => {
     if (!name || typeof name !== 'string') {
@@ -47,9 +47,11 @@ function PatientSidebar({ patients, currentPatient, onPatientSelect, onAddPatien
           </svg>
           Dashboard
         </Link>
-        <button className="add-patient-button" onClick={onAddPatientClick}>
-          + Add Patient
-        </button>
+        {user && user.role === 'genetic_counselor' && (
+          <button className="add-patient-button" onClick={onAddPatientClick}>
+            + Add Patient
+          </button>
+        )}
       </div>
       
       <div className="patients-list">

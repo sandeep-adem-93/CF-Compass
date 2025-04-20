@@ -16,14 +16,17 @@ function Navbar({ onAddPatientClick, user, onLogout }) {
         </Link>
         
         <div className="navbar-right">
-          
-              <button className="add-patient-btn" onClick={onAddPatientClick}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Add Patient
-              </button>
+          {user && (
+            <>
+              {user.role !== 'medical_receptionist' && (
+                <button className="add-patient-btn" onClick={onAddPatientClick}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Add Patient
+                </button>
+              )}
               <button className="logout-btn" onClick={onLogout}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -32,7 +35,8 @@ function Navbar({ onAddPatientClick, user, onLogout }) {
                 </svg>
                 Logout
               </button>
-
+            </>
+          )}
         </div>
       </div>
     </nav>

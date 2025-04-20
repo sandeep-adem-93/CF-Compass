@@ -73,6 +73,7 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
   const [error, setError] = useState(null);
   const [formattedAnalysis, setFormattedAnalysis] = useState({ geneticAnalysis: null, clinicalSections: [] });
   const [patientToDelete, setPatientToDelete] = useState(null);
+  const [user] = useState(JSON.parse(localStorage.getItem('user')));
 
   // Update current patient when patients array or ID changes
   useEffect(() => {
@@ -240,6 +241,7 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
         onPatientSelect={handlePatientSelect}
         onPatientDelete={(patient) => setPatientToDelete(patient)}
         onAddPatientClick={onAddPatientClick}
+        user={user}
       />
       
       <div className="patient-content">
