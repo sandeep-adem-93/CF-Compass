@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 import './Login.css';
+
+const API_URL = 'https://cf-compass.onrender.com';
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
@@ -10,30 +13,27 @@ function Login({ onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      console.log('Attempting login with:', { username });
+      const response = await axios.post(`${API_URL}/api/auth/login`, {
+        username,
+        password
       });
 
-      const data = await response.json();
+      console.log('Login response:', response.data);
 
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        onLoginSuccess(data.user); // Call the callback with the user data
-        navigate('/dashboard');
-      } else {
-        setError(data.message || 'Login failed');
-      }
+      // Store token and user info
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+      // Update App component's state
+      onLoginSuccess(response.data.user);
+
+      // Redirect to dashboard
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
-      setError('An error occurred during login');
+      setError(error.response?.data?.error || 'Login failed. Please check your credentials.');
     }
   };
 

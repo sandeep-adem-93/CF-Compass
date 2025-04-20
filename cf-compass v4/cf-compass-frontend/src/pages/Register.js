@@ -5,7 +5,7 @@ import './Register.css';
 
 const API_URL = 'https://cf-compass.onrender.com';
 
-function Register() {
+function Register({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('genetic_counselor');
@@ -30,6 +30,9 @@ function Register() {
       // Store token and user info
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      // Update App component's state
+      onLoginSuccess(response.data.user);
 
       // Redirect to dashboard
       navigate('/dashboard');

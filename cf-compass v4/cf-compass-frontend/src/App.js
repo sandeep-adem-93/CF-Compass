@@ -15,22 +15,16 @@ function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    fetchPatients();
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      fetchPatients();
-    }
-  }, [user]);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('token');
     setUser(null);
+  };
+
+  const handleLogin = (userData) => {
+    setUser(userData);
   };
 
   const fetchPatients = async () => {
@@ -73,40 +67,18 @@ function App() {
         
         <main className="app-content">
           <Routes>
-            <Route 
-              path="/login" 
-              element={<Login onLoginSuccess={(userData) => setUser(userData)} />} 
-            />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login onLoginSuccess={handleLogin} />} />
+            <Route path="/register" element={<Register onLoginSuccess={handleLogin} />} />
             <Route
               path="/dashboard"
               element={
-                <ProtectedRoute user={user}>
-                  <Dashboard patients={patients} onPatientsUpdate={fetchPatients} user={user} />
+                <ProtectedRoute>
+                  <Dashboard patients={patients} onPatientsUpdate={fetchPatients} />
                 </ProtectedRoute>
               }
             />
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute user={user}>
-                  <Navigate to="/dashboard" replace />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/patient/:id" 
-              element={
-                <ProtectedRoute user={user}>
-                  <PatientDetails 
-                    onAddPatientClick={handleAddPatientClick} 
-                    patients={patients} 
-                    onPatientsUpdate={fetchPatients}
-                    user={user}
-                  />
-                </ProtectedRoute>
-              } 
-            />
+            <Route path="/" element={<ProtectedRoute><Navigate to="/dashboard" replace /></ProtectedRoute>} />
+            <Route path="/patient/:id" element={<PatientDetails onAddPatientClick={handleAddPatientClick} patients={patients} onPatientsUpdate={fetchPatients} />} />
           </Routes>
         </main>
         
@@ -122,7 +94,9 @@ function App() {
 }
 
 // Protected route component
-function ProtectedRoute({ children, user }) {
+function ProtectedRoute({ children }) {
+  const user = localStorage.getItem('user');
+  
   if (!user) {
     return <Navigate to="/login" replace />;
   }
