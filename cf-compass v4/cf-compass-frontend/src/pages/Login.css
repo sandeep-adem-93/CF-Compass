@@ -31,20 +31,12 @@
   color: #666;
 }
 
-.form-group input,
-.form-group select {
+.form-group input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .login-button {
@@ -57,26 +49,10 @@
   font-size: 1rem;
   cursor: pointer;
   margin-top: 1rem;
-  transition: background-color 0.2s;
 }
 
 .login-button:hover {
   background-color: #0056b3;
-}
-
-.toggle-form-button {
-  width: 100%;
-  padding: 0.75rem;
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
-  margin-top: 1rem;
-  font-size: 0.875rem;
-}
-
-.toggle-form-button:hover {
-  text-decoration: underline;
 }
 
 .error-message {

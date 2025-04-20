@@ -12,16 +12,35 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [patientToDelete, setPatientToDelete] = useState(null);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('=== Dashboard Component Mounted ===');
+    // Check if user is logged in
+    const storedUser = localStorage.getItem('user');
+    console.log('Stored user:', storedUser ? JSON.parse(storedUser) : 'none');
+    
+    if (!storedUser) {
+      console.log('No user found, redirecting to login');
+      navigate('/login');
+      return;
+    }
+
+    const parsedUser = JSON.parse(storedUser);
+    console.log('Setting user:', parsedUser);
+    setUser(parsedUser);
     fetchPatients();
-  }, []);
+  }, [navigate]);
 
   const fetchPatients = async () => {
     try {
+      console.log('=== Fetching Patients ===');
       setLoading(true);
-      const data = await getPatients();
+      const token = localStorage.getItem('token');
+      console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
+      
+      const data = await getPatients(token);
       console.log('=== Patient Data Analysis ===');
       console.log('Raw patient data received:', data);
       
@@ -52,6 +71,12 @@ function Dashboard() {
     } catch (error) {
       console.error('Error fetching patients:', error);
       setError('Failed to load patients');
+      if (error.response?.status === 401) {
+        console.log('Token expired or invalid, redirecting to login');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login');
+      }
     } finally {
       setLoading(false);
     }
@@ -66,24 +91,46 @@ function Dashboard() {
   });
 
   const handlePatientClick = (patient) => {
+    console.log('Patient clicked:', patient.id);
     navigate(`/patient/${patient.id}`);
   };
 
   const handlePatientDelete = async (patientId) => {
     try {
-      await deletePatient(patientId);
-      setPatientToDelete(null); // Close the dialog
+      console.log('=== Deleting Patient ===');
+      console.log('Patient ID:', patientId);
+      const token = localStorage.getItem('token');
+      console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
+      
+      await deletePatient(patientId, token);
+      console.log('Patient deleted successfully');
+      setPatientToDelete(null);
       
       // Refresh the patient list
+      console.log('Refreshing patient list');
       fetchPatients();
     } catch (error) {
       console.error('Error deleting patient:', error);
       setError(`Failed to delete patient: ${error.message}`);
+      if (error.response?.status === 401) {
+        console.log('Token expired or invalid, redirecting to login');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login');
+      }
     }
+  };
+
+  const handleLogout = () => {
+    console.log('=== Logging Out ===');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
   };
 
   // Calculate variant statistics for the chart
   const calculateVariantStats = () => {
+    console.log('=== Calculating Variant Statistics ===');
     const variantCounts = {};
     
     patients.forEach(patient => {
@@ -99,24 +146,39 @@ function Dashboard() {
     });
     
     // Convert to array format for chart
-    return Object.entries(variantCounts).map(([variant, count]) => ({
+    const stats = Object.entries(variantCounts).map(([variant, count]) => ({
       name: variant,
       count
     }));
+    
+    console.log('Variant statistics:', stats);
+    return stats;
   };
 
   if (loading) {
+    console.log('Loading patient data...');
     return <div className="loading">Loading patient data...</div>;
   }
 
   if (error) {
+    console.error('Error state:', error);
     return <div className="error-message">{error}</div>;
   }
 
+  console.log('Rendering dashboard with', patients.length, 'patients');
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
         <h1>Patient Dashboard</h1>
+        {user && (
+          <div className="user-info">
+            <span>Welcome, {user.username}</span>
+            <span className="user-role">({user.role})</span>
+            <button onClick={handleLogout} className="logout-button">
+              Logout
+            </button>
+          </div>
+        )}
       </header>
 
       <div className="stats-container">

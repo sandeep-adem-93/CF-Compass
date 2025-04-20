@@ -1,83 +1,91 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { isAuthenticated } from './services/authService';
-import ProtectedRoute from './components/ProtectedRoute';
-import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import PatientDetails from './pages/PatientDetails';
-import Unauthorized from './components/Unauthorized';
 import Navbar from './components/Navbar';
 import AddPatientModal from './components/AddPatientModal';
+import Login from './pages/Login';
+import { uploadPatientData, getPatients } from './services/patientService';
 import './App.css';
 
 function App() {
-  const [isAddPatientModalOpen, setIsAddPatientModalOpen] = React.useState(false);
-  const [patients, setPatients] = React.useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [patients, setPatients] = useState([]);
 
-  const handleAddPatientClick = () => {
-    setIsAddPatientModalOpen(true);
-  };
-
-  const handleCloseAddPatientModal = () => {
-    setIsAddPatientModalOpen(false);
-  };
+  useEffect(() => {
+    fetchPatients();
+  }, []);
 
   const fetchPatients = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/patients`);
-      const data = await response.json();
+      const data = await getPatients();
       setPatients(data);
     } catch (error) {
       console.error('Error fetching patients:', error);
     }
   };
 
-  React.useEffect(() => {
-    fetchPatients();
-  }, []);
+  const handleAddPatientClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleAddPatient = async (patientData) => {
+    try {
+      console.log("App.js: handleAddPatient called with:", patientData ? "patient data present" : "no patient data");
+      
+      // Refresh the patient list after adding a new patient
+      await fetchPatients();
+      
+      // Close the modal
+      setIsModalOpen(false);
+      return { success: true };
+    } catch (error) {
+      console.error('Error in handleAddPatient:', error);
+      throw error;
+    }
+  };
 
   return (
     <Router>
-      <div className="app">
+      <div className="app-container">
         <Navbar onAddPatientClick={handleAddPatientClick} />
+        
         <main className="app-content">
           <Routes>
-            {/* Public routes */}
-            <Route path="/login" element={
-              isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Login />
-            } />
-            <Route path="/unauthorized" element={<Unauthorized />} />
-
-            {/* Protected routes */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard patients={patients} onPatientsUpdate={fetchPatients} />
-              </ProtectedRoute>
-            } />
-            <Route path="/patient/:id" element={
-              <ProtectedRoute>
-                <PatientDetails onAddPatientClick={handleAddPatientClick} patients={patients} onPatientsUpdate={fetchPatients} />
-              </ProtectedRoute>
-            } />
-
-            {/* Redirect root to dashboard if authenticated, otherwise to login */}
-            <Route path="/" element={
-              isAuthenticated() ? 
-                <Navigate to="/dashboard" replace /> : 
-                <Navigate to="/login" replace />
-            } />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard patients={patients} onPatientsUpdate={fetchPatients} />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/patient/:id" element={<PatientDetails onAddPatientClick={handleAddPatientClick} patients={patients} onPatientsUpdate={fetchPatients} />} />
           </Routes>
         </main>
-
-        {isAddPatientModalOpen && (
-          <AddPatientModal
-            onClose={handleCloseAddPatientModal}
-            onSuccess={fetchPatients}
+        
+        {isModalOpen && (
+          <AddPatientModal 
+            onClose={() => setIsModalOpen(false)}
+            onAddPatient={handleAddPatient}
           />
         )}
       </div>
     </Router>
   );
+}
+
+// Protected route component
+function ProtectedRoute({ children }) {
+  const user = localStorage.getItem('user');
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 }
 
 export default App;
