@@ -5,6 +5,7 @@ import PatientDetails from './pages/PatientDetails';
 import Navbar from './components/Navbar';
 import AddPatientModal from './components/AddPatientModal';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import { uploadPatientData, getPatients } from './services/patientService';
 import './App.css';
 
@@ -53,6 +54,7 @@ function App() {
         <main className="app-content">
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
               path="/dashboard"
               element={

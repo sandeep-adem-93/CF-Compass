@@ -90,9 +90,10 @@ mongoose.connection.on('error', (err) => {
   }
 });
 
-mongoose.connection.on('connected', () => {
+mongoose.connection.on('connected', async () => {
   console.log('MongoDB connected');
   clearTimeout(connectionRetryTimeout);
+  await createInitialUsers();
 });
 
 // Initial connection
@@ -323,6 +324,40 @@ app.use((err, req, res, next) => {
   console.error('Error handling middleware:', err);
   res.status(500).json({ error: 'Internal Server Error' });
 });
+
+// Add this after your MongoDB connection
+const createInitialUsers = async () => {
+  try {
+    const User = require('./models/User');
+    const bcrypt = require('bcryptjs');
+
+    // Check if users exist
+    const userCount = await User.countDocuments({});
+    if (userCount === 0) {
+      console.log('Creating initial users...');
+      
+      // Create genetic counselor
+      const counselorPassword = await bcrypt.hash('genetic123', 10);
+      await User.create({
+        username: 'genetic_counselor',
+        password: counselorPassword,
+        role: 'genetic_counselor'
+      });
+      console.log('Created genetic counselor user');
+
+      // Create medical receptionist
+      const receptionistPassword = await bcrypt.hash('reception123', 10);
+      await User.create({
+        username: 'medical_receptionist',
+        password: receptionistPassword,
+        role: 'medical_receptionist'
+      });
+      console.log('Created medical receptionist user');
+    }
+  } catch (error) {
+    console.error('Error creating initial users:', error);
+  }
+};
 
 // Start server
 app.listen(PORT, () => {
