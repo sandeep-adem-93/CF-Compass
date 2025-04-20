@@ -6,7 +6,7 @@ const path = require('path');
 const connectDB = require('./config/db');
 const Patient = require('./models/Patient');
 const initializeDatabase = require('./scripts/initDb');
-const { auth, checkRole } = require('./middleware/auth');
+const { auth } = require('./middleware/auth');
 const authRoutes = require('./routes/auth');
 require('dotenv').config();
 const mongoose = require('mongoose');
@@ -186,8 +186,7 @@ app.get('/api/patients/:id', async (req, res) => {
   }
 });
 
-// Delete a patient
-app.delete('/api/patients/:id', checkRole(['genetic_counselor']), async (req, res) => {
+app.delete('/api/patients/:id', auth, async (req, res) => {
   try {
     console.log('=== Delete Patient Request ===');
     console.log('Patient ID:', req.params.id);
@@ -209,8 +208,10 @@ app.delete('/api/patients/:id', checkRole(['genetic_counselor']), async (req, re
   }
 });
 
+
+
 // Upload a new patient (from FHIR format) and analyze with AI
-app.post('/api/patients/upload', checkRole(['genetic_counselor']), async (req, res) => {
+app.post('/api/patients/upload', async (req, res) => {
   try {
     console.log('=== Patient Upload Request ===');
     console.log('Request body keys:', Object.keys(req.body));
@@ -305,8 +306,6 @@ app.use('/api', require('./routes/patients'));
 // Add auth routes
 app.use('/api/auth', authRoutes);
 
-// Protect patient routes with authentication
-app.use('/api/patients', auth);
 
 // Catch-all route to serve the React app
 app.get('*', (req, res) => {
@@ -316,7 +315,7 @@ app.get('*', (req, res) => {
   }
   
   // For all other routes, serve the frontend application
-  res.sendFile(path.join(__dirname, '../cf-compass-frontend/build/index.html'));
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // Error handling middleware
