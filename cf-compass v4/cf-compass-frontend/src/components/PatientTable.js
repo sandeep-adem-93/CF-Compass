@@ -1,7 +1,7 @@
 import React from 'react';
 import './PatientTable.css';
 
-function PatientTable({ patients, onPatientClick, onPatientDelete }) {
+function PatientTable({ patients, onPatientClick, onPatientDelete, user }) {
   // Function to generate initials for the avatar
   const getInitials = (name) => {
     if (!name || typeof name !== 'string') {
@@ -75,7 +75,7 @@ function PatientTable({ patients, onPatientClick, onPatientDelete }) {
             <th>AGE</th>
             <th>GENDER</th>
             <th>VARIANTS</th>
-            <th>ACTIONS</th>
+            {user && user.role !== 'medical_receptionist' && <th>ACTIONS</th>}
           </tr>
         </thead>
         <tbody>
@@ -95,24 +95,26 @@ function PatientTable({ patients, onPatientClick, onPatientDelete }) {
                 <td>{calculateAge(patient)}</td>
                 <td>{patient.gender || 'Unknown'}</td>
                 <td>{getVariants(patient)}</td>
-                <td>
-                  <button 
-                    className="delete-patient-button1"
-                    onClick={(e) => handleDeleteClick(e, patient)}
-                    aria-label="Delete patient"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
-                      <line x1="10" y1="11" x2="10" y2="17"></line>
-                      <line x1="14" y1="11" x2="14" y2="17"></line>
-                    </svg>
-                  </button>
-                </td>
+                {user && user.role !== 'medical_receptionist' && (
+                  <td>
+                    <button 
+                      className="delete-patient-button1"
+                      onClick={(e) => handleDeleteClick(e, patient)}
+                      aria-label="Delete patient"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </button>
+                  </td>
+                )}
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="no-patients">
+              <td colSpan={user && user.role !== 'medical_receptionist' ? "5" : "4"} className="no-patients">
                 No patients found
               </td>
             </tr>

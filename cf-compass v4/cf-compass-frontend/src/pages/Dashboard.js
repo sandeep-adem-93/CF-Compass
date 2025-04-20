@@ -12,7 +12,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [patientToDelete, setPatientToDelete] = useState(null);
-  const [user, setUser] = useState(null);
+  const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -204,6 +204,7 @@ function Dashboard() {
             patients={filteredPatients} 
             onPatientClick={handlePatientClick} 
             onPatientDelete={(patient) => setPatientToDelete(patient)}
+            user={user}
           />
         </div>
         
