@@ -316,7 +316,7 @@ app.get('*', (req, res) => {
   }
   
   // For all other routes, serve the frontend application
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.sendFile(path.join(__dirname, '../cf-compass-frontend/build/index.html'));
 });
 
 // Error handling middleware

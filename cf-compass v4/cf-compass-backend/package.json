@@ -5,7 +5,8 @@
   "main": "mockApiBackend.js",
   "scripts": {
     "start": "node mockApiBackend.js",
-    "dev": "nodemon mockApiBackend.js"
+    "serve": "node serve.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@google/generative-ai": "^0.2.1",

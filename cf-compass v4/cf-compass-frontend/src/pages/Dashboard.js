@@ -19,7 +19,6 @@ function Dashboard() {
     console.log('=== Dashboard Component Mounted ===');
     // Check if user is logged in
     const storedUser = localStorage.getItem('user');
-    console.log('Stored user:', storedUser ? JSON.parse(storedUser) : 'none');
     
     if (!storedUser) {
       console.log('No user found, redirecting to login');
@@ -27,10 +26,17 @@ function Dashboard() {
       return;
     }
 
-    const parsedUser = JSON.parse(storedUser);
-    console.log('Setting user:', parsedUser);
-    setUser(parsedUser);
-    fetchPatients();
+    try {
+      const parsedUser = JSON.parse(storedUser);
+      console.log('Setting user:', parsedUser);
+      setUser(parsedUser);
+      fetchPatients();
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      navigate('/login');
+    }
   }, [navigate]);
 
   const fetchPatients = async () => {
