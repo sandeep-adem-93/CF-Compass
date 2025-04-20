@@ -3,7 +3,8 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f8f9fa;
+  padding: 20px;
 }
 
 .register-box {
@@ -16,9 +17,9 @@
 }
 
 .register-box h2 {
-  text-align: center;
-  color: #333;
   margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
 }
 
 .form-group {
@@ -28,42 +29,42 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666;
+  color: #555;
+  font-weight: 500;
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
 }
 
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #4361ee;
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
 .register-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #28a745;
+  background-color: #4361ee;
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
   margin-top: 1rem;
+  transition: background-color 0.2s;
 }
 
 .register-button:hover {
-  background-color: #218838;
-}
-
-.error-message {
-  color: #dc3545;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  padding: 0.75rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-  text-align: center;
+  background-color: #3a56d4;
 }
 
 .login-link {
@@ -73,10 +74,22 @@
 }
 
 .login-link a {
-  color: #007bff;
+  color: #4361ee;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .login-link a:hover {
   text-decoration: underline;
+}
+
+.error-message {
+  background-color: #fff2f2;
+  color: #dc3545;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  border: 1px solid #ffcdd2;
+  text-align: center;
 } 
