@@ -3,7 +3,8 @@ import { VARIANT_INFO } from './GeneticVariants';
 import './VariantChart.css';
 
 function VariantChart({ data }) {
-  const [activeTooltip, setActiveTooltip] = useState(null);
+  const [tooltipInfo, setTooltipInfo] = useState(null);
+  const legendRef = useRef(null);
   // Color map for consistent variant colors
   const variantColors = {
     'F508del': '#4361EE',    // Blue
@@ -67,17 +68,18 @@ function VariantChart({ data }) {
   };
   // Function to handle tooltip display
   // Update the handleMouseEnter function in VariantChart.js
+  // Function to handle tooltip display
   const handleMouseEnter = (variant, event) => {
-    setActiveTooltip({
+    const legendRect = legendRef.current.getBoundingClientRect();
+    setTooltipInfo({
       variant,
-      // Store the mouse position for tooltip positioning
       position: {
-        x: event.clientX,
-        y: event.clientY
+        x: legendRect.left - 330, // Position to the left of the legend
+        y: event.clientY - 100    // Align vertically with cursor (with offset)
       }
     });
   };
-  
+    
   const handleMouseLeave = () => {
     setActiveTooltip(null);
   };
@@ -97,7 +99,7 @@ function VariantChart({ data }) {
           </div>
         </div>
         
-        <div className="chart-legend">
+        <div className="chart-legend" ref={legendRef}>
           {chartData.map((item, index) => (
             <div 
               key={index} 
@@ -110,60 +112,64 @@ function VariantChart({ data }) {
               <div className="legend-value">
                 {item.count} <span className="percentage">({item.percentage}%)</span>
               </div>
-              
-              {/* Tooltip */}
-              {activeTooltip === item.name  && activeTooltip.variant === item.name && VARIANT_INFO[item.name] && (
-                <div className="variant-tooltip"  style={{
-                  left: `${activeTooltip.position.x - 340}px`, // Position to the left of the cursor
-                  top: `${activeTooltip.position.y - 100}px`, // Position above the cursor
-                }}>
-                  <div className={`variant-card ${VARIANT_INFO[item.name].severity ? 
-                    VARIANT_INFO[item.name].severity.replace(/\s+/g, '-').toLowerCase() + '-severity' : 
-                    'unknown'}`}>
-                    <div className="variant-header">
-                      <h4 className="variant-name">{item.name}</h4>
-                      {VARIANT_INFO[item.name].fullName && (
-                        <span className="variant-full-name">{VARIANT_INFO[item.name].fullName}</span>
-                      )}
-                    </div>
-                    
-                    <div className="variant-details">
-                      {VARIANT_INFO[item.name].description && (
-                        <p className="variant-description">{VARIANT_INFO[item.name].description}</p>
-                      )}
-                      
-                      <div className="variant-info-grid">
-                        {VARIANT_INFO[item.name].severity && (
-                          <div className="variant-info-item">
-                            <span className="info-label">Severity:</span>
-                            <span className={`severity-badge ${VARIANT_INFO[item.name].severity.replace(/\s+/g, '-').toLowerCase()}`}>
-                              {VARIANT_INFO[item.name].severity}
-                            </span>
-                          </div>
-                        )}
-                        
-                        {VARIANT_INFO[item.name].prevalence && (
-                          <div className="variant-info-item">
-                            <span className="info-label">Prevalence:</span>
-                            <span className="info-value">{VARIANT_INFO[item.name].prevalence}</span>
-                          </div>
-                        )}
-                        
-                        {VARIANT_INFO[item.name].modulator && (
-                          <div className="variant-info-item modulator-info">
-                            <span className="info-label">Modulator therapy:</span>
-                            <span className="info-value">{VARIANT_INFO[item.name].modulator}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           ))}
         </div>
       </div>
+      
+      {/* Tooltip - rendered outside of the legend items */}
+      {tooltipInfo && VARIANT_INFO[tooltipInfo.variant] && (
+        <div 
+          className="variant-tooltip" 
+          style={{
+            left: `${tooltipInfo.position.x}px`,
+            top: `${tooltipInfo.position.y}px`,
+          }}
+        >
+          <div className={`variant-card ${VARIANT_INFO[tooltipInfo.variant].severity ? 
+            VARIANT_INFO[tooltipInfo.variant].severity.replace(/\s+/g, '-').toLowerCase() + '-severity' : 
+            'unknown'}`}
+          >
+            <div className="variant-header">
+              <h4 className="variant-name">{tooltipInfo.variant}</h4>
+              {VARIANT_INFO[tooltipInfo.variant].fullName && (
+                <span className="variant-full-name">{VARIANT_INFO[tooltipInfo.variant].fullName}</span>
+              )}
+            </div>
+            
+            <div className="variant-details">
+              {VARIANT_INFO[tooltipInfo.variant].description && (
+                <p className="variant-description">{VARIANT_INFO[tooltipInfo.variant].description}</p>
+              )}
+              
+              <div className="variant-info-grid">
+                {VARIANT_INFO[tooltipInfo.variant].severity && (
+                  <div className="variant-info-item">
+                    <span className="info-label">Severity:</span>
+                    <span className={`severity-badge ${VARIANT_INFO[tooltipInfo.variant].severity.replace(/\s+/g, '-').toLowerCase()}`}>
+                      {VARIANT_INFO[tooltipInfo.variant].severity}
+                    </span>
+                  </div>
+                )}
+                
+                {VARIANT_INFO[tooltipInfo.variant].prevalence && (
+                  <div className="variant-info-item">
+                    <span className="info-label">Prevalence:</span>
+                    <span className="info-value">{VARIANT_INFO[tooltipInfo.variant].prevalence}</span>
+                  </div>
+                )}
+                
+                {VARIANT_INFO[tooltipInfo.variant].modulator && (
+                  <div className="variant-info-item modulator-info">
+                    <span className="info-label">Modulator therapy:</span>
+                    <span className="info-value">{VARIANT_INFO[tooltipInfo.variant].modulator}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
