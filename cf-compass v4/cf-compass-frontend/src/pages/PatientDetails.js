@@ -236,6 +236,9 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate, onLogout
   };
 
   const handleLogout = () => {
+    console.log('=== Logging Out ===');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     onLogout();
     navigate('/login');
   };
