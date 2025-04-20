@@ -86,6 +86,7 @@
 .error-message {
   color: #DC3545;
   background-color: #FFF2F2;
+  padding: var(--spacing-md);
   border-radius: 4px;
   margin: 0px 0px 16px;
   font-size: 14px;
