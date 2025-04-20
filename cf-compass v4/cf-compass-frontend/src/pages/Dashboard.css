@@ -35,7 +35,7 @@
   
   .stats-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: var(--spacing-lg);
     margin-bottom: var(--spacing-xl);
   }
@@ -67,7 +67,7 @@
     box-shadow: var(--shadow-sm);
     padding: var(--spacing-lg);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    grid-column: 1;
+    width: 100%;
   }
   
   .stat-card1:hover {
@@ -91,7 +91,7 @@
   
   .main-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: var(--spacing-xl);
   }
   

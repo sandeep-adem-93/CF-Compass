@@ -12,10 +12,16 @@ import './App.css';
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [patients, setPatients] = useState([]);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
   useEffect(() => {
     fetchPatients();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+  };
 
   const fetchPatients = async () => {
     try {
@@ -49,7 +55,11 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        <Navbar onAddPatientClick={handleAddPatientClick} />
+        <Navbar 
+          onAddPatientClick={handleAddPatientClick} 
+          user={user}
+          onLogout={handleLogout}
+        />
         
         <main className="app-content">
           <Routes>

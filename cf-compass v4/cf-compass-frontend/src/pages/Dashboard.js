@@ -175,20 +175,11 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
-        <h1>Patient Dashboard</h1>
-        {user && (
-          <div className="user-info">
-            <span>Welcome, {user.username}</span>
-            <span className="user-role">({user.role})</span>
-            <button onClick={handleLogout} className="logout-button">
-              Logout
-            </button>
-          </div>
-        )}
+        <h1>Welcome, {user.username}</h1>
       </header>
 
       <div className="stats-container">
-        <div className="stat-card">
+        <div className="stat-card1">
           <h3>Total Patients</h3>
           <div className="stat-value">{patients.length}</div>
         </div>
