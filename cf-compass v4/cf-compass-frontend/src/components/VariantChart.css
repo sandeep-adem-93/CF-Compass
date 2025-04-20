@@ -57,22 +57,18 @@
     flex-direction: column;
     gap: var(--spacing-md);
     max-height: 400px;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding-right: 8px;
   }
   
-  .legend-item {
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
-    padding: 8px;
-    border-radius: 8px;
-    z-index: 1;
+  .chart-legend:hover {
+    overflow-y: auto;
   }
   
-  .legend-item:hover {
-    background-color: rgba(0, 0, 0, 0.03);
-    z-index: 2;
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
   }
   
   .legend-color {
@@ -97,7 +93,19 @@
     font-size: 12px;
   }
 
-  /* Import the styling from GeneticVariants.css to ensure consistency */
+  /* Add to VariantChart.css */
+.legend-item {
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.legend-item:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
 .variant-tooltip {
   position: fixed;
   top: 0;
@@ -203,19 +211,18 @@
 
 /* Custom scrollbar styling */
 .chart-legend::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .chart-legend::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
+  background: transparent;
 }
 
 .chart-legend::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
 }
 
 .chart-legend::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgba(0, 0, 0, 0.3);
 }
