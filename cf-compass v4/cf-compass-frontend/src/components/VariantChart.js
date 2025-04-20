@@ -35,6 +35,7 @@ function VariantChart({ data }) {
 
   // Calculate total count and percentages
   const totalCount = data.reduce((sum, item) => sum + item.count, 0);
+  const uniqueVariants = new Set(data.map(item => item.name)).size;
   
   // Calculate percentage and add color to each item
   const chartData = data.map(item => ({
@@ -94,8 +95,8 @@ function VariantChart({ data }) {
           style={{ background: generateConicGradient() }}
         >
           <div className="donut-inner">
-            <div className="donut-value">{totalCount}</div>
-            <div className="donut-label">Variants</div>
+            <div className="donut-value">{uniqueVariants}</div>
+            <div className="donut-label">Unique Variants</div>
           </div>
         </div>
         
