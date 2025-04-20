@@ -45,11 +45,21 @@ function Register({ onLoginSuccess }) {
   return (
     <div className="register-container">
       <div className="register-box">
-        <h2>CF Compass Registration</h2>
+        <div className="register-logo">
+          <div className="register-logo-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <span className="register-logo-text">CF Compass</span>
+        </div>
+
+        <h2>Create Account</h2>
         {error && <div className="error-message">{error}</div>}
+        
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
@@ -59,8 +69,9 @@ function Register({ onLoginSuccess }) {
               placeholder="Choose a username"
             />
           </div>
+          
           <div className="form-group">
-            <label htmlFor="password">Password:</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
@@ -70,8 +81,9 @@ function Register({ onLoginSuccess }) {
               placeholder="Choose a password"
             />
           </div>
+          
           <div className="form-group">
-            <label htmlFor="role">Role:</label>
+            <label htmlFor="role">Role</label>
             <select
               id="role"
               value={role}
@@ -82,8 +94,10 @@ function Register({ onLoginSuccess }) {
               <option value="medical_receptionist">Medical Receptionist</option>
             </select>
           </div>
+          
           <button type="submit" className="register-button">Register</button>
         </form>
+        
         <div className="login-link">
           Already have an account? <Link to="/login">Login here</Link>
         </div>
