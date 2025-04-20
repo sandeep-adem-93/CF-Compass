@@ -40,11 +40,21 @@ function Login({ onLoginSuccess }) {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>CF Compass Login</h2>
+        <div className="login-logo">
+          <div className="login-logo-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <span className="login-logo-text">CF Compass</span>
+        </div>
+
+        <h2>Welcome Back</h2>
         {error && <div className="error-message">{error}</div>}
+        
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
@@ -54,8 +64,9 @@ function Login({ onLoginSuccess }) {
               placeholder="Enter your username"
             />
           </div>
+          
           <div className="form-group">
-            <label htmlFor="password">Password:</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
@@ -65,8 +76,12 @@ function Login({ onLoginSuccess }) {
               placeholder="Enter your password"
             />
           </div>
-          <button type="submit" className="login-button">Login</button>
+          
+          <button type="submit" className="login-button">
+            Log In
+          </button>
         </form>
+        
         <div className="register-link">
           Don't have an account? <Link to="/register">Register here</Link>
         </div>
