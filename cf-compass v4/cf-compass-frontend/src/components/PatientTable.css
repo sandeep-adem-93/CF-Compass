@@ -4,8 +4,7 @@
     overflow-x: auto;
     background-color: var(--bg-card);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    max-height: 500px; /* Set a fixed maximum height */
+    box-shadow: var(--shadow-sm);/* Set a fixed maximum height */
     overflow-y: visible; /* Enable vertical scrolling */
   }
   
