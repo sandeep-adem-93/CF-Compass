@@ -117,7 +117,7 @@ button {
   color: #4CAF50;
 }
 
-/* Loading spinner */
+/* Loading spinner
 .loading-spinner {
   display: inline-block;
   width: 20px;
@@ -131,4 +131,4 @@ button {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
+} */

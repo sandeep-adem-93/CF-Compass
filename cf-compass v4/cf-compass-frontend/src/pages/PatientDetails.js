@@ -65,7 +65,7 @@ const formatPatientAnalysis = (patient) => {
   };
 };
 
-function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
+function PatientDetails({onAddPatientClick, patients, onPatientsUpdate, onLogout}) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [currentPatient, setCurrentPatient] = useState(null);
@@ -244,6 +244,7 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
         onPatientDelete={(patient) => setPatientToDelete(patient)}
         onAddPatientClick={onAddPatientClick}
         user={user}
+        onLogout={onLogout}
       />
       
       <div className="patient-content">
