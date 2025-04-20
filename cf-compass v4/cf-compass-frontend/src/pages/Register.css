@@ -84,7 +84,12 @@
 }
 
 .error-message {
-  color: #DC3545;
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--error-color);
+  padding: var(--spacing-md);
+  border-radius: 16px;
+  margin-bottom: var(--spacing-lg);
+  /* color: #DC3545;
   background-color: #FFF2F2;
   padding: var(--spacing-md);
   border-radius: 4px;
@@ -95,5 +100,5 @@
   text-align: center;
   width: auto;
   display: inline-block;
-  min-width: 200px;
+  min-width: 200px; */
 } 
