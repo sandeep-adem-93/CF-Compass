@@ -102,7 +102,7 @@
 .variant-tooltip {
   position: absolute;
   top: 0;
-  left: calc(100% + 10px);
+  right: calc(100% + 10px);
   width: 320px;
   background-color: white;
   border-radius: 12px;
@@ -192,11 +192,11 @@
 /* Make tooltip position responsive */
 @media (max-width: 768px) {
   .variant-tooltip {
-    left: 50%;
+    right: 50%;
     top: auto;
     bottom: 100%;
     margin-bottom: 10px;
-    transform: translateX(-50%);
+    transform: translateX(50%);
     width: 280px;
   }
 }
