@@ -62,9 +62,17 @@
   }
   
   .legend-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    padding: 8px;
+    border-radius: 8px;
+    z-index: 1;
+  }
+  
+  .legend-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    z-index: 2;
   }
   
   .legend-color {
@@ -89,28 +97,16 @@
     font-size: 12px;
   }
 
-  /* Add to VariantChart.css */
-.legend-item {
-  position: relative;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-  padding: 8px;
-  border-radius: 8px;
-}
-
-.legend-item:hover {
-  background-color: rgba(0, 0, 0, 0.03);
-}
-
+  /* Import the styling from GeneticVariants.css to ensure consistency */
 .variant-tooltip {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: calc(100% + 10px);
   width: 320px;
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  z-index: 100;
+  z-index: 1000;
   overflow: hidden;
   animation: tooltip-fade-in 0.2s ease forwards;
 }
@@ -195,6 +191,7 @@
 /* Make tooltip position responsive */
 @media (max-width: 768px) {
   .variant-tooltip {
+    position: fixed;
     right: 50%;
     top: auto;
     bottom: 100%;
