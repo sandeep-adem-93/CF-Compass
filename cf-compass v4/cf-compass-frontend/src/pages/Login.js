@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://cf-compass-frontend.onrender.com';
+const API_URL = 'https://cf-compass.onrender.com';
 
 function Login() {
   const [username, setUsername] = useState('');

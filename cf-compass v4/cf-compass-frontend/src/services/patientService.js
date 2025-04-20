@@ -1,13 +1,12 @@
 // src/services/patientService.js
 import axios from 'axios';
 
-// const API_URL = 'http://localhost:5000/api';
-const API_URL = process.env.REACT_APP_API_URL || 'https://cf-compass-frontend.onrender.com';
+const API_URL = 'https://cf-compass.onrender.com';
 
 // Get all patients
 export const getPatients = async (token) => {
   try {
-    const url = `${API_URL.replace(/\/+$/, '')}/api/patients`;
+    const url = `${API_URL}/api/patients`;
     console.log('Fetching patients from:', url);
     console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
