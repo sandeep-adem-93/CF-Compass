@@ -32,7 +32,7 @@ export const getPatients = async (token) => {
 // Get a specific patient by id
 export const getPatientById = async (id, token) => {
   try {
-    const url = `${API_URL.replace(/\/+$/, '')}/api/patients/${id}`;
+    const url = `${API_URL}/api/patients/${id}`;
     console.log('Fetching patient:', id);
     console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
@@ -59,7 +59,7 @@ export const getPatientById = async (id, token) => {
 export const uploadPatientData = async (requestData, token) => {
   try {
     console.log('=== PATIENT SERVICE: uploadPatientData called ===');
-    const url = `${API_URL.replace(/\/+$/, '')}/api/patients/upload`;
+    const url = `${API_URL}/api/patients/upload`;
     console.log('Uploading patient data to:', url);
     console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
@@ -123,7 +123,7 @@ export const deletePatient = async (patientId, token) => {
     console.log('Patient ID:', patientId);
     console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
-    const url = `${API_URL.replace(/\/+$/, '')}/api/patients/${patientId}`;
+    const url = `${API_URL}/api/patients/${patientId}`;
     console.log('Delete URL:', url);
     
     const response = await axios.delete(url, {
