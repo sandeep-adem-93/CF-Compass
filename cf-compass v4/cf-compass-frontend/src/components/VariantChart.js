@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { VARIANT_INFO } from './GeneticVariants';
 import './VariantChart.css';
 
 function VariantChart({ data }) {
+  const [activeTooltip, setActiveTooltip] = useState(null);
   // Color map for consistent variant colors
   const variantColors = {
     'F508del': '#4361EE',    // Blue

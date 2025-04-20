@@ -244,3 +244,4 @@ const GeneticVariants = ({ variants = [], expanded = false }) => {
 };
 
 export default GeneticVariants;
+export { VARIANT_INFO };
