@@ -119,6 +119,9 @@ export const uploadPatientData = async (requestData, token) => {
 // Delete a patient
 export const deletePatient = async (patientId, token) => {
   try {
+    if (!token) {
+      token = localStorage.getItem('token');
+    }
     console.log('=== Delete Patient Request ===');
     console.log('Patient ID:', patientId);
     console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');

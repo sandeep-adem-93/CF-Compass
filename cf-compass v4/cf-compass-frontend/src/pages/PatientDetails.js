@@ -194,6 +194,8 @@ function PatientDetails({onAddPatientClick, patients, onPatientsUpdate}) {
 
   const handlePatientDelete = async (patientId) => {
     try {
+      const token = localStorage.getItem('token');
+      
       await deletePatient(patientId);
       setPatientToDelete(null); // Close the dialog
       
