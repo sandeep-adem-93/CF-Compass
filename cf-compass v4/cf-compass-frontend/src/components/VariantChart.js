@@ -112,7 +112,7 @@ function VariantChart({ data }) {
               </div>
               
               {/* Tooltip */}
-              {activeTooltip === item.name && VARIANT_INFO[item.name] && (
+              {activeTooltip === item.name  && activeTooltip.variant === item.name && VARIANT_INFO[item.name] && (
                 <div className="variant-tooltip"  style={{
                   left: `${activeTooltip.position.x - 340}px`, // Position to the left of the cursor
                   top: `${activeTooltip.position.y - 100}px`, // Position above the cursor
