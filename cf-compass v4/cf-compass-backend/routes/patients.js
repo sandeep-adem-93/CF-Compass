@@ -2,49 +2,15 @@
 const express = require('express');
 const router = express.Router();
 const Patient = require('../models/Patient');
-const { auth } = require('../middleware/auth');
-
-// Apply auth middleware to all routes
-router.use(auth);
 
 // Get all patients
 router.get('/', async (req, res) => {
   try {
-    console.log('=== Get All Patients ===');
-    console.log('User making request:', {
-      userId: req.user.userId,
-      role: req.user.role
-    });
-    
-    const patients = await Patient.find();
-    console.log('Found patients:', patients.length);
+    const patients = await Patient.find({});
     res.json(patients);
-  } catch (error) {
-    console.error('Error getting patients:', error);
-    res.status(500).json({ error: 'Failed to get patients' });
-  }
-});
-
-// Get a single patient
-router.get('/:id', async (req, res) => {
-  try {
-    console.log('=== Get Single Patient ===');
-    console.log('Patient ID:', req.params.id);
-    console.log('User making request:', {
-      userId: req.user.userId,
-      role: req.user.role
-    });
-    
-    const patient = await Patient.findOne({ id: req.params.id });
-    if (!patient) {
-      console.log('Patient not found');
-      return res.status(404).json({ error: 'Patient not found' });
-    }
-    console.log('Patient found:', patient.id);
-    res.json(patient);
-  } catch (error) {
-    console.error('Error getting patient:', error);
-    res.status(500).json({ error: 'Failed to get patient' });
+  } catch (err) {
+    console.error('Error fetching patients:', err);
+    res.status(500).json({ error: 'Failed to retrieve patients' });
   }
 });
 
@@ -110,26 +76,19 @@ router.post('/upload', async (req, res) => {
 // Delete a patient
 router.delete('/:id', async (req, res) => {
   try {
-    console.log('=== Delete Patient ===');
-    console.log('Patient ID:', req.params.id);
-    console.log('User making request:', {
-      userId: req.user.userId,
-      role: req.user.role
-    });
+    const { id } = req.params;
+    const deletedPatient = await Patient.findOneAndDelete({ id });
     
-    const result = await Patient.deleteOne({ id: req.params.id });
-    console.log('Delete result:', result);
-    
-    if (result.deletedCount === 0) {
-      console.log('No patient found with ID:', req.params.id);
+    if (!deletedPatient) {
       return res.status(404).json({ error: 'Patient not found' });
     }
     
-    console.log('Successfully deleted patient:', req.params.id);
-    res.json({ message: 'Patient deleted successfully' });
+    res.json({ 
+      success: true, 
+      message: 'Patient deleted successfully' 
+    });
   } catch (error) {
     console.error('Error deleting patient:', error);
-    console.error('Error stack:', error.stack);
     res.status(500).json({ error: 'Failed to delete patient' });
   }
 });

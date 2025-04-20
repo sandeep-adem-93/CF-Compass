@@ -8,10 +8,7 @@ export const getPatients = async (token) => {
   try {
     const url = `${API_URL}/api/patients`;
     console.log('Fetching patients from:', url);
-    
-    if (!token) {
-      throw new Error('Authentication token is required');
-    }
+    console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
     const response = await axios.get(url, {
       headers: {
@@ -20,6 +17,7 @@ export const getPatients = async (token) => {
     });
     
     console.log('Response status:', response.status);
+    console.log('API response data:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error in getPatients:', error);
@@ -63,24 +61,33 @@ export const uploadPatientData = async (requestData, token) => {
     console.log('=== PATIENT SERVICE: uploadPatientData called ===');
     const url = `${API_URL}/api/patients/upload`;
     console.log('Uploading patient data to:', url);
-    
-    if (!token) {
-      throw new Error('Authentication token is required');
-    }
+    console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
     const { patientData, apiKey, modelProvider } = requestData;
     
     // Validate inputs
     if (!patientData) {
+      console.error('Missing patient data');
       throw new Error('Patient data is required');
     }
     if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length === 0) {
+      console.error('Invalid API key');
       throw new Error('Valid API key is required');
     }
     if (!modelProvider || typeof modelProvider !== 'string') {
+      console.error('Invalid model provider');
       throw new Error('Model provider is required');
     }
 
+    // Debug logs
+    console.log('Request validation passed:');
+    console.log('- API Key:', apiKey ? `${apiKey.substring(0, 5)}... (length: ${apiKey.length})` : 'missing');
+    console.log('- Model provider:', modelProvider);
+    console.log('- Patient data type:', typeof patientData);
+    console.log('- Patient data keys:', Object.keys(patientData));
+
+    // Make the API request
+    console.log('Making request to:', url);
     const response = await axios.post(url, {
       patientData,
       apiKey: apiKey.trim(),
@@ -105,7 +112,7 @@ export const uploadPatientData = async (requestData, token) => {
       console.error('Response status:', error.response.status);
       console.error('Error details:', error.response.data);
     }
-    throw error;
+    throw error.response?.data?.error || new Error('Failed to upload patient data');
   }
 };
 
@@ -114,38 +121,27 @@ export const deletePatient = async (patientId, token) => {
   try {
     console.log('=== Delete Patient Request ===');
     console.log('Patient ID:', patientId);
-    console.log('Token exists:', !!token);
-    
-    if (!token) {
-      console.error('No token provided for delete operation');
-      throw new Error('Authentication token is required');
-    }
+    console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
     const url = `${API_URL}/api/patients/${patientId}`;
     console.log('Delete URL:', url);
     
-    console.log('Making delete request...');
     const response = await axios.delete(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`
       }
     });
     
-    console.log('Response received:', {
-      status: response.status,
-      data: response.data
-    });
-    
+    console.log('Response status:', response.status);
+    console.log('Delete result:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error deleting patient:', error);
+    console.error('Error deleting patient', patientId, ':', error);
     if (error.response) {
       console.error('Response status:', error.response.status);
       console.error('Error details:', error.response.data);
-      console.error('Error headers:', error.response.headers);
     }
-    throw error;
+    throw new Error('Failed to delete patient');
   }
 };
 
