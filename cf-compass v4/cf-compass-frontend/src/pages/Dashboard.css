@@ -3,6 +3,9 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
   
   .dashboard-header {
@@ -91,7 +94,7 @@
   
   .main-content {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
     gap: var(--spacing-xl);
   }
   
@@ -119,6 +122,11 @@
     border-radius: 20px;
     box-shadow: var(--shadow-sm);
     padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+
   }
   
   .chart-section {
