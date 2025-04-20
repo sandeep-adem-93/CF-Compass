@@ -114,10 +114,8 @@ export const deletePatient = async (patientId, token) => {
   try {
     console.log('=== Delete Patient Request ===');
     console.log('Patient ID:', patientId);
-    console.log('Token exists:', !!token);
     
     if (!token) {
-      console.error('No token provided for delete request');
       throw new Error('Authentication token is required');
     }
     
@@ -135,15 +133,10 @@ export const deletePatient = async (patientId, token) => {
     console.log('Delete result:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error deleting patient:', error);
+    console.error('Error deleting patient', patientId, ':', error);
     if (error.response) {
       console.error('Response status:', error.response.status);
       console.error('Error details:', error.response.data);
-      console.error('Error headers:', error.response.headers);
-    } else if (error.request) {
-      console.error('No response received:', error.request);
-    } else {
-      console.error('Error setting up request:', error.message);
     }
     throw error;
   }
