@@ -6,87 +6,20 @@ import DeleteConfirmDialog from '../components/DeleteConfirmDialog';
 import { getPatients, deletePatient } from '../services/patientService';
 import './Dashboard.css';
 
-function Dashboard() {
-  const [patients, setPatients] = useState([]);
+function Dashboard({ patients, onPatientsUpdate, user }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [patientToDelete, setPatientToDelete] = useState(null);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('=== Dashboard Component Mounted ===');
-    // Check if user is logged in
-    const storedUser = localStorage.getItem('user');
-    
-    if (!storedUser) {
-      console.log('No user found, redirecting to login');
+    if (!user) {
       navigate('/login');
       return;
     }
-
-    try {
-      const parsedUser = JSON.parse(storedUser);
-      console.log('Setting user:', parsedUser);
-      setUser(parsedUser);
-      fetchPatients();
-    } catch (error) {
-      console.error('Error parsing user data:', error);
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      navigate('/login');
-    }
-  }, [navigate]);
-
-  const fetchPatients = async () => {
-    try {
-      console.log('=== Fetching Patients ===');
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
-      
-      const data = await getPatients(token);
-      console.log('=== Patient Data Analysis ===');
-      console.log('Raw patient data received:', data);
-      
-      if (!data || !Array.isArray(data)) {
-        console.warn('Invalid data received:', data);
-        setPatients([]);
-        return;
-      }
-
-      const validPatients = data.map(patient => {
-        console.log('Processing patient:', {
-          id: patient.id,
-          name: patient.name,
-          status: patient.status,
-          variants: patient.variants?.length || 0
-        });
-        
-        return {
-          ...patient,
-          name: patient.name || `Patient ${patient.id}`,
-          variants: patient.variants || [],
-          status: patient.status || 'Active'
-        };
-      });
-
-      console.log('Processed patients:', validPatients.length);
-      setPatients(validPatients);
-    } catch (error) {
-      console.error('Error fetching patients:', error);
-      setError('Failed to load patients');
-      if (error.response?.status === 401) {
-        console.log('Token expired or invalid, redirecting to login');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+    onPatientsUpdate();
+  }, [user, navigate, onPatientsUpdate]);
 
   const filteredPatients = patients.filter(patient => {
     if (!patient) return false;
@@ -114,7 +47,7 @@ function Dashboard() {
       
       // Refresh the patient list
       console.log('Refreshing patient list');
-      fetchPatients();
+      onPatientsUpdate();
     } catch (error) {
       console.error('Error deleting patient:', error);
       setError(`Failed to delete patient: ${error.message}`);
