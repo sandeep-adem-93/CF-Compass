@@ -2,6 +2,8 @@
 .variant-chart-container {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
   }
   
   .chart-title {
@@ -56,10 +58,12 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
-    max-height: 250px;
+    max-height: 400px; /* Increase the max height */
+    min-height: 300px; /* Set a minimum height */
     overflow-y: auto;
     padding-right: 8px;
     position: relative;
+    flex: 1; /* Allow legend to grow to fill available space */
   }
   
   .legend-item {
