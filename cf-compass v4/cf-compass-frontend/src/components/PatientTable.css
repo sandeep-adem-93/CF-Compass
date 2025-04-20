@@ -5,8 +5,9 @@
     background-color: var(--bg-card);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);/* Set a fixed maximum height */
-    min-height: 300px; /* Start with this height */
-    max-height: 70vh; /* But don't exceed this portion of viewport height */
+    min-height: 300px;
+    max-height: 400px; /* Same as chart-legend max-height */
+    flex: 1; /* Allow it to grow to fill available space */
     overflow-y: auto; /* Only show scrollbar when content exceeds max-height */
   }
   
