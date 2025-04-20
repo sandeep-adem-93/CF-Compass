@@ -54,7 +54,6 @@ function Register({ onLoginSuccess }) {
           <span className="register-logo-text">CF Compass</span>
         </div>
 
-        <h2>Create Account</h2>
         {error && <div className="error-message">{error}</div>}
         
         <form onSubmit={handleSubmit}>
