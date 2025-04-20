@@ -270,32 +270,15 @@ function AddPatientModal({ onClose, onAddPatient }) {
               </div>
 
               <div className="api-key-section">
-                <div className="provider-selector">
-                  <label htmlFor="model-provider">Select AI Provider:</label>
-                  <select
-                    id="model-provider"
-                    value={modelProvider}
-                    onChange={(e) => setModelProvider(e.target.value)}
-                    className="provider-select"
-                  >
-                    <option value="gemini">Gemini</option>
-                    <option value="openai">OpenAI</option>
-                    <option value="anthropic">Anthropic</option>
-                  </select>
-                </div>
-
                 <label htmlFor="api-key">Enter your {modelProvider === 'gemini' ? 'Gemini' : modelProvider === 'openai' ? 'OpenAI' : 'Anthropic'} API key:</label>
                 <input
                   type="text"
                   id="api-key"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  placeholder={`Enter your ${modelProvider === 'gemini' ? 'Gemini' : modelProvider === 'openai' ? 'OpenAI' : 'Anthropic'} API key (or use 'test-key')`}
+                  placeholder={`Enter your ${modelProvider === 'gemini' ? 'Gemini' : modelProvider === 'openai' ? 'OpenAI' : 'Anthropic'} API key`}
                   className="api-key-input"
                 />
-                {/* <div className="api-key-info">
-                  You can use "test-key" for testing. For real analysis, use a valid {modelProvider === 'gemini' ? 'Gemini' : modelProvider === 'openai' ? 'OpenAI' : 'Anthropic'} API key.
-                </div> */}
               </div>
 
               {error && <div className="error-message">{error}</div>}
