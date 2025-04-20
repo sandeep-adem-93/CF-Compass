@@ -59,7 +59,7 @@ export const getPatientById = async (id, token) => {
 export const uploadPatientData = async (requestData, token) => {
   try {
     console.log('=== PATIENT SERVICE: uploadPatientData called ===');
-    const url = `${API_URL}/api/patients/upload`;
+    const url = `${API_URL.replace(/\/+$/, '')}/api/patients/upload`;
     console.log('Uploading patient data to:', url);
     console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
@@ -127,7 +127,7 @@ export const deletePatient = async (patientId, token) => {
       throw new Error('Authentication token is required');
     }
     
-    const url = `${API_URL}/api/patients/${patientId}`;
+    const url = `${API_URL.replace(/\/+$/, '')}/api/patients/${patientId}`;
     console.log('Delete URL:', url);
     
     const response = await axios.delete(url, {
