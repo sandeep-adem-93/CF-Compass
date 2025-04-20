@@ -123,12 +123,17 @@ export const deletePatient = async (patientId, token) => {
     console.log('Patient ID:', patientId);
     console.log('Using token:', token ? `${token.substring(0, 5)}...` : 'none');
     
+    if (!token) {
+      throw new Error('Authentication token is required');
+    }
+    
     const url = `${API_URL}/api/patients/${patientId}`;
     console.log('Delete URL:', url);
     
     const response = await axios.delete(url, {
       headers: {
-        Authorization: `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     });
     

@@ -2,6 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const Patient = require('../models/Patient');
+const { auth, checkRole } = require('../middleware/auth');
+
+// Apply auth middleware to all routes
+router.use(auth);
 
 // Get all patients
 router.get('/', async (req, res) => {
