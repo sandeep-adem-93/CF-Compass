@@ -296,6 +296,7 @@
 //         gender: patient.gender,
 //         birthDate: patient.birthDate,
 //         variantsCount: patient.variants.length,
+//         variants: patient.variants,
 //         clinicalDetailsCount: patient.clinicalDetails.length
 //       });
       
@@ -444,8 +445,12 @@ function extractFhirBundleToParagraph(bundle) {
     // Genetic information
     for (const seq of molecularSequences) {
       if (seq.type === "dna" && seq.variants.length > 0) {
+        console.log('=== Processing Genetic Variants ===');
+        console.log('Raw variants:', JSON.stringify(seq.variants, null, 2));
+        
         // Extract variant types from the variant objects
         const variantTypes = seq.variants.map(v => v.variantType).filter(Boolean);
+        console.log('Extracted variant types:', variantTypes);
         
         // Group identical variants
         const variantCounts = {};
@@ -453,6 +458,7 @@ function extractFhirBundleToParagraph(bundle) {
         for (const variantType of variantTypes) {
           variantCounts[variantType] = (variantCounts[variantType] || 0) + 1;
         }
+        console.log('Variant counts:', variantCounts);
         
         const variantDescriptions = [];
         
@@ -460,16 +466,20 @@ function extractFhirBundleToParagraph(bundle) {
         if (Object.keys(variantCounts).length > 1) {
           const mutations = Object.keys(variantCounts);
           variantDescriptions.push(`compound heterozygous for ${mutations.join(" and ")} mutations`);
+          console.log('Compound heterozygous detected:', mutations);
         } else {
           // Handle homozygous or single variant cases
           for (const [variantType, count] of Object.entries(variantCounts)) {
             const zygosity = count > 1 ? "homozygous" : "heterozygous";
             variantDescriptions.push(`${zygosity} for ${variantType} mutation`);
+            console.log(`${zygosity} variant detected:`, variantType);
           }
         }
         
         if (variantDescriptions.length > 0) {
-          paragraph += `. Genetic testing shows patient is ${variantDescriptions.join(", ")}`;
+          const geneticInfo = `Genetic testing shows patient is ${variantDescriptions.join(", ")}`;
+          console.log('Final genetic information:', geneticInfo);
+          paragraph += `. ${geneticInfo}`;
         }
       }
     }
@@ -614,6 +624,7 @@ function extractFhirBundleToParagraph(bundle) {
         gender: patient.gender,
         birthDate: patient.birthDate,
         variantsCount: patient.variants.length,
+        variants: patient.variants,
         clinicalDetailsCount: patient.clinicalDetails.length
       });
       
