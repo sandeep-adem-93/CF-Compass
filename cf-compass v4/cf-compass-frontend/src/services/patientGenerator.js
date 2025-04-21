@@ -420,7 +420,6 @@ const generateRandomPatientParams = () => {
       referenceAllele: 'G',
       variantType: '2789+5G>A'
     },
-    ,
     {
       name: 'D1152H',
       start: 117199646,
