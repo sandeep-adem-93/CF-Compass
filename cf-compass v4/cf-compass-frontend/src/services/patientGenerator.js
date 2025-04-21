@@ -481,7 +481,7 @@ Create a complete R4 FHIR bundle of type "collection" with the following resourc
 1. Patient resource with:
    - Unique ID: "${uniqueId}"
    - Name (official use)
-   - Gender
+   - Gender (must be male or female or non-binary)
    - Birth date
 
 2. Condition resource for cystic fibrosis with:
