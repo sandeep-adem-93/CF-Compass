@@ -24,6 +24,12 @@ async function analyzeWithMultipleProviders(fhirData, apiKey, modelProvider) {
     
     console.log('Processed FHIR data into text description successfully');
     
+    // Extract variants from the FHIR data
+    const molecularSequence = fhirData.entry?.find(e => e.resource?.resourceType === 'MolecularSequence')?.resource;
+    const variants = molecularSequence?.variant?.map(v => v.variantType) || [];
+    
+    console.log('Extracted variants:', variants);
+    
     // Define the required sections at the top level
     const requiredSections = [
       'Pulmonary Management',
@@ -38,7 +44,7 @@ async function analyzeWithMultipleProviders(fhirData, apiKey, modelProvider) {
     const promptTemplate = `You are a cystic fibrosis genetic specialist analyzing patient data. Your analysis must strictly follow this format:
 
 PART 1: GENETIC ANALYSIS
-- Start with a clear statement about the patient's CFTR gene variants: ${fhirData.variants.join(' and ')}.
+- Start with a clear statement about the patient's CFTR gene variants: ${variants.join(' and ')}.
 - Explain what each mutation is and how it affects the CFTR protein.
 - Discuss the implications of these specific mutations in combination.
 - Do not use bullet points or asterisks.
@@ -68,7 +74,7 @@ IMPORTANT FORMATTING RULES:
     // Combine patient data with prompt
     const fullPrompt = `${patientParagraph}\n\n${promptTemplate}`;
     console.log('Full prompt length:', fullPrompt.length);
-    console.log('Variants being sent to LLM:', fhirData.variants);
+    console.log('Variants being sent to LLM:', variants);
     
     let responseText = '';
     
