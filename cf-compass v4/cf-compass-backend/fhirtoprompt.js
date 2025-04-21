@@ -444,20 +444,28 @@ function extractFhirBundleToParagraph(bundle) {
     // Genetic information
     for (const seq of molecularSequences) {
       if (seq.type === "dna" && seq.variants.length > 0) {
+        // Extract variant types from the variant objects
+        const variantTypes = seq.variants.map(v => v.variantType).filter(Boolean);
+        
         // Group identical variants
         const variantCounts = {};
         
-        for (const variant of seq.variants) {
-          const key = `${variant}`;
-          variantCounts[key] = (variantCounts[key] || 0) + 1;
+        for (const variantType of variantTypes) {
+          variantCounts[variantType] = (variantCounts[variantType] || 0) + 1;
         }
         
         const variantDescriptions = [];
         
-        for (const [key, count] of Object.entries(variantCounts)) {
-          const varType = key;
-          const zygosity = count > 1 ? "homozygous" : "heterozygous";
-          variantDescriptions.push(`${zygosity} for ${varType} mutation`);
+        // Check if we have compound heterozygous mutations
+        if (Object.keys(variantCounts).length > 1) {
+          const mutations = Object.keys(variantCounts);
+          variantDescriptions.push(`compound heterozygous for ${mutations.join(" and ")} mutations`);
+        } else {
+          // Handle homozygous or single variant cases
+          for (const [variantType, count] of Object.entries(variantCounts)) {
+            const zygosity = count > 1 ? "homozygous" : "heterozygous";
+            variantDescriptions.push(`${zygosity} for ${variantType} mutation`);
+          }
         }
         
         if (variantDescriptions.length > 0) {
