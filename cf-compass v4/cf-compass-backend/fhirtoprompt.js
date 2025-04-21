@@ -445,7 +445,7 @@ function extractFhirBundleToParagraph(bundle) {
     // Genetic information
     for (const seq of molecularSequences) {
       if (seq.type === "dna" && seq.variants.length > 0) {
-        console.log('=== Processing Genetic Variants ===');
+        console.log('\n=== PATIENT GENETIC INFORMATION ===');
         console.log('Raw variants:', JSON.stringify(seq.variants, null, 2));
         
         // Extract variant types from the variant objects
@@ -618,6 +618,7 @@ function extractFhirBundleToParagraph(bundle) {
         status: 'Active'
       };
       
+      console.log('\n=== PATIENT GENETIC INFORMATION ===');
       console.log('Processed patient:', {
         id: patient.id,
         name: patient.name,
@@ -627,6 +628,7 @@ function extractFhirBundleToParagraph(bundle) {
         variants: patient.variants,
         clinicalDetailsCount: patient.clinicalDetails.length
       });
+      console.log('=== END GENETIC INFORMATION ===\n');
       
       return patient;
     } catch (error) {
