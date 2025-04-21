@@ -24,6 +24,18 @@ function VariantChart({ data }) {
     'R347P': '#93B7BE',      // Steel Blue
     'R334W': '#E0A458',      // Bronze
     '2184delA': '#C5D86D',   // Lime
+    'D1152H': '#8B5CF6',     // Violet
+    'S1251N': '#EC4899',     // Pink
+    'R334W': '#F59E0B',      // Amber
+    'A455E': '#10B981',      // Emerald
+    'P67L': '#3B82F6',       // Blue
+    'L206W': '#6366F1',      // Indigo
+    'R347P': '#8B5CF6',      // Purple
+    'R560T': '#EC4899',      // Pink
+    'D579G': '#F59E0B',      // Amber
+    'S549N': '#10B981',      // Emerald
+    'G85E': '#3B82F6',       // Blue
+    'E60X': '#6366F1',       // Indigo
     // Default color for any other variants
     'default': '#4CC9F0'     // Light Blue
   };

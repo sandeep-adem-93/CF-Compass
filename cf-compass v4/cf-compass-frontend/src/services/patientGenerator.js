@@ -238,17 +238,96 @@ const generateWithAnthropic = async (apiKey, patientParams) => {
 const generateRandomPatientParams = () => {
   // Arrays of common first and last names
   const firstNames = [
+    // European American
     'Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'William', 'Sophia', 'James',
     'Isabella', 'Logan', 'Charlotte', 'Benjamin', 'Amelia', 'Lucas', 'Mia',
     'Mason', 'Harper', 'Ethan', 'Evelyn', 'Michael', 'Abigail', 'Alexander',
-    'Emily', 'Daniel', 'Elizabeth', 'Matthew', 'Sofia', 'Elijah', 'Ella'
+    'Emily', 'Daniel', 'Elizabeth', 'Matthew', 'Sofia', 'Elijah', 'Ella',
+    
+    // Hispanic American
+    'Santiago', 'Isabella', 'Jose', 'Maria', 'Carlos', 'Ana', 'Miguel', 'Carmen',
+    'Diego', 'Lucia', 'Antonio', 'Valentina', 'Juan', 'Gabriela', 'Luis',
+    'Sofia', 'Mateo', 'Camila', 'Alejandro', 'Elena', 'Eduardo', 'Adriana',
+    'Javier', 'Valeria', 'Francisco', 'Mariana', 'Rafael', 'Victoria', 'Daniel',
+    
+    // East Asian American
+    'Wei', 'Ming', 'Jin', 'Ying', 'Hui', 'Xiu', 'Tao', 'Mei', 'Jun', 'Lin',
+    'Soo-jin', 'Ji-won', 'Min-ho', 'Hye-jin', 'Hiroshi', 'Yuki', 'Haruka',
+    'Takashi', 'Akira', 'Yuna', 'Kazuki', 'Sakura', 'Riku', 'Xiaoping',
+    'Jiaying', 'Yunxi', 'Jiwoo', 'Minji', 'Eun-ji', 'Kenji',
+    
+    // South Asian American
+    'Aarav', 'Aanya', 'Arjun', 'Ananya', 'Vihaan', 'Anika', 'Reyansh', 'Ishani',
+    'Vivaan', 'Advika', 'Advik', 'Myra', 'Dhruv', 'Shanaya', 'Kabir', 'Kiara',
+    'Shaurya', 'Aadhya', 'Arnav', 'Ira', 'Dev', 'Avni', 'Rohan', 'Diya',
+    'Ishaan', 'Shreya', 'Riya', 'Ayaan', 'Priya', 'Neil',
+    
+    // African American
+    'Jamal', 'Aaliyah', 'Malik', 'Imani', 'Elijah', 'Zion', 'Xavier', 'Nia',
+    'Isaiah', 'Layla', 'Jordan', 'Trinity', 'Josiah', 'Anaya', 'Miles',
+    'London', 'Jayden', 'Kennedy', 'Zaire', 'Aliyah', 'Jabari', 'Amara',
+    'Darius', 'Zora', 'Malcolm', 'Tiana', 'Solomon', 'Kira', 'Omari', 'Jade',
+    
+    // African (Continental)
+    'Kwame', 'Amara', 'Kofi', 'Esi', 'Chinedu', 'Chiamaka', 'Oluwaseun', 'Amina',
+    'Tendai', 'Thandiwe', 'Abayomi', 'Fatou', 'Nnamdi', 'Zainab', 'Sekou',
+    'Adanna', 'Faraji', 'Makena', 'Chijioke', 'Onyeka', 'Abebi', 'Mandla',
+    'Folami', 'Thabo', 'Obioma', 'Aisha', 'Kwesi', 'Nia', 'Oluchi', 'Kamau',
+    
+    // Middle Eastern American
+    'Ahmad', 'Fatima', 'Omar', 'Layla', 'Yusuf', 'Amira', 'Zain', 'Noor',
+    'Karim', 'Sara', 'Hassan', 'Rania', 'Samir', 'Yasmine', 'Mohammed',
+    'Leila', 'Ali', 'Aisha', 'Ibrahim', 'Mariam', 'Rayan', 'Zahra', 'Tariq',
+    'Huda', 'Khalid', 'Jana', 'Sami', 'Lina', 'Kareem', 'Salma'
   ];
   
   const lastNames = [
+    // European American
     'Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson',
     'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin',
     'Thompson', 'Garcia', 'Martinez', 'Robinson', 'Clark', 'Rodriguez', 'Lewis',
-    'Lee', 'Walker', 'Hall', 'Allen', 'Young', 'Hernandez', 'King', 'Wright'
+    'Lee', 'Walker', 'Hall', 'Allen', 'Young', 'Hernandez', 'King', 'Wright',
+    
+    // Hispanic American
+    'Gonzalez', 'Rodriguez', 'Martinez', 'Lopez', 'Garcia', 'Perez', 'Sanchez',
+    'Ramirez', 'Torres', 'Flores', 'Rivera', 'Morales', 'Ortiz', 'Cruz',
+    'Reyes', 'Herrera', 'Gutierrez', 'Mendoza', 'Ruiz', 'Alvarez', 'Jimenez',
+    'Vazquez', 'Gomez', 'Diaz', 'Fernandez', 'Soto', 'Romero', 'Castillo',
+    'Moreno', 'Rojas', 'Navarro',
+    
+    // East Asian American
+    'Wang', 'Li', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Wu', 'Zhou', 'Sun',
+    'Kim', 'Park', 'Lee', 'Choi', 'Jung', 'Kang', 'Suzuki', 'Tanaka', 'Sato',
+    'Nakamura', 'Yamamoto', 'Takahashi', 'Watanabe', 'Ito', 'Yamaguchi',
+    'Song', 'Lin', 'Chang', 'Kwon', 'Ahn', 'Hayashi',
+    
+    // South Asian American
+    'Patel', 'Sharma', 'Singh', 'Kumar', 'Shah', 'Desai', 'Mehta', 'Joshi',
+    'Verma', 'Agarwal', 'Gupta', 'Reddy', 'Kapoor', 'Malhotra', 'Nair',
+    'Rao', 'Iyer', 'Gandhi', 'Chatterjee', 'Mukherjee', 'Banerjee', 'Bose',
+    'Dutta', 'Kaur', 'Chauhan', 'Chowdhury', 'Trivedi', 'Sinha', 'Tiwari',
+    'Deshpande', 'Naidu',
+    
+    // African American
+    'Washington', 'Johnson', 'Williams', 'Jackson', 'Davis', 'Wilson', 'Smith',
+    'Brown', 'Jones', 'Bailey', 'Coleman', 'Jenkins', 'Simmons', 'Ford', 'Bryant',
+    'Patterson', 'Brooks', 'Howard', 'Hunter', 'Grant', 'Perry', 'Marshall',
+    'Mack', 'Gordon', 'Fields', 'Owens', 'Douglas', 'Hayes', 'Hopkins',
+    'Warren', 'Dixon',
+    
+    // African (Continental)
+    'Okafor', 'Mensah', 'Osei', 'Adeyemi', 'Nwosu', 'Diallo', 'Afolayan', 'Mbeki',
+    'Mwangi', 'Nkosi', 'Okonkwo', 'Moyo', 'Adekunle', 'Nyongo', 'Okeke',
+    'Kenyatta', 'Nkrumah', 'Dlamini', 'Adebayo', 'Keita', 'Eze', 'Kamara',
+    'Ndlovu', 'Chukwu', 'Obasanjo', 'Toure', 'Mutombo', 'Abiola', 'Olawale',
+    'Muchiri', 'Gueye',
+    
+    // Middle Eastern American
+    'Hassan', 'Ibrahim', 'Ahmed', 'Ali', 'Khalil', 'Mahmoud', 'Saleh',
+    'Abdullah', 'Karim', 'Rahman', 'Khan', 'Malik', 'Hussein', 'Yusuf',
+    'Al-Farsi', 'Hakim', 'Qureshi', 'Rashid', 'Al-Hakim', 'Karimi', 'Farooq',
+    'Amir', 'Aziz', 'Hamid', 'Mustafa', 'Kassem', 'Haddad', 'Saeed', 'Zaidi',
+    'Mansour', 'El-Sayed'
   ];
   
   // Common CFTR mutations with their specific details
@@ -340,6 +419,103 @@ const generateRandomPatientParams = () => {
       observedAllele: 'A',
       referenceAllele: 'G',
       variantType: '2789+5G>A'
+    },
+    ,
+    {
+      name: 'D1152H',
+      start: 117199646,
+      end: 117199646,
+      observedAllele: 'C',
+      referenceAllele: 'G',
+      variantType: 'D1152H'
+    },
+    {
+      name: 'S1251N',
+      start: 117282360,
+      end: 117282360,
+      observedAllele: 'A',
+      referenceAllele: 'G',
+      variantType: 'S1251N'
+    },
+    {
+      name: 'R334W',
+      start: 117199646,
+      end: 117199646,
+      observedAllele: 'T',
+      referenceAllele: 'C',
+      variantType: 'R334W'
+    },
+    {
+      name: 'A455E',
+      start: 117282360,
+      end: 117282360,
+      observedAllele: 'A',
+      referenceAllele: 'C',
+      variantType: 'A455E'
+    },
+    {
+      name: 'P67L',
+      start: 117199646,
+      end: 117199646,
+      observedAllele: 'T',
+      referenceAllele: 'C',
+      variantType: 'P67L'
+    },
+    {
+      name: 'L206W',
+      start: 117282360,
+      end: 117282360,
+      observedAllele: 'G',
+      referenceAllele: 'T',
+      variantType: 'L206W'
+    },
+    {
+      name: 'R347P',
+      start: 117199646,
+      end: 117199646,
+      observedAllele: 'C',
+      referenceAllele: 'G',
+      variantType: 'R347P'
+    },
+    {
+      name: 'R560T',
+      start: 117282360,
+      end: 117282360,
+      observedAllele: 'C',
+      referenceAllele: 'G',
+      variantType: 'R560T'
+    },
+    {
+      name: 'D579G',
+      start: 117199646,
+      end: 117199646,
+      observedAllele: 'G',
+      referenceAllele: 'A',
+      variantType: 'D579G'
+    },
+    {
+      name: 'S549N',
+      start: 117282360,
+      end: 117282360,
+      observedAllele: 'A',
+      referenceAllele: 'G',
+      variantType: 'S549N'
+    },
+    {
+      name: 'G85E',
+      start: 117199646,
+      end: 117199646,
+      observedAllele: 'A',
+      referenceAllele: 'G',
+      variantType: 'G85E'
+    },
+    {
+      name: 'E60X',
+      start: 117282360,
+      end: 117282360,
+      observedAllele: 'T',
+      referenceAllele: 'G',
+      variantType: 'E60X'
     }
   ];
   
@@ -395,7 +571,25 @@ const generateRandomPatientParams = () => {
     'shortness of breath',
     'salty-tasting skin',
     'male infertility',
-    'CFRD (CF-related diabetes)'
+    'CFRD (CF-related diabetes)',
+    'persistent wheezing',
+    'hemoptysis',
+    'recurrent pneumonia',
+    'clubbing of fingers and toes',
+    'steatorrhea (fatty stools)',
+    'vitamin K deficiency',
+    'osteoporosis',
+    'liver cirrhosis',
+    'gallstones',
+    'distal intestinal obstruction syndrome',
+    'exercise intolerance',
+    'rectal prolapse',
+    'chronic fatigue',
+    'delayed puberty',
+    'recurrent pancreatitis',
+    'gastroesophageal reflux disease',
+    'allergic bronchopulmonary aspergillosis',
+    'chronic rhinosinusitis'
   ];
   
   // Select 3-5 random symptoms

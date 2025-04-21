@@ -121,6 +121,55 @@ const VARIANT_INFO = {
     severity: 'high',
     prevalence: 'Found in ~0.5% of CF patients',
     modulator: 'Potentially responsive to Elexacaftor/Tezacaftor/Ivacaftor'
+  },
+  'D1152H': {
+    fullName: 'c.3454G>C (p.Asp1152His)',
+    description: 'Class IV conductance mutation affecting chloride channel gating.',
+    severity: 'mild to moderate',
+    prevalence: 'Found in ~0.2% of CF patients globally, more common in Ashkenazi Jewish populations',
+    modulator: 'Responsive to Ivacaftor and combination therapies including Elexacaftor/Tezacaftor/Ivacaftor'
+  },
+  'S1251N': {
+    fullName: 'c.3752G>A (p.Ser1251Asn)',
+    description: 'Class III gating mutation that reduces channel opening time.',
+    severity: 'moderate',
+    prevalence: 'Found in ~0.1% of CF patients',
+    modulator: 'Highly responsive to Ivacaftor'
+  },
+  'P67L': {
+    fullName: 'c.200C>T (p.Pro67Leu)',
+    description: 'Class II processing mutation affecting protein trafficking to cell surface.',
+    severity: 'mild to moderate',
+    prevalence: 'Found in ~0.2% of CF patients',
+    modulator: 'Responsive to Elexacaftor/Tezacaftor/Ivacaftor'
+  },
+  'L206W': {
+    fullName: 'c.617T>G (p.Leu206Trp)',
+    description: 'Class II processing mutation affecting protein folding and trafficking.',
+    severity: 'moderate',
+    prevalence: 'Found in ~0.1% of CF patients',
+    modulator: 'Responsive to Elexacaftor/Tezacaftor/Ivacaftor'
+  },
+  'D579G': {
+    fullName: 'c.1736A>G (p.Asp579Gly)',
+    description: 'Class II processing mutation affecting protein maturation and trafficking.',
+    severity: 'moderate',
+    prevalence: 'Found in ~0.1% of CF patients, more common in Mediterranean populations',
+    modulator: 'Responsive to Elexacaftor/Tezacaftor/Ivacaftor'
+  },
+  'G85E': {
+    fullName: 'c.254G>A (p.Gly85Glu)',
+    description: 'Class II processing mutation causing protein misfolding and degradation.',
+    severity: 'moderate to severe',
+    prevalence: 'Found in ~0.7% of CF patients',
+    modulator: 'Partially responsive to Elexacaftor/Tezacaftor/Ivacaftor'
+  },
+  'E60X': {
+    fullName: 'c.178G>T (p.Glu60X)',
+    description: 'Class I nonsense mutation creating premature stop codon, resulting in no functional protein.',
+    severity: 'high',
+    prevalence: 'Found in ~0.1% of CF patients',
+    modulator: 'Potentially responsive to read-through agents like Ataluren (investigational)'
   }
 };
 
